@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mitsukii_sempai — Personal Space & Creator Hub</title>
+    <link rel="icon" type="image/jpeg" href="logos/flood.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           1. CSS ПЕРЕМЕННЫЕ И СБРОС СТИЛЕЙ (OBSIDIAN & FROST THEME)
+           ========================================================================== */
+        :root {
+            --bg-main: #07080b;
+            --bg-card: rgba(15, 17, 23, 0.7);
+            --bg-card-hover: rgba(22, 25, 35, 0.8);
+            --border-color: rgba(255, 255, 255, 0.07);
+            --border-hover: rgba(99, 102, 241, 0.3);
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --accent-indigo: #6366f1;
+            --accent-cyan: #ffffff;
+            --accent-emerald: #ffffff;
+            --accent-rose: #f43f5e;
+            --accent-amber: #f59e0b;
+
+            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --glass-blur: blur(16px);
+            --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Background Ambient Grid Mesh */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(255, 255, 255, 0.06) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.082) 0%, transparent 60%);
+        }
+
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+
+        /* ==========================================================================
+           2. ВЕРХНЯЯ ШАПКА И НАВИГАЦИЯ
+           ========================================================================== */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 48px;
+            background: rgba(7, 8, 11, 0.75);
+            backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .brand-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .brand-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-badge {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(99, 102, 241, 0.12);
+            color: var(--accent-indigo);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            font-weight: 600;
+        }
+
+        /* Единственная кнопка возврата */
+        .btn-back-main {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 18px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-back-main:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(-3px);
+        }
+
+        /* ==========================================================================
+           3. ГЛАВНЫЙ КОНТЕЙНЕР
+           ========================================================================== */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1140px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 50px 24px 80px 24px;
+            flex: 1;
+        }
+
+        /* HERO БЛОК ПРЕМИУМ-ПРОФИЛЯ */
+        .hero-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 44px;
+            backdrop-filter: var(--glass-blur);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            margin-bottom: 32px;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-indigo), var(--accent-cyan), transparent);
+        }
+
+        .hero-layout {
+            display: flex;
+            align-items: flex-start;
+            gap: 36px;
+        }
+
+        .hero-avatar-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .hero-avatar-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .online-indicator {
+            position: absolute;
+            bottom: -6px;
+            right: -6px;
+            background: var(--bg-main);
+            padding: 4px;
+            border-radius: 50%;
+        }
+
+        .online-dot {
+            width: 14px;
+            height: 14px;
+            background: var(--accent-emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--accent-emerald);
+            animation: pulse-online 2.5s infinite;
+        }
+
+        @keyframes pulse-online {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.15); }
+        }
+
+        .hero-details {
+            flex: 1;
+        }
+
+        .hero-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .creator-name {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #ffffff;
+            line-height: 1.1;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--accent-emerald);
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: var(--font-mono);
+        }
+
+        .hero-tags-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        .hero-bio-text {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            max-width: 760px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 14px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 1px solid transparent;
+        }
+
+        .action-primary {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .action-primary:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .action-secondary {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .action-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* ==========================================================================
+           4. BENTO GRID СЕКЦИЯ (УНИКАЛЬНАЯ АРХИТЕКТУРА КАРТОЧЕК)
+           ========================================================================== */
+        .section-heading {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            margin: 48px 0 24px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-heading span {
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .bento-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: var(--glass-blur);
+            transition: var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-card:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .span-2 {
+            grid-column: span 2;
+        }
+
+        .span-3 {
+            grid-column: span 3;
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+
+        .card-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.65;
+        }
+
+        /* ТЕРМИНАЛ КОДА СТИЛЯ VERCEL */
+        .code-terminal {
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            margin-top: 18px;
+            overflow: hidden;
+            font-family: var(--font-mono);
+        }
+
+        .terminal-bar {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .terminal-content {
+            padding: 18px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: #d1d5db;
+        }
+
+        .kw { color: #c084fc; }
+        .str { color: #38bdf8; }
+        .cm { color: #4b5563; font-style: italic; }
+        .val { color: #34d399; }
+
+        /* ИНТЕРАКТИВНЫЙ ПЛЕЕР ВАЙБА */
+        .vibe-player {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .album-art {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .track-info {
+            flex: 1;
+        }
+
+        .track-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .track-artist {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .sound-wave {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 18px;
+        }
+
+        .wave-bar {
+            width: 3px;
+            background: var(--accent-cyan);
+            border-radius: 3px;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+
+        .wave-bar:nth-child(2) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.4s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.1s; }
+
+        @keyframes wave {
+            0%, 100% { height: 4px; }
+            50% { height: 18px; }
+        }
+
+        /* PROGRESS METERS */
+        .progress-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .progress-item-head {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .progress-track {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-indigo), var(--accent-cyan));
+            border-radius: 10px;
+        }
+
+        /* ==========================================================================
+           5. ТАЙМЛАЙН ПРОЕКТА
+           ========================================================================== */
+        .timeline-container {
+            position: relative;
+            padding-left: 24px;
+            margin-top: 20px;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            bottom: 5px;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-step {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .timeline-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-step::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--bg-main);
+            border: 2px solid var(--accent-indigo);
+        }
+
+        .timeline-date {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent-indigo);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .timeline-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .timeline-desc {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* ==========================================================================
+           6. ОСОБЫЙ БЛОК: "ОТ ЧИСТОГО СЕРДЦА" (LETTER CONTAINER)
+           ========================================================================== */
+        .heartfelt-wrapper {
+            background: linear-gradient(180deg, rgba(20, 22, 32, 0.8) 0%, rgba(12, 13, 18, 0.95) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 24px;
+            padding: 48px;
+            margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .heartfelt-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -80px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .letter-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--accent-amber);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+
+        .letter-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .letter-body {
+            font-size: 1.05rem;
+            line-height: 1.85;
+            color: #e2e8f0;
+            white-space: pre-line;
+            font-weight: 400;
+        }
+
+        /* ==========================================================================
+           7. ПОДВАЛ (FOOTER)
+           ========================================================================== */
+        .site-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            background: rgba(7, 8, 11, 0.9);
+            padding: 32px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .footer-left span {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* TOAST УВЕДОМЛЕНИЕ */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--accent-indigo);
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            backdrop-filter: var(--glass-blur);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition-smooth);
+            z-index: 1000;
+        }
+
+        #toast.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ==========================================================================
+           8. АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ
+           ========================================================================== */
+        @media (max-width: 992px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+            .span-3 { grid-column: span 2; }
+        }
+
+        @media (max-width: 768px) {
+            .site-header { padding: 14px 20px; }
+            .main-container { padding: 30px 16px; }
+            .hero-card { padding: 28px; }
+            .hero-layout { flex-direction: column; align-items: center; text-align: center; }
+            .hero-header-row { justify-content: center; }
+            .hero-tags-row { justify-content: center; }
+            .hero-actions { justify-content: center; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .span-2, .span-3 { grid-column: span 1; }
+            .heartfelt-wrapper { padding: 28px; }
+            .site-footer { padding: 24px 20px; flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Фоновая векторная сетка -->
+    <div class="ambient-bg"></div>
+    <div class="grid-pattern"></div>
+
+    <!-- 1. ШАПКА САЙТА (ТОЛЬКО БРЕНД И КНОПКА ВОЗВРАТА) -->
+    <header class="site-header">
+        <a href="index.html" class="header-brand">
+            <img src="avatars/flood.jpg" alt="Anireil" class="brand-avatar">
+            <span class="brand-title">Anireil Hub</span>
+        </a>
+
+        <!-- Единственная кнопка возврата на главный сайт -->
+        <a href="index.html" class="btn-back-main">
+            ← На главный сайт
+        </a>
+    </header>
+
+    <!-- 2. ОСНОВНОЙ КОНТЕНТ -->
+    <main class="main-container">
+
+        <!-- HERO СЕКЦИЯ ПРОФИЛЯ -->
+        <section class="hero-card">
+            <div class="hero-layout">
+                <div class="hero-avatar-container">
+                    <!-- Замени creator.png на свою аватарку в папке avatars/ -->
+                    <img src="avatars/creator.png" alt="Mitsukii_sempai" class="hero-avatar-img" onerror="this.src='avatars/cat_boy.jpg'">
+                    <div class="online-indicator" title="В сети / Проектирует веб-системы">
+                        <div class="online-dot"></div>
+                    </div>
+                </div>
+
+                <div class="hero-details">
+                    <div class="hero-header-row">
+                        <h1 class="creator-name">Mitsukii_Sempai</h1>
+                        <div class="status-pill">
+                            ⚡ Building Anireil Ecosystem
+                        </div>
+                    </div>
+
+                    <div class="hero-tags-row">
+                        <span class="chip">Owner & Founder</span>
+                        <span class="chip">Full-Stack Craft</span>
+                        <span class="chip">UI/UX Designer</span>
+                        <span class="chip">Anime Culture</span>
+                    </div>
+
+                    <div class="hero-bio-text">
+                        <!-- ✍️ ТЕКСТ: КРАТКОЕ ВСТУПЛЕНИЕ -->
+                        Приветсвую дорогой гость, я Mitsuki собрал тут информацию о себе и надеюсь тебе она пригодиться и тебе будет интересно её читать 
+                    </div>
+
+                    <div class="hero-actions">
+                        <a href="https://t.me/Mitsukii_sempai" target="_blank" class="action-btn action-primary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                             Связаться в Telegram
+                        </a>
+                        <button class="action-btn action-secondary" onclick="copyContact('Mitsukii_Sempai', 'Discord tag')">
+                            <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="currentColor">
+                                <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a74.37,74.37,0,0,0,6.72-10.93,68.6,68.6,0,0,1-10.64-5.12c.91-.67,1.81-1.37,2.65-2.1a75.22,75.22,0,0,0,72.9,0c.84.73,1.74,1.43,2.65,2.1a68.86,68.86,0,0,1-10.64,5.12,74.74,74.74,0,0,0,6.72,10.93,105.73,105.73,0,0,0,31.57-18.83C129.78,49.49,123.93,26.68,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z"/>
+                            </svg>
+                             Discord
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. BENTO GRID (ИНТЕРАКТИВНАЯ СЕТКА СВЕДЕНИЙ) -->
+        <h2 class="section-heading">Пространство создателя <span>/ Architecture & Vibe</span></h2>
+
+        <div class="bento-grid">
+            
+            <!-- КАРТОЧКА 1: О СОЗДАТЕЛЕ И ПРОЕКТЕ -->
+            <div class="bento-card span-2">
+                <div>
+                    <div class="card-icon">🚀</div>
+                    <h3 class="card-title">Генезис Anireil</h3>
+                    <p class="card-text">
+                        <!-- ✍️ ТЕКСТ: ИСТОРИЯ И ЗАМЫСЕЛ -->
+                        Когда ко мне в голову пришло идея создать свой флуда я даже и не думал что у меня будет этот сайт, когда я создал этот сайт у меня горели глаза, ниже будет подробно
+                    </p>
+                </div>
+
+                <!-- Консоль стиля Vercel -->
+                <div class="code-terminal">
+                    <div class="terminal-bar">
+                        <div class="terminal-dots">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                        <span>mitsukii@Anireil-core ~ %</span>
+                    </div>
+                    <div class="terminal-content">
+                        <span class="kw">const</span> developer = {<br>
+                        &nbsp;&nbsp;name: <span class="str">'Mitsukii_Sempai'</span>,<br>
+                        &nbsp;&nbsp;focus: <span class="str">'High Quality Code & Aesthetic UI'</span>,<br>
+                        &nbsp;&nbsp;vision: <span class="str">'Уютное пространство без токсичности'</span>,<br>
+                        &nbsp;&nbsp;state: <span class="val">'Active Development 🚀'</span><br>
+                        };
+                    </div>
+                </div>
+            </div>
+
+            <!-- КАРТОЧКА 2: МОЙ ВАЙБ И МУЗЫКА -->
+            <div class="bento-card">
+                <div>
+                    <div class="card-icon">🎧</div>
+                    <h3 class="card-title">Музыка во время кодирование</h3>
+                    <p class="card-text">
+                        <!-- ✍️ ТЕКСТ: МУЗЫКАЛЬНЫЙ ВАЙБ -->
+                        У меня всегда играет разная музыка но вот мои любимые песни/исполнител: Rebzyyx, Hatsune Miku, Unhappy и многое другое 
+                    </p>
+                </div>
+
+                <div class="vibe-player">
+                    <img src="logos/39_music.jpg" alt="Track Art" class="album-art">
+                    <div class="track-info">
+                        <div class="track-title">39 Music!</div>
+                        <div class="track-artist">Hatsune Miku</div>
+                    </div>
+                    <div class="sound-wave">
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КАРТОЧКА 3: ТЕХНИЧЕСКИЙ СТЕК -->
+            <div class="bento-card">
+                <div>
+                    <div class="card-icon">💻</div>
+                    <h3 class="card-title">Технологии & Навыки</h3>
+                    <p class="card-text">
+                        <!-- ✍️ ТЕКСТ: ТЕХНИЧЕСКИЙ ОПЫТ -->
+                        При создании моих проектов мне помогал ИИ и стал моим замечательным портнером, и сейчас я продолжаю создавать что-то новое и обновлять моего бота
+                    </p>
+                </div>
+
+                <div class="progress-list">
+                    <div class="progress-item">
+                        <div class="progress-item-head">
+                            <span>HTML5 / CSS3 / Glassmorphism</span>
+                            <span style="color: var(--accent-cyan)">50%</span>
+                        </div>
+                        <div class="progress-track"><div class="progress-fill" style="width: 50%;"></div></div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-item-head">
+                            <span>JavaScript / Telegram Bots (grammY)</span>
+                            <span style="color: var(--accent-indigo)">40%</span>
+                        </div>
+                        <div class="progress-track"><div class="progress-fill" style="width: 40%;"></div></div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-item-head">
+                            <span>UI/UX Architecture & Responsive Layouts</span>
+                            <span style="color: var(--accent-emerald)">50%</span>
+                        </div>
+                        <div class="progress-track"><div class="progress-fill" style="width: 50%;"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КАРТОЧКА 4: АНИМЕ И ИГРОВОЙ МИР -->
+            <div class="bento-card span-2">
+                <div>
+                    <div class="card-icon">🎮</div>
+                    <h3 class="card-title">Любимые тайтлы и миры</h3>
+                    <p class="card-text">
+                        <!-- ✍️ ТЕКСТ: ИГРЫ И АНИМЕ -->
+                        Мои любимые тайтлы (их очень много) Хоримия, Это фарфоровая кукла влюбилась, Песнь ночных сов и все прочие романтики а также я обожаю играть в геншин с майнкрафтом они мои самые любимые игры, также хочу сказать что когда смотрю аниме это меня очень успакаивает очень люблю романтические тайтлы. 
+                    </p>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;">
+                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 12px 18px; border-radius: 12px; flex: 1; min-width: 140px;">
+                        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Персонаж</div>
+                        <div style="font-weight: 700; color: #fff; margin-top: 2px;">Марин Китагава</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 12px 18px; border-radius: 12px; flex: 1; min-width: 140px;">
+                        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Игровые вселенные</div>
+                        <div style="font-weight: 700; color: #fff; margin-top: 2px;">Minecraft / Genshin</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КАРТОЧКА 5: ТАЙМЛАЙН ПРОЕКТА -->
+            <div class="bento-card span-3">
+                <div class="card-icon">📜</div>
+                <h3 class="card-title">Создание разработки Anireil</h3>
+                <p class="card-text" style="margin-bottom: 24px;">
+                    <!-- ✍️ ТЕКСТ: КРАТКО ОБ ЭТАПАХ -->
+                    Пришло мне создать флуд ещё в феврале 26 года, я тогда искал со владельца и нашел наверное самую лучшую, после этого мы вместе начали строить этот флуд из-за блокировки тг и по личным причинам пришлось сделать паузу но все же 9 апреля флуд официально было открыто, потом я запустил бота для принятие анкет моей главной целью было чтобы флуд стал популярном чтобы каждый нашел свое месте чтобы всем было комфортно.
+                </p>
+
+                <div class="timeline-container">
+                    <div class="timeline-step">
+                        <div class="timeline-date">ЭТАП 1 — ИДЕЯ И ФУНДАМЕНТ</div>
+                        <div class="timeline-title">Запуск Telegram-флуда и Telegram-бота</div>
+                        <div class="timeline-desc">
+                            <!-- ✍️ ТЕКСТ ДЛЯ ЭТАПА 1 -->
+                            У меня было короткий список найти со владельца дизайнера и монтожера но всем этим занялся со владелец мне протсо оставалось сделать бота
+                        </div>
+                    </div>
+
+                    <div class="timeline-step">
+                        <div class="timeline-date">ЭТАП 2 — ВЕБ-РЕВОЛЮЦИЯ</div>
+                        <div class="timeline-title">Релиз веб-сайта Anireil</div>
+                        <div class="timeline-desc">
+                            <!-- ✍️ ТЕКСТ ДЛЯ ЭТАПА 2 -->
+                            Не знаю как мне это пришло в голову но я просто ради интереса решил сделать сайт для флуда, поэтому в начале июнья разработал его и до сих пор улучшаю и обновляю его.
+                        </div>
+                    </div>
+
+                    <div class="timeline-step">
+                        <div class="timeline-date">ЭТАП 3 — НАСТОЯЩЕЕ ВРЕМЯ (Август-2026)</div>
+                        <div class="timeline-title">Обновление инфраструктуры и новый дизайн</div>
+                        <div class="timeline-desc">
+                            <!-- ✍️ ТЕКСТ ДЛЯ ЭТАПА 3 -->
+                            Сейчас я активно пытаюсь сделать сайт, бот лучше а также безопаснее и красивее 
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step">
+                        <div class="timeline-date">ЭТАП 4 — ПОЛНОЕ ПЕРЕИМЕНОВАНИЕ ПРОЕКТА (Август-2026)</div>
+                        <div class="timeline-title">Обновление имени проекта</div>
+                        <div class="timeline-desc">
+                            <!-- ✍️ ТЕКСТ ДЛЯ ЭТАПА 4 -->
+                            Долго думал насчет этого и наконец-то решился на это теперь наш проект не AfterGlow а Anireil
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 4. ОСОБЫЙ БЛОК: "ОТ ЧИСТОГО СЕРДЦА" -->
+        <section class="heartfelt-wrapper">
+            <div class="letter-badge">💬 От чистого сердца</div>
+            <h2 class="letter-title">Слово к участникам комьюнити</h2>
+            
+            <div class="letter-body">
+               Скоро
+            </div>
+
+    </main>
+
+    <!-- 5. МИНИМАЛИСТИЧНЫЙ ПОДВАЛ -->
+    <footer class="site-footer">
+        <div class="footer-left">
+            &copy; 2026 <span>Anireil Project</span>. Crafted with passion by Mitsukii_Sempai.
+        </div>
+
+        <!-- Единственная ссылка возврата на главный сайт -->
+        <div>
+            <a href="index.html" class="btn-back-main">
+                ← На главный сайт
+            </a>
+        </div>
+    </footer>
+
+    <!-- Toast Уведомление -->
+    <div id="toast">Сообщение скопировано!</div>
+
+    <!-- ==========================================================================
+       6. JAVASCRIPT ДИНАМИКА И ИНТЕРАКТИВНОСТЬ
+       ========================================================================== -->
+    <script>
+        // 1. Копирование контактов с Toast-уведомлением
+        function copyContact(text, label) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`✅ ${label} скопирован в буфер обмена!`);
+            }).catch(() => {
+                showToast(`💬 ${text}`);
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        // 2. Интерактивный счетчик Респектов с сохранением
+        let respects = parseInt(localStorage.getItem('afterglow_respect_count') || '142');
+        const counterEl = document.getElementById('respectCounter');
+        counterEl.innerText = respects;
+
+        function giveRespect() {
+            respects++;
+            localStorage.setItem('afterglow_respect_count', respects);
+            counterEl.innerText = respects;
+            showToast('❤️ Вы отправили респект создателю! Спасибо за поддержку!');
+        }
+
+        // 3. Плавный микро-эффект при движении мыши для карточек Bento
+        const bentoCards = document.querySelectorAll('.bento-card, .hero-card, .heartfelt-wrapper');
+        
+        bentoCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body>
+</html>

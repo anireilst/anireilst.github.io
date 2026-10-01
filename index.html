@@ -1266,6 +1266,124 @@
 const API_BASE = window.location.hostname === 'localhost' 
   ? 'http://localhost:3000'   
   : 'https://anireil-bot.onrender.com';
+        
+        const SITE_THEME_ADMIN_ID = 6120367732;
+        let siteTheme = { autumnRainEnabled: true };
+
+        function createAutumnAtmosphere() {
+            const rainBox = document.getElementById('rain-box');
+            const leafBox = document.getElementById('leaf-box');
+            if (!rainBox || !leafBox || rainBox.children.length > 0) return;
+
+            const rainCount = Math.min(110, Math.max(70, Math.floor(window.innerWidth / 14)));
+
+            for (let i = 0; i < rainCount; i++) {
+                const drop = document.createElement('span');
+                drop.className = 'rain-drop';
+                drop.style.left = (Math.random() * 112 - 6) + 'vw';
+                drop.style.setProperty('--rain-height', (48 + Math.random() * 78).toFixed(0) + 'px');
+                drop.style.setProperty('--rain-duration', (0.85 + Math.random() * 0.7).toFixed(2) + 's');
+                drop.style.setProperty('--rain-delay', (-Math.random() * 2.2).toFixed(2) + 's');
+                drop.style.setProperty('--rain-drift', (-4 - Math.random() * 12).toFixed(1) + 'vw');
+                rainBox.appendChild(drop);
+            }
+
+            const leafColors = ['#b45309', '#d97706', '#ea580c', '#a16207', '#92400e'];
+
+            for (let i = 0; i < 18; i++) {
+                const leaf = document.createElement('span');
+                leaf.className = 'leaf';
+                leaf.style.left = (Math.random() * 110 - 5) + 'vw';
+                leaf.style.setProperty('--leaf-size', (9 + Math.random() * 9).toFixed(0) + 'px');
+                leaf.style.setProperty('--leaf-color', leafColors[Math.floor(Math.random() * leafColors.length)]);
+                leaf.style.setProperty('--leaf-duration', (7 + Math.random() * 7).toFixed(1) + 's');
+                leaf.style.setProperty('--leaf-delay', (-Math.random() * 12).toFixed(1) + 's');
+                leaf.style.setProperty('--leaf-sway', (-12 + Math.random() * 24).toFixed(1) + 'vw');
+                leaf.style.setProperty('--leaf-drift', (-18 + Math.random() * 36).toFixed(1) + 'vw');
+                leafBox.appendChild(leaf);
+            }
+        }
+
+        function setAutumnMode(enabled) {
+            siteTheme.autumnRainEnabled = Boolean(enabled);
+            document.body.classList.toggle('autumn-mode', siteTheme.autumnRainEnabled);
+
+            const status = document.getElementById('autumn-status-pill');
+            const button = document.getElementById('autumn-toggle-button');
+
+            if (status) {
+                status.textContent = siteTheme.autumnRainEnabled ? '🍂 Включено' : '🌙 Выключено';
+            }
+
+            if (button) {
+                button.textContent = siteTheme.autumnRainEnabled
+                    ? '🌙 Выключить осенний режим'
+                    : '🍂 Вернуть осенний режим';
+            }
+        }
+
+        async function loadSiteTheme() {
+            try {
+                const response = await fetch(API_BASE + '/api/site/theme', { cache: 'no-store' });
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    siteTheme.autumnRainEnabled = data.autumnRainEnabled !== false;
+                }
+            } catch (error) {
+                console.warn('Не удалось получить тему сайта:', error);
+            }
+
+            createAutumnAtmosphere();
+            setAutumnMode(siteTheme.autumnRainEnabled);
+            updateAutumnAdminUI();
+        }
+
+        function updateAutumnAdminUI() {
+            const card = document.getElementById('autumn-admin-card');
+            if (!card) return;
+
+            const isAdmin = Number(currentSiteUser?.userId) === SITE_THEME_ADMIN_ID;
+            card.style.display = isAdmin ? 'block' : 'none';
+            setAutumnMode(siteTheme.autumnRainEnabled);
+        }
+
+        async function toggleAutumnTheme() {
+            if (Number(currentSiteUser?.userId) !== SITE_THEME_ADMIN_ID) {
+                showToast('⛔ Недостаточно прав.');
+                return;
+            }
+
+            const nextValue = !siteTheme.autumnRainEnabled;
+
+            try {
+                const response = await fetch(API_BASE + '/api/site/theme', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer ' + getSiteToken()
+                    },
+                    body: JSON.stringify({ autumnRainEnabled: nextValue })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Не удалось изменить тему');
+                }
+
+                setAutumnMode(data.autumnRainEnabled !== false);
+                showToast(
+                    data.autumnRainEnabled !== false
+                        ? '🍂 Осенняя тема включена для всех посетителей.'
+                        : '🌙 Осенняя тема выключена для всех посетителей.'
+                );
+            } catch (error) {
+                console.error('Ошибка переключения темы:', error);
+                showToast('❌ Не удалось изменить тему сайта.');
+            }
+        }
+
 
 // Переопределим все fetch, чтобы использовать API_BASE
 // Можно просто во всех вызовах добавить префикс, как описано выше.
@@ -1394,6 +1512,7 @@ const API_BASE = window.location.hostname === 'localhost'
 
                 localStorage.setItem('anireil_site_user', JSON.stringify(currentSiteUser));
                 updateUserUI();
+                updateAutumnAdminUI();
             } catch (error) {
                 console.warn('Сессия Telegram истекла или недействительна:', error);
                 localStorage.removeItem('anireil_site_token');
@@ -1447,6 +1566,7 @@ const API_BASE = window.location.hostname === 'localhost'
         }
 
         function renderMyProfile(user) {
+            updateAutumnAdminUI();
             const avatar = document.getElementById('modal-avatar');
 
             if (avatar) {
@@ -1672,6 +1792,7 @@ const API_BASE = window.location.hostname === 'localhost'
 
         document.addEventListener("DOMContentLoaded", function() {
             restoreTelegramSession();
+            loadSiteTheme();
             updateUserUI();
             audioPlayer.volume = 0.7; 
 

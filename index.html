@@ -764,6 +764,48 @@
             .rain-drop, .leaf { animation-play-state: paused !important; }
             .autumn-layer, body { transition: none; }
         }
+        
+        /* ЦЕНТР АНАЛИТИКИ */
+        .analytics-shell{width:100%;max-width:1180px;margin:0 auto}
+        .analytics-hero{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:24px;padding:26px;border-radius:24px;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(192,132,252,.10));border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 60px rgba(0,0,0,.22);backdrop-filter:blur(14px)}
+        .analytics-kicker{display:inline-flex;align-items:center;gap:7px;color:#94a3b8;font-size:.72rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:8px}
+        .analytics-hero h2{margin:0;font-size:2rem;background:linear-gradient(90deg,#fff,var(--neon-color));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .analytics-hero p{margin:8px 0 0;color:#94a3b8;max-width:680px;line-height:1.55}
+        .analytics-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .analytics-status{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.20);color:#86efac;font-size:.78rem;white-space:nowrap}
+        .analytics-refresh{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);color:#e2e8f0;padding:9px 14px;border-radius:10px;cursor:pointer;transition:.2s ease}
+        .analytics-refresh:hover{transform:translateY(-1px);border-color:var(--neon-color);box-shadow:0 8px 22px var(--neon-glow)}
+        .analytics-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+        .analytics-kpi{position:relative;overflow:hidden;padding:18px;border-radius:18px;background:rgba(20,20,35,.52);border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(10px);box-shadow:0 14px 35px rgba(0,0,0,.16)}
+        .analytics-kpi::after{content:'';position:absolute;width:120px;height:120px;right:-60px;bottom:-65px;border-radius:50%;background:var(--kpi-glow,rgba(96,165,250,.12));filter:blur(8px)}
+        .analytics-kpi-label{color:#94a3b8;font-size:.76rem;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+        .analytics-kpi-value{position:relative;z-index:1;font-size:1.75rem;font-weight:800;color:#fff}
+        .analytics-kpi-sub{position:relative;z-index:1;margin-top:5px;color:#64748b;font-size:.78rem}
+        .analytics-grid{display:grid;grid-template-columns:1.45fr .95fr;gap:18px;margin-bottom:18px}
+        .analytics-card{min-width:0;background:rgba(20,20,35,.50);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:18px;backdrop-filter:blur(10px);box-shadow:0 16px 44px rgba(0,0,0,.16)}
+        .analytics-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+        .analytics-card-head h3{margin:0;color:#f8fafc;font-size:1rem}
+        .analytics-card-head span{color:#64748b;font-size:.74rem}
+        .analytics-chart-box{position:relative;height:320px}
+        .analytics-list{display:flex;flex-direction:column;gap:9px}
+        .analytics-list-item{display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:10px;padding:10px 11px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04)}
+        .analytics-rank{width:28px;height:28px;display:grid;place-items:center;border-radius:9px;color:#cbd5e1;font-size:.76rem;font-weight:800;background:rgba(255,255,255,.06)}
+        .analytics-person{min-width:0}
+        .analytics-person strong{display:block;color:#f8fafc;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .analytics-person span{display:block;color:#64748b;font-size:.72rem;margin-top:2px}
+        .analytics-list-value{color:var(--neon-color);font-weight:800;font-size:.84rem;white-space:nowrap}
+        .analytics-empty{padding:26px;text-align:center;color:#64748b;border:1px dashed rgba(255,255,255,.08);border-radius:14px}
+        .analytics-bottom-grid{display:grid;grid-template-columns:1fr 1fr .9fr;gap:18px}
+        .analytics-retention{display:grid;gap:10px}
+        .retention-row{padding:13px;border-radius:13px;background:rgba(255,255,255,.03)}
+        .retention-row-top{display:flex;justify-content:space-between;gap:10px;color:#94a3b8;font-size:.78rem;margin-bottom:8px}
+        .retention-row-top strong{color:#f8fafc}
+        .retention-bar{height:7px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+        .retention-bar>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#60a5fa,var(--neon-color))}
+        .analytics-note{margin-top:12px;color:#64748b;font-size:.73rem;line-height:1.45}
+        .analytics-updated{color:#64748b;font-size:.72rem}
+        @media(max-width:960px){.analytics-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.analytics-grid,.analytics-bottom-grid{grid-template-columns:1fr}}
+        @media(max-width:640px){.analytics-hero{flex-direction:column;align-items:flex-start}.analytics-kpi-grid{grid-template-columns:1fr 1fr;gap:10px}.analytics-kpi{padding:14px}.analytics-kpi-value{font-size:1.35rem}.analytics-chart-box{height:260px}}
 </style>
 </head>
 <body>          
@@ -787,6 +829,7 @@
         <nav class="nav-links" style="display: flex; gap: 25px; align-items: center; margin: 0 auto;">
             <button class="nav-link active" onclick="switchSection('home')">Главная</button>
             <button class="nav-link" onclick="switchSection('stats')">Статистика</button>
+            <button id="analytics-nav" class="nav-link" onclick="switchSection('analytics')" style="display:none;">Аналитика</button>
             <button class="nav-link" onclick="switchSection('wall')">Цитаты флуда</button>
             <button class="nav-link" onclick="switchSection('gallery')">Галерея</button>
             <button class="nav-link" onclick="switchSection('about')">О нас</button>
@@ -1028,6 +1071,72 @@
     </div>
   </div>
 </section>
+
+        <section id="analytics" class="content-section">
+            <div class="analytics-shell">
+                <div class="analytics-hero">
+                    <div>
+                        <div class="analytics-kicker">🔒 PRIVATE ADMIN AREA · ANIREIL</div>
+                        <h2>Центр аналитики</h2>
+                        <p>Живые показатели аудитории, активности, роста, команд и поведения пользователей.</p>
+                    </div>
+                    <div class="analytics-actions">
+                        <span id="analytics-status" class="analytics-status">● Готово</span>
+                        <button class="analytics-refresh" type="button" onclick="loadAdminAnalytics()">↻ Обновить</button>
+                    </div>
+                </div>
+
+                <div class="analytics-kpi-grid">
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(96,165,250,.16)"><div class="analytics-kpi-label">Пользователей в базе</div><div id="analytics-total-users" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">все известные аккаунты</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(34,197,94,.15)"><div class="analytics-kpi-label">Сейчас в чате</div><div id="analytics-current-members" class="analytics-kpi-value">—</div><div id="analytics-telegram-count" class="analytics-kpi-sub">Telegram: —</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(168,85,247,.15)"><div class="analytics-kpi-label">Активны за 24 часа</div><div id="analytics-active-24h" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">по последней активности</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(245,158,11,.15)"><div class="analytics-kpi-label">Сообщений за 24 часа</div><div id="analytics-messages-24h" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">из журнала сообщений</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(96,165,250,.12)"><div class="analytics-kpi-label">Активны за 7 дней</div><div id="analytics-active-7d" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">уникальная аудитория</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(34,197,94,.13)"><div class="analytics-kpi-label">Новых за 30 дней</div><div id="analytics-joins-30d" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">по дате вступления</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(239,68,68,.13)"><div class="analytics-kpi-label">Ушли за 30 дней</div><div id="analytics-leaves-30d" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">по истории выхода</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(192,132,252,.16)"><div class="analytics-kpi-label">В чёрном списке</div><div id="analytics-blacklist" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">ограниченных аккаунтов</div></div>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <div class="analytics-card-head"><div><h3>Активность за 7 дней</h3><span>сообщения и уникальные активные пользователи</span></div><span id="analytics-updated" class="analytics-updated">—</span></div>
+                        <div class="analytics-chart-box"><canvas id="analyticsActivityChart"></canvas></div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-head"><div><h3>Самые активные за 7 дней</h3><span>по журналу сообщений</span></div></div>
+                        <div id="analytics-top-users" class="analytics-list"></div>
+                    </div>
+                </div>
+
+                <div class="analytics-card" style="margin-bottom:18px">
+                    <div class="analytics-card-head"><div><h3>Рост аудитории за 30 дней</h3><span>вступления против выходов</span></div></div>
+                    <div class="analytics-chart-box"><canvas id="analyticsGrowthChart"></canvas></div>
+                </div>
+
+                <div class="analytics-bottom-grid">
+                    <div class="analytics-card">
+                        <div class="analytics-card-head"><div><h3>Популярные команды</h3><span>slash-команды за 7 дней</span></div></div>
+                        <div id="analytics-commands" class="analytics-list"></div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-head"><div><h3>Типы активности</h3><span>накопительные счётчики</span></div></div>
+                        <div class="analytics-chart-box" style="height:260px"><canvas id="analyticsMediaChart"></canvas></div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-head"><div><h3>Удержание базы</h3><span>текущая доля оставшихся</span></div></div>
+                        <div id="analytics-retention" class="analytics-retention"></div>
+                        <div class="analytics-note">Операционный показатель по текущей базе, не классический cohort-retention.</div>
+                    </div>
+                </div>
+
+                <div class="analytics-card" style="margin-top:18px">
+                    <div class="analytics-card-head"><div><h3>Топ за всё время</h3><span>по накопленному счётчику сообщений</span></div></div>
+                    <div id="analytics-lifetime-top" class="analytics-list"></div>
+                </div>
+
+                <div class="analytics-note">Оперативная история сообщений хранится 7 дней; рост пользователей и накопительная статистика доступны дольше.</div>
+            </div>
+        </section>
 
         <section id="wall" class="content-section">
             <h2 class="section-title">Цитаты флуда</h2>

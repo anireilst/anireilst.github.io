@@ -2166,6 +2166,8 @@ const API_BASE = window.location.hostname === 'localhost'
             }
 
             updateUserUI();
+            syncAnalyticsNav();
+            if (currentSiteUser?.isSiteAdmin) loadAdminAnalytics();
             audioPlayer.volume = 0.7; 
 
             const animatedElements = document.querySelectorAll('.fade-in-element');
@@ -2330,6 +2332,184 @@ document.addEventListener('DOMContentLoaded', function() {
   // ... остальной код
   loadChart(30);
 });
+
+
+let analyticsActivityChart = null;
+let analyticsGrowthChart = null;
+let analyticsMediaChart = null;
+
+function syncAnalyticsNav() {
+    const nav = document.getElementById('analytics-nav');
+    if (nav) nav.style.display = currentSiteUser?.isSiteAdmin ? 'inline-block' : 'none';
+}
+
+function analyticsNumber(value) {
+    return Number(value || 0).toLocaleString('ru-RU');
+}
+
+function analyticsDate(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '—';
+    return date.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+}
+
+function renderAnalyticsList(id, items, renderer) {
+    const box = document.getElementById(id);
+    if (!box) return;
+    box.innerHTML = '';
+    if (!items || !items.length) {
+        box.innerHTML = '<div class="analytics-empty">Пока недостаточно данных.</div>';
+        return;
+    }
+    items.forEach((item, index) => box.insertAdjacentHTML('beforeend', renderer(item, index)));
+}
+
+function analyticsChartOptions() {
+    return {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { intersect: false, mode: 'index' },
+        plugins: { legend: { labels: { color: '#cbd5e1', usePointStyle: true, pointStyle: 'circle' } } },
+        scales: {
+            x: { grid: { color: 'rgba(255,255,255,0.045)' }, ticks: { color: '#64748b' } },
+            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.045)' }, ticks: { color: '#64748b' } }
+        }
+    };
+}
+
+async function loadAdminAnalytics() {
+    if (!currentSiteUser?.isSiteAdmin) return;
+
+    const status = document.getElementById('analytics-status');
+    if (status) status.textContent = '● Обновляем…';
+
+    try {
+        const response = await fetch(API_BASE + '/api/site/analytics', {
+            headers: { Authorization: 'Bearer ' + getSiteToken() },
+            cache: 'no-store'
+        });
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.error || 'Не удалось загрузить аналитику');
+        }
+
+        const o = data.overview;
+        setText('analytics-total-users', analyticsNumber(o.totalUsers));
+        setText('analytics-current-members', analyticsNumber(o.currentMembers));
+        setText('analytics-telegram-count', o.telegramMemberCount === null ? 'Telegram: нет доступа' : 'Telegram: ' + analyticsNumber(o.telegramMemberCount));
+        setText('analytics-active-24h', analyticsNumber(o.active24h));
+        setText('analytics-messages-24h', analyticsNumber(o.messages24h));
+        setText('analytics-active-7d', analyticsNumber(o.active7d));
+        setText('analytics-joins-30d', analyticsNumber(o.joins30d));
+        setText('analytics-leaves-30d', analyticsNumber(o.leaves30d));
+        setText('analytics-blacklist', analyticsNumber(o.blacklistCount));
+        setText('analytics-updated', analyticsDate(data.generatedAt));
+
+        const activityLabels = data.activity.map(item => {
+            const p = item.date.split('-');
+            return p[2] + '.' + p[1];
+        });
+
+        if (analyticsActivityChart) {
+            analyticsActivityChart.data.labels = activityLabels;
+            analyticsActivityChart.data.datasets[0].data = data.activity.map(i => i.messages);
+            analyticsActivityChart.data.datasets[1].data = data.activity.map(i => i.activeUsers);
+            analyticsActivityChart.update();
+        } else {
+            analyticsActivityChart = new Chart(document.getElementById('analyticsActivityChart'), {
+                type: 'line',
+                data: {
+                    labels: activityLabels,
+                    datasets: [
+                        { label: 'Сообщения', data: data.activity.map(i => i.messages), borderColor: '#60a5fa', backgroundColor: 'rgba(96,165,250,0.10)', fill: true, tension: 0.35, pointRadius: 3 },
+                        { label: 'Активные пользователи', data: data.activity.map(i => i.activeUsers), borderColor: '#c084fc', backgroundColor: 'rgba(192,132,252,0.08)', fill: true, tension: 0.35, pointRadius: 3 }
+                    ]
+                },
+                options: analyticsChartOptions()
+            });
+        }
+
+        const growthLabels = data.growth.map(item => {
+            const p = item.date.split('-');
+            return p[2] + '.' + p[1];
+        });
+
+        if (analyticsGrowthChart) {
+            analyticsGrowthChart.data.labels = growthLabels;
+            analyticsGrowthChart.data.datasets[0].data = data.growth.map(i => i.joins);
+            analyticsGrowthChart.data.datasets[1].data = data.growth.map(i => i.leaves);
+            analyticsGrowthChart.update();
+        } else {
+            analyticsGrowthChart = new Chart(document.getElementById('analyticsGrowthChart'), {
+                type: 'bar',
+                data: {
+                    labels: growthLabels,
+                    datasets: [
+                        { label: 'Вступили', data: data.growth.map(i => i.joins), backgroundColor: 'rgba(34,197,94,0.55)', borderColor: '#22c55e', borderWidth: 1, borderRadius: 6 },
+                        { label: 'Вышли', data: data.growth.map(i => i.leaves), backgroundColor: 'rgba(239,68,68,0.50)', borderColor: '#ef4444', borderWidth: 1, borderRadius: 6 }
+                    ]
+                },
+                options: analyticsChartOptions()
+            });
+        }
+
+        const mediaData = [data.media.text || 0, data.media.voice || 0, data.media.videoNote || 0, data.media.sticker || 0, data.media.animation || 0];
+
+        if (analyticsMediaChart) {
+            analyticsMediaChart.data.datasets[0].data = mediaData;
+            analyticsMediaChart.update();
+        } else {
+            analyticsMediaChart = new Chart(document.getElementById('analyticsMediaChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Текст', 'Голос', 'Кружки', 'Стикеры', 'GIF'],
+                    datasets: [{
+                        data: mediaData,
+                        backgroundColor: ['rgba(96,165,250,0.78)','rgba(192,132,252,0.78)','rgba(245,158,11,0.78)','rgba(34,197,94,0.78)','rgba(239,68,68,0.78)'],
+                        borderColor: 'rgba(13,14,21,0.9)',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '68%',
+                    plugins: { legend: { position: 'bottom', labels: { color: '#cbd5e1', usePointStyle: true, pointStyle: 'circle' } } }
+                }
+            });
+        }
+
+        const renderPerson = (user, index) => {
+            const handle = user.username ? '@' + user.username : 'ID ' + user.userId;
+            return '<div class="analytics-list-item"><div class="analytics-rank">' + (index + 1) + '</div><div class="analytics-person"><strong>' + escapeHtml(user.name) + '</strong><span>' + escapeHtml(handle) + '</span></div><div class="analytics-list-value">' + analyticsNumber(user.messages) + '</div></div>';
+        };
+
+        renderAnalyticsList('analytics-top-users', data.topUsers7d, renderPerson);
+        renderAnalyticsList('analytics-lifetime-top', data.lifetimeTop, renderPerson);
+
+        renderAnalyticsList('analytics-commands', data.commands7d, (command, index) => {
+            return '<div class="analytics-list-item"><div class="analytics-rank">' + (index + 1) + '</div><div class="analytics-person"><strong>' + escapeHtml(command.command) + '</strong><span>за последние 7 дней</span></div><div class="analytics-list-value">' + analyticsNumber(command.count) + '</div></div>';
+        });
+
+        const retention = document.getElementById('analytics-retention');
+        if (retention) {
+            retention.innerHTML =
+                '<div class="retention-row"><div class="retention-row-top"><span>База старше 7 дней</span><strong>' +
+                Number(data.retention.sevenDay.rate || 0).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + '%</strong></div><div class="retention-bar"><span style="width:' +
+                Math.min(100, data.retention.sevenDay.rate) + '%"></span></div></div>' +
+                '<div class="retention-row"><div class="retention-row-top"><span>База старше 30 дней</span><strong>' +
+                Number(data.retention.thirtyDay.rate || 0).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + '%</strong></div><div class="retention-bar"><span style="width:' +
+                Math.min(100, data.retention.thirtyDay.rate) + '%"></span></div></div>';
+        }
+
+        if (status) status.textContent = '● Данные актуальны';
+    } catch (error) {
+        console.error('Ошибка аналитики:', error);
+        if (status) status.textContent = '● Ошибка загрузки';
+        showToast('❌ Не удалось загрузить аналитику.');
+    }
+}
 
 function changeTheme(color, glow) {
   document.documentElement.style.setProperty('--neon-color', color);

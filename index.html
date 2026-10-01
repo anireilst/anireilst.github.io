@@ -829,7 +829,7 @@
         <nav class="nav-links" style="display: flex; gap: 25px; align-items: center; margin: 0 auto;">
             <button class="nav-link active" onclick="switchSection('home')">Главная</button>
             <button class="nav-link" onclick="switchSection('stats')">Статистика</button>
-            <button id="analytics-nav" class="nav-link" onclick="switchSection('analytics')" style="display:none;">Аналитика</button>
+            <button id="analytics-nav" class="nav-link" onclick="switchSection('analytics')">Аналитика</button>
             <button class="nav-link" onclick="switchSection('wall')">Цитаты флуда</button>
             <button class="nav-link" onclick="switchSection('gallery')">Галерея</button>
             <button class="nav-link" onclick="switchSection('about')">О нас</button>
@@ -1076,9 +1076,9 @@
             <div class="analytics-shell">
                 <div class="analytics-hero">
                     <div>
-                        <div class="analytics-kicker">🔒 PRIVATE ADMIN AREA · ANIREIL</div>
+                        <div class="analytics-kicker">🌐 PUBLIC ANALYTICS · ANIREIL</div>
                         <h2>Центр аналитики</h2>
-                        <p>Живые показатели аудитории, активности, роста, команд и поведения пользователей.</p>
+                        <p>Общие показатели аудитории, активности и роста Anireil — доступны всем посетителям без регистрации.</p>
                     </div>
                     <div class="analytics-actions">
                         <span id="analytics-status" class="analytics-status">● Готово</span>
@@ -2167,7 +2167,7 @@ const API_BASE = window.location.hostname === 'localhost'
 
             updateUserUI();
             syncAnalyticsNav();
-            if (currentSiteUser?.isSiteAdmin) loadAdminAnalytics();
+            loadAdminAnalytics();
             audioPlayer.volume = 0.7; 
 
             const animatedElements = document.querySelectorAll('.fade-in-element');
@@ -2340,7 +2340,7 @@ let analyticsMediaChart = null;
 
 function syncAnalyticsNav() {
     const nav = document.getElementById('analytics-nav');
-    if (nav) nav.style.display = currentSiteUser?.isSiteAdmin ? 'inline-block' : 'none';
+    if (nav) nav.style.display = 'inline-block';
 }
 
 function analyticsNumber(value) {
@@ -2378,14 +2378,12 @@ function analyticsChartOptions() {
 }
 
 async function loadAdminAnalytics() {
-    if (!currentSiteUser?.isSiteAdmin) return;
 
     const status = document.getElementById('analytics-status');
     if (status) status.textContent = '● Обновляем…';
 
     try {
-        const response = await fetch(API_BASE + '/api/site/analytics', {
-            headers: { Authorization: 'Bearer ' + getSiteToken() },
+        const response = await fetch(API_BASE + '/api/site/public-analytics', {
             cache: 'no-store'
         });
         const data = await response.json();
@@ -2403,7 +2401,7 @@ async function loadAdminAnalytics() {
         setText('analytics-active-7d', analyticsNumber(o.active7d));
         setText('analytics-joins-30d', analyticsNumber(o.joins30d));
         setText('analytics-leaves-30d', analyticsNumber(o.leaves30d));
-        setText('analytics-blacklist', analyticsNumber(o.blacklistCount));
+        setText('analytics-blacklist', 'Приватно');
         setText('analytics-updated', analyticsDate(data.generatedAt));
 
         const activityLabels = data.activity.map(item => {

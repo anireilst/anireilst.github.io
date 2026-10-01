@@ -868,7 +868,7 @@
         </nav>
 
         <div id="auth-block" style="display: flex; align-items: center; margin: 0;">
-            <div id="tg-auth-container"></div>
+            <div id="google-auth-container"></div>
 
             <div id="user-profile" style="display: none; align-items: center; gap: 8px;">
                 <button
@@ -885,7 +885,7 @@
 
                 <button
                     type="button"
-                    onclick="logoutTelegram()"
+                    onclick="logoutGoogle()"
                     style="background: rgba(255, 75, 75, 0.15); border: 1px solid rgba(255, 75, 75, 0.3); color: #ff4b4b; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: 0.2s;"
                 >
                     Выйти
@@ -1174,18 +1174,20 @@
                 <img src="avatars/flood.png" class="p-avatar" id="modal-avatar" alt="Аватар">
                 <div class="p-header-info">
                     <h2 id="modal-name">Мой профиль</h2>
-                    <span class="p-badge" id="modal-badge">Участник</span>
-                    <div id="modal-username" style="margin-top: 7px; color: #64748b; font-size: 0.9rem;">Telegram</div>
+                    <span class="p-badge" id="modal-badge">Google</span>
+                    <div id="modal-username" style="margin-top: 7px; color: #64748b; font-size: 0.9rem;">Google</div>
                 </div>
             </div>
 
             <div class="p-profile-grid">
                 <div class="p-card">
-                    <h3>Telegram</h3>
+                    <h3>Аккаунт</h3>
                     <div>
-                        <div class="profile-info-line"><span>ID</span><strong id="profile-user-id">—</strong></div>
+                        <div class="profile-info-line"><span>Email</span><strong id="profile-email">—</strong></div>
+                        <div class="profile-info-line"><span>Google ID</span><strong id="profile-google-id">—</strong></div>
+                        <div class="profile-info-line"><span>Telegram ID</span><strong id="profile-user-id">—</strong></div>
                         <div class="profile-info-line"><span>Статус</span><strong id="profile-status">—</strong></div>
-                        <div class="profile-info-line"><span>В чате</span><strong id="profile-chat-status">—</strong></div>
+                        <div class="profile-info-line"><span>В Anireil</span><strong id="profile-chat-status">—</strong></div>
                         <div class="profile-info-line"><span>В браке</span><strong id="profile-partner">—</strong></div>
                     </div>
                 </div>
@@ -1405,8 +1407,8 @@ const API_BASE = window.location.hostname === 'localhost'
             });
         }
 
-        function setTelegramLoggedOutUI() {
-            const authContainer = document.getElementById('tg-auth-container');
+        function setGoogleLoggedOutUI() {
+            const authContainer = document.getElementById('google-auth-container');
             const userProfile = document.getElementById('user-profile');
 
             if (authContainer) authContainer.style.display = 'block';
@@ -1416,13 +1418,13 @@ const API_BASE = window.location.hostname === 'localhost'
         }
 
         function updateUserUI() {
-            const authContainer = document.getElementById('tg-auth-container');
+            const authContainer = document.getElementById('google-auth-container');
             const userProfile = document.getElementById('user-profile');
             const userName = document.getElementById('user-name');
             const userAvatar = document.getElementById('user-avatar');
 
             if (!currentSiteUser) {
-                setTelegramLoggedOutUI();
+                setGoogleLoggedOutUI();
                 return;
             }
 
@@ -1430,18 +1432,20 @@ const API_BASE = window.location.hostname === 'localhost'
             if (userProfile) userProfile.style.display = 'flex';
 
             if (userName) {
-                userName.textContent = currentSiteUser.username
-                    ? '@' + currentSiteUser.username
+                userName.textContent = currentSiteUser.email
+                    ? '@' + currentSiteUser.email
                     : currentSiteUser.name || 'Профиль';
             }
 
             if (userAvatar) {
                 userAvatar.src = currentSiteUser.photoUrl || 'avatars/flood.png';
             }
+
+            updateAutumnAdminUI();
         }
 
-        function initTelegramWidget() {
-            const container = document.getElementById('tg-auth-container');
+        async function initGoogleAuth() {
+            const container = document.getElementById('google-auth-container');
 
             if (!container || currentSiteUser || container.dataset.widgetLoaded === 'true') {
                 return;
@@ -1449,32 +1453,79 @@ const API_BASE = window.location.hostname === 'localhost'
 
             container.dataset.widgetLoaded = 'true';
 
-            const script = document.createElement('script');
-            script.src = 'https://telegram.org/js/telegram-widget.js?22';
-            script.async = true;
-            script.setAttribute('data-telegram-login', 'Anireil_Site_Bot');
-            script.setAttribute('data-size', 'medium');
-            script.setAttribute('data-radius', '8');
-            script.setAttribute('data-onauth', 'onTelegramAuth(user)');
-            script.setAttribute('data-request-access', 'write');
+            try {
+                const configResponse = await fetch(API_BASE + '/api/auth/google/config', {
+                    cache: 'no-store'
+                });
+                const config = await configResponse.json();
 
-            container.appendChild(script);
+                if (!configResponse.ok || !config.success || !config.clientId) {
+                    throw new Error(config.error || 'Google Client ID не настроен');
+                }
+
+                if (!window.google?.accounts?.id) {
+                    await new Promise((resolve, reject) => {
+                        const existing = document.querySelector('script[data-anireil-google-identity]');
+                        if (existing) {
+                            existing.addEventListener('load', resolve, { once: true });
+                            existing.addEventListener('error', reject, { once: true });
+                            return;
+                        }
+
+                        const script = document.createElement('script');
+                        script.src = 'https://accounts.google.com/gsi/client';
+                        script.async = true;
+                        script.defer = true;
+                        script.dataset.anireilGoogleIdentity = 'true';
+                        script.onload = resolve;
+                        script.onerror = () => reject(new Error('Не удалось загрузить Google Identity Services'));
+                        document.head.appendChild(script);
+                    });
+                }
+
+                google.accounts.id.initialize({
+                    client_id: config.clientId,
+                    callback: handleGoogleCredential,
+                    ux_mode: 'popup',
+                    auto_select: false
+                });
+
+                google.accounts.id.renderButton(container, {
+                    type: 'standard',
+                    theme: 'outline',
+                    size: 'medium',
+                    shape: 'rectangular',
+                    text: 'signin_with',
+                    logo_alignment: 'left',
+                    width: 240
+                });
+            } catch (error) {
+                console.error('Ошибка инициализации Google авторизации:', error);
+                container.dataset.widgetLoaded = 'false';
+                showToast('❌ Не удалось загрузить вход через Google.');
+            }
         }
 
-        async function onTelegramAuth(user) {
+        async function handleGoogleCredential(response) {
             try {
-                const response = await fetch(`${API_BASE}/api/auth/telegram`, {
+                const credential = response?.credential;
+
+                if (!credential) {
+                    throw new Error('Google не передал credential');
+                }
+
+                const authResponse = await fetch(API_BASE + '/api/auth/google', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(user)
+                    body: JSON.stringify({ credential })
                 });
 
-                const data = await response.json();
+                const data = await authResponse.json();
 
-                if (!response.ok || !data.success || !data.token) {
-                    throw new Error(data.error || 'Не удалось подтвердить Telegram-авторизацию');
+                if (!authResponse.ok || !data.success || !data.token) {
+                    throw new Error(data.error || 'Не удалось подтвердить Google-авторизацию');
                 }
 
                 localStorage.setItem('anireil_site_token', data.token);
@@ -1484,28 +1535,29 @@ const API_BASE = window.location.hostname === 'localhost'
                 updateUserUI();
 
                 await loadMyProfile(true);
-                showToast('✅ Telegram успешно привязан к профилю Anireil.');
+
+                showToast('✅ Google успешно вошёл в Anireil.');
             } catch (error) {
-                console.error('Ошибка Telegram авторизации:', error);
-                showToast('❌ Не удалось подтвердить авторизацию Telegram.');
+                console.error('Ошибка Google авторизации:', error);
+                showToast('❌ Не удалось подтвердить Google-аккаунт.');
                 localStorage.removeItem('anireil_site_token');
                 localStorage.removeItem('anireil_site_user');
-                setTelegramLoggedOutUI();
+                setGoogleLoggedOutUI();
             }
         }
 
-        async function restoreTelegramSession() {
+        async function restoreSiteSession() {
             const token = getSiteToken();
 
             if (!token) {
-                setTelegramLoggedOutUI();
+                setGoogleLoggedOutUI();
                 return;
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/me`, {
+                const response = await fetch(API_BASE + '/api/me', {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: 'Bearer ' + token
                     }
                 });
 
@@ -1526,10 +1578,10 @@ const API_BASE = window.location.hostname === 'localhost'
                 updateUserUI();
                 updateAutumnAdminUI();
             } catch (error) {
-                console.warn('Сессия Telegram истекла или недействительна:', error);
+                console.warn('Google-сессия истекла или недействительна:', error);
                 localStorage.removeItem('anireil_site_token');
                 localStorage.removeItem('anireil_site_user');
-                setTelegramLoggedOutUI();
+                setGoogleLoggedOutUI();
             }
         }
 
@@ -1541,14 +1593,14 @@ const API_BASE = window.location.hostname === 'localhost'
             const token = getSiteToken();
 
             if (!token) {
-                showToast('Сначала войди через Telegram.');
+                showToast('Сначала войди через Google.');
                 return;
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/me`, {
+                const response = await fetch(API_BASE + '/api/me', {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: 'Bearer ' + token
                     }
                 });
 
@@ -1586,11 +1638,18 @@ const API_BASE = window.location.hostname === 'localhost'
             }
 
             setText('modal-name', user.name, 'Пользователь');
-            setText('modal-badge', user.rankTitle || user.status, 'Участник');
-            setText('modal-username', user.username ? '@' + user.username : 'Username не указан');
+            setText('modal-badge', user.linkedTelegram ? (user.rankTitle || user.status) : 'Google');
+            setText('modal-username', user.email || 'Google-аккаунт');
+            setText('profile-email', user.email);
+            setText('profile-google-id', user.googleId);
             setText('profile-user-id', user.userId);
             setText('profile-status', user.status);
-            setText('profile-chat-status', user.knownInBot ? (user.isLeft ? 'Вышел из чата' : 'Состоит в чате') : 'Ещё не найден ботом');
+            setText(
+                'profile-chat-status',
+                user.linkedTelegram
+                    ? (user.isLeft ? 'Вышел из чата' : 'Состоит в чате')
+                    : 'Telegram не привязан'
+            );
             setText('profile-partner', user.partnerName || 'Нет');
 
             setText('iris-rank', user.rankTitle);
@@ -1602,9 +1661,9 @@ const API_BASE = window.location.hostname === 'localhost'
 
             const syncBadge = document.getElementById('profile-sync-badge');
             if (syncBadge) {
-                syncBadge.textContent = user.knownInBot
+                syncBadge.textContent = user.linkedTelegram
                     ? 'Синхронизировано с ботом'
-                    : 'Telegram подтверждён';
+                    : 'Google подтверждён';
             }
 
             const anketaBox = document.getElementById('profile-anketa');
@@ -1650,7 +1709,7 @@ const API_BASE = window.location.hostname === 'localhost'
                         const tag = document.createElement('span');
                         tag.className = 'p-game-tag';
                         tag.title = award.date
-                            ? `Получена: ${formatProfileDate(award.date)}`
+                            ? 'Получена: ' + formatProfileDate(award.date)
                             : '';
                         tag.textContent = award.title || 'Награда';
                         awardsBox.appendChild(tag);
@@ -1659,10 +1718,18 @@ const API_BASE = window.location.hostname === 'localhost'
             }
         }
 
-        function logoutTelegram() {
+        function logoutGoogle() {
+            try {
+                if (window.google?.accounts?.id) {
+                    google.accounts.id.disableAutoSelect();
+                }
+            } catch (error) {
+                console.warn('Не удалось отключить Google auto-select:', error);
+            }
+
             localStorage.removeItem('anireil_site_token');
             localStorage.removeItem('anireil_site_user');
-            setTelegramLoggedOutUI();
+            setGoogleLoggedOutUI();
             closeProfile();
             location.reload();
         }
@@ -1803,11 +1870,11 @@ const API_BASE = window.location.hostname === 'localhost'
         }
 
         document.addEventListener("DOMContentLoaded", async function() {
-            await restoreTelegramSession();
+            await restoreSiteSession();
             loadSiteTheme();
 
             if (!currentSiteUser) {
-                initTelegramWidget();
+                await initGoogleAuth();
             }
 
             updateUserUI();

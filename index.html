@@ -1221,6 +1221,42 @@
                     </div>
                 </div>
             </div>
+            <div id="telegram-link-card" class="p-card" style="margin-top: 20px; display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+                    <div>
+                        <h3 style="margin-bottom: 6px;">🔗 Привязка Telegram</h3>
+                        <div id="telegram-link-description" style="color: #94a3b8; font-size: 0.84rem;">
+                            Привяжи свой Telegram, чтобы подтянуть статистику Anireil.
+                        </div>
+                    </div>
+                    <span id="telegram-link-status-pill" class="iris-sync-badge">Не привязан</span>
+                </div>
+
+                <div id="telegram-link-controls" style="margin-top: 16px;">
+                    <button
+                        id="telegram-link-button"
+                        type="button"
+                        class="autumn-admin-button"
+                        onclick="requestTelegramLinkCode()"
+                    >
+                        Получить код привязки
+                    </button>
+
+                    <div id="telegram-link-code-box" style="display: none; margin-top: 14px;">
+                        <div style="color: #94a3b8; font-size: 0.84rem; margin-bottom: 8px;">
+                            Отправь этот код нашему Telegram-боту командой:
+                        </div>
+                        <code
+                            id="telegram-link-code"
+                            style="display: inline-block; padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,0.06); font-size: 1.15rem; letter-spacing: 2px;"
+                        >——————</code>
+                        <div style="color: #64748b; font-size: 0.78rem; margin-top: 8px;">
+                            <code>/linksite КОД</code> · код действует 10 минут и используется один раз.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="autumn-admin-card" class="p-card autumn-admin-card" style="display: none;">
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
                     <div>
@@ -1643,6 +1679,7 @@ const API_BASE = window.location.hostname === 'localhost'
             setText('profile-email', user.email);
             setText('profile-google-id', user.googleId);
             setText('profile-user-id', user.userId);
+            updateTelegramLinkUI(user);
             setText('profile-status', user.status);
             setText(
                 'profile-chat-status',
@@ -1718,6 +1755,147 @@ const API_BASE = window.location.hostname === 'localhost'
             }
         }
 
+        function updateTelegramLinkUI(user) {
+            const card = document.getElementById('telegram-link-card');
+            const controls = document.getElementById('telegram-link-controls');
+            const button = document.getElementById('telegram-link-button');
+            const codeBox = document.getElementById('telegram-link-code-box');
+            const status = document.getElementById('telegram-link-status-pill');
+            const description = document.getElementById('telegram-link-description');
+
+            if (!card || !status || !description) return;
+
+            card.style.display = 'block';
+
+            if (user?.linkedTelegram) {
+                status.textContent = '✅ Привязан';
+                description.textContent = user.telegramUsername
+                    ? 'Telegram: @' + user.telegramUsername
+                    : 'Telegram успешно связан с этим Google-профилем.';
+
+                if (controls) controls.style.display = 'none';
+                if (codeBox) codeBox.style.display = 'none';
+                return;
+            }
+
+            status.textContent = 'Не привязан';
+            description.textContent = 'Привяжи свой Telegram, чтобы подтянуть статистику Anireil.';
+
+            if (controls) controls.style.display = 'block';
+            if (button) {
+                button.disabled = false;
+                button.textContent = 'Получить код привязки';
+            }
+        }
+
+        async function requestTelegramLinkCode() {
+            const button = document.getElementById('telegram-link-button');
+            const codeBox = document.getElementById('telegram-link-code-box');
+            const codeElement = document.getElementById('telegram-link-code');
+
+            if (button) {
+                button.disabled = true;
+                button.textContent = 'Создаём код…';
+            }
+
+            try {
+                const response = await fetch(API_BASE + '/api/site/link/telegram/request', {
+                    method: 'POST',
+                    headers: {
+                        Authorization: 'Bearer ' + getSiteToken()
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Не удалось создать код');
+                }
+
+                if (data.linked) {
+                    await loadMyProfile(false);
+                    showToast('✅ Telegram уже привязан к этому Google-профилю.');
+                    return;
+                }
+
+                if (codeElement) {
+                    codeElement.textContent = data.code;
+                }
+
+                if (codeBox) {
+                    codeBox.style.display = 'block';
+                }
+
+                if (button) {
+                    button.textContent = 'Ожидаем привязку…';
+                }
+
+                showToast('🔗 Код создан. Отправь его боту командой /linksite КОД.');
+                startTelegramLinkPolling();
+            } catch (error) {
+                console.error('Ошибка создания кода Telegram:', error);
+
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = 'Получить код привязки';
+                }
+
+                showToast('❌ Не удалось создать код привязки.');
+            }
+        }
+
+        function startTelegramLinkPolling() {
+            clearInterval(window.__telegramLinkPollTimer);
+
+            let attempts = 0;
+
+            window.__telegramLinkPollTimer = setInterval(async () => {
+                attempts += 1;
+
+                if (attempts > 60) {
+                    clearInterval(window.__telegramLinkPollTimer);
+
+                    const button = document.getElementById('telegram-link-button');
+                    if (button) {
+                        button.disabled = false;
+                        button.textContent = 'Получить новый код';
+                    }
+
+                    return;
+                }
+
+                try {
+                    const response = await fetch(API_BASE + '/api/site/link/telegram/status', {
+                        headers: {
+                            Authorization: 'Bearer ' + getSiteToken()
+                        },
+                        cache: 'no-store'
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success) return;
+
+                    if (data.linked) {
+                        clearInterval(window.__telegramLinkPollTimer);
+
+                        currentSiteUser = {
+                            ...currentSiteUser,
+                            linkedTelegram: true,
+                            telegramUsername: data.telegramUsername || currentSiteUser?.telegramUsername || null,
+                            telegramName: data.telegramName || currentSiteUser?.telegramName || null
+                        };
+
+                        localStorage.setItem('anireil_site_user', JSON.stringify(currentSiteUser));
+                        await loadMyProfile(false);
+                        showToast('✅ Telegram привязан. Профиль синхронизирован.');
+                    }
+                } catch (error) {
+                    console.warn('Ошибка проверки привязки Telegram:', error);
+                }
+            }, 2000);
+        }
+
         function logoutGoogle() {
             try {
                 if (window.google?.accounts?.id) {
@@ -1727,6 +1905,7 @@ const API_BASE = window.location.hostname === 'localhost'
                 console.warn('Не удалось отключить Google auto-select:', error);
             }
 
+            clearInterval(window.__telegramLinkPollTimer);
             localStorage.removeItem('anireil_site_token');
             localStorage.removeItem('anireil_site_user');
             setGoogleLoggedOutUI();

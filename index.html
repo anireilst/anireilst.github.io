@@ -1150,6 +1150,23 @@
 // ==========================================
 // НАСТРОЙКА API БАЗОВОГО URL
 // ==========================================
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+
+            if (!toast) {
+                console.log(message);
+                return;
+            }
+
+            toast.textContent = message;
+            toast.classList.add('active');
+
+            clearTimeout(window.__anireilToastTimer);
+            window.__anireilToastTimer = setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
 const API_BASE = window.location.hostname === 'localhost' 
   ? 'http://localhost:3000'   
   : 'https://anireil-bot.onrender.com';
@@ -1555,27 +1572,6 @@ const API_BASE = window.location.hostname === 'localhost'
             star.style.animationDuration = (Math.random() * 4 + 4) + 's';
             star.style.animationDelay = (Math.random() * 5) + 's';
             starsBox.appendChild(star);
-        }
-
-        function onTelegramAuth(user) {
-            localStorage.setItem('tg_user', JSON.stringify(user));
-            updateUserUI();
-        }
-        function updateUserUI() {
-            const savedUser = localStorage.getItem('tg_user');
-            const authContainer = document.getElementById('tg-auth-container');
-            const userProfile = document.getElementById('user-profile');
-            const userName = document.getElementById('user-name');
-            if (savedUser) {
-                const user = JSON.parse(savedUser);
-                if (authContainer) authContainer.style.display = 'none';
-                if (userProfile) userProfile.style.display = 'flex';
-                if (userName) userName.innerText = user.username ? '@' + user.username : user.first_name;
-            }
-        }
-        function logoutTelegram() {
-            localStorage.removeItem('tg_user');
-            location.reload();
         }
 
         document.addEventListener("DOMContentLoaded", function() {

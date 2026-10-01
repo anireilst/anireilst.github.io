@@ -725,14 +725,14 @@
         }
         @keyframes autumnRain {
             0% { transform: translate3d(0,-8vh,0) rotate(12deg); opacity: 0; }
-            8% { opacity: 0.72; } 88% { opacity: 0.58; }
+            8% { opacity: 0.42; } 88% { opacity: 0.30; }
             100% { transform: translate3d(var(--rain-drift,-10vw),118vh,0) rotate(12deg); opacity: 0; }
         }
         .leaf {
             position: absolute; top: -12vh; width: var(--leaf-size,14px);
             height: calc(var(--leaf-size,14px) * 0.72); border-radius: 95% 0 95% 0;
             background: var(--leaf-color,#d97706);
-            box-shadow: 0 0 8px rgba(217,119,6,0.18); opacity: 0.8; transform: rotate(35deg);
+            box-shadow: 0 0 8px rgba(217,119,6,0.14); opacity: 0.62; transform: rotate(35deg);
             animation: leafFall var(--leaf-duration,9s) ease-in-out infinite;
             animation-delay: var(--leaf-delay,0s);
         }
@@ -868,16 +868,7 @@
         </nav>
 
         <div id="auth-block" style="display: flex; align-items: center; margin: 0;">
-            <div id="tg-auth-container">
-                <script async
-                        src="https://telegram.org/js/telegram-widget.js?22"
-                        data-telegram-login="Anireil_Site_Bot"
-                        data-size="medium"
-                        data-radius="8"
-                        data-onauth="onTelegramAuth(user)"
-                        data-request-access="write">
-                </script>
-            </div>
+            <div id="tg-auth-container"></div>
 
             <div id="user-profile" style="display: none; align-items: center; gap: 8px;">
                 <button
@@ -1275,14 +1266,14 @@ const API_BASE = window.location.hostname === 'localhost'
             const leafBox = document.getElementById('leaf-box');
             if (!rainBox || !leafBox || rainBox.children.length > 0) return;
 
-            const rainCount = Math.min(110, Math.max(70, Math.floor(window.innerWidth / 14)));
+            const rainCount = Math.min(68, Math.max(42, Math.floor(window.innerWidth / 24)));
 
             for (let i = 0; i < rainCount; i++) {
                 const drop = document.createElement('span');
                 drop.className = 'rain-drop';
                 drop.style.left = (Math.random() * 112 - 6) + 'vw';
                 drop.style.setProperty('--rain-height', (48 + Math.random() * 78).toFixed(0) + 'px');
-                drop.style.setProperty('--rain-duration', (0.85 + Math.random() * 0.7).toFixed(2) + 's');
+                drop.style.setProperty('--rain-duration', (1.9 + Math.random() * 1.1).toFixed(2) + 's');
                 drop.style.setProperty('--rain-delay', (-Math.random() * 2.2).toFixed(2) + 's');
                 drop.style.setProperty('--rain-drift', (-4 - Math.random() * 12).toFixed(1) + 'vw');
                 rainBox.appendChild(drop);
@@ -1290,13 +1281,13 @@ const API_BASE = window.location.hostname === 'localhost'
 
             const leafColors = ['#b45309', '#d97706', '#ea580c', '#a16207', '#92400e'];
 
-            for (let i = 0; i < 18; i++) {
+            for (let i = 0; i < 12; i++) {
                 const leaf = document.createElement('span');
                 leaf.className = 'leaf';
                 leaf.style.left = (Math.random() * 110 - 5) + 'vw';
                 leaf.style.setProperty('--leaf-size', (9 + Math.random() * 9).toFixed(0) + 'px');
                 leaf.style.setProperty('--leaf-color', leafColors[Math.floor(Math.random() * leafColors.length)]);
-                leaf.style.setProperty('--leaf-duration', (7 + Math.random() * 7).toFixed(1) + 's');
+                leaf.style.setProperty('--leaf-duration', (10 + Math.random() * 8).toFixed(1) + 's');
                 leaf.style.setProperty('--leaf-delay', (-Math.random() * 12).toFixed(1) + 's');
                 leaf.style.setProperty('--leaf-sway', (-12 + Math.random() * 24).toFixed(1) + 'vw');
                 leaf.style.setProperty('--leaf-drift', (-18 + Math.random() * 36).toFixed(1) + 'vw');
@@ -1447,6 +1438,27 @@ const API_BASE = window.location.hostname === 'localhost'
             if (userAvatar) {
                 userAvatar.src = currentSiteUser.photoUrl || 'avatars/flood.png';
             }
+        }
+
+        function initTelegramWidget() {
+            const container = document.getElementById('tg-auth-container');
+
+            if (!container || currentSiteUser || container.dataset.widgetLoaded === 'true') {
+                return;
+            }
+
+            container.dataset.widgetLoaded = 'true';
+
+            const script = document.createElement('script');
+            script.src = 'https://telegram.org/js/telegram-widget.js?22';
+            script.async = true;
+            script.setAttribute('data-telegram-login', 'Anireil_Site_Bot');
+            script.setAttribute('data-size', 'medium');
+            script.setAttribute('data-radius', '8');
+            script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+            script.setAttribute('data-request-access', 'write');
+
+            container.appendChild(script);
         }
 
         async function onTelegramAuth(user) {
@@ -1790,9 +1802,14 @@ const API_BASE = window.location.hostname === 'localhost'
             starsBox.appendChild(star);
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            restoreTelegramSession();
+        document.addEventListener("DOMContentLoaded", async function() {
+            await restoreTelegramSession();
             loadSiteTheme();
+
+            if (!currentSiteUser) {
+                initTelegramWidget();
+            }
+
             updateUserUI();
             audioPlayer.volume = 0.7; 
 

@@ -401,6 +401,37 @@
         .p-header-info h2 { margin: 0 0 5px 0; font-size: 1.6rem; color: #fff; }
         .p-badge { background: var(--neon-glow); color: #fff; border: 1px solid var(--neon-color); padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; }
 
+        .site-user-profile-button:hover {
+            border-color: var(--neon-color) !important;
+            box-shadow: 0 0 14px var(--neon-glow);
+            transform: translateY(-1px);
+        }
+
+        .profile-info-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .profile-info-line:last-child {
+            border-bottom: none;
+        }
+
+        .profile-info-line strong {
+            color: #fff;
+            text-align: right;
+        }
+
+        .profile-empty {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
         .p-profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 550px) { .p-profile-grid { grid-template-columns: 1fr; } }
         .p-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); padding: 18px; border-radius: 14px; }
@@ -753,25 +784,38 @@
 
         <div id="auth-block" style="display: flex; align-items: center; margin: 0;">
             <div id="tg-auth-container">
-                <script async 
-                        src="https://telegram.org/js/telegram-widget.js?22" 
-                        data-telegram-login="Anireil_Site_Bot" 
-                        data-size="medium" 
-                        data-radius="8" 
-                        data-onauth="onTelegramAuth(user)" 
+                <script async
+                        src="https://telegram.org/js/telegram-widget.js?22"
+                        data-telegram-login="Anireil_Site_Bot"
+                        data-size="medium"
+                        data-radius="8"
+                        data-onauth="onTelegramAuth(user)"
                         data-request-access="write">
                 </script>
             </div>
 
-            <div id="user-profile" style="display: none; align-items: center; gap: 12px;">
-                <span id="user-name" style="color: #fff; font-weight: 500; font-size: 0.9rem; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);"></span>
-                <button onclick="logoutTelegram()" style="background: rgba(255, 75, 75, 0.15); border: 1px solid rgba(255, 75, 75, 0.3); color: #ff4b4b; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: 0.2s;">
+            <div id="user-profile" style="display: none; align-items: center; gap: 8px;">
+                <button
+                    id="user-profile-button"
+                    class="site-user-profile-button"
+                    type="button"
+                    onclick="openMyProfile()"
+                    title="Открыть мой профиль"
+                    style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 6px 10px; border-radius: 9px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: 0.2s;"
+                >
+                    <img id="user-avatar" src="avatars/flood.png" alt="" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.18);">
+                    <span id="user-name">Профиль</span>
+                </button>
+
+                <button
+                    type="button"
+                    onclick="logoutTelegram()"
+                    style="background: rgba(255, 75, 75, 0.15); border: 1px solid rgba(255, 75, 75, 0.3); color: #ff4b4b; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: 0.2s;"
+                >
                     Выйти
                 </button>
             </div>
-        </div>
-
-    </header>
+        </div></header>
 
     <main>
         
@@ -1044,46 +1088,61 @@
         <p style="margin: 0; font-size: 0.8rem; color: #475569;">Оригинальный проект. Февраль 2026 года. Автор кода: Mitsukii_Sempai</p>
     </footer>
 
-    <!-- ДИНАМИЧЕСКАЯ МОДАЛКА ДЛЯ ВСЕХ ПРОФИЛЕЙ -->
+    <!-- ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ ANIREIL -->
     <div id="profile-modal" class="p-modal">
         <div class="p-modal-overlay" onclick="closeProfile()"></div>
         <div class="p-modal-content">
             <button class="p-modal-close" onclick="closeProfile()">&times;</button>
-            
+
             <div class="p-profile-header">
-                <img src="avatars/miyamura.jpg" class="p-avatar" id="modal-avatar" alt="Avatar">
+                <img src="avatars/flood.png" class="p-avatar" id="modal-avatar" alt="Аватар">
                 <div class="p-header-info">
-                    <h2 id="modal-name">Миямура семпай</h2>
-                    <span class="p-badge" id="modal-badge">Владелец Anireil</span>
+                    <h2 id="modal-name">Мой профиль</h2>
+                    <span class="p-badge" id="modal-badge">Участник</span>
+                    <div id="modal-username" style="margin-top: 7px; color: #64748b; font-size: 0.9rem;">Telegram</div>
                 </div>
             </div>
 
             <div class="p-profile-grid">
                 <div class="p-card">
-                    <h3>🎮 Любимые игры</h3>
-                    <div class="p-games-list" id="modal-games"></div>
+                    <h3>Telegram</h3>
+                    <div>
+                        <div class="profile-info-line"><span>ID</span><strong id="profile-user-id">—</strong></div>
+                        <div class="profile-info-line"><span>Статус</span><strong id="profile-status">—</strong></div>
+                        <div class="profile-info-line"><span>В чате</span><strong id="profile-chat-status">—</strong></div>
+                        <div class="profile-info-line"><span>В браке</span><strong id="profile-partner">—</strong></div>
+                    </div>
                 </div>
 
                 <div class="p-card iris-card">
                     <div class="iris-header">
-                        <h3>Статистика Iris Bot</h3>
-                        <span class="iris-sync-badge">Синхронизировано</span>
+                        <h3>Статистика Anireil</h3>
+                        <span class="iris-sync-badge" id="profile-sync-badge">Синхронизировано</span>
                     </div>
                     <div class="iris-stats">
-                        <div class="iris-stat-item"><span>Ранг во флуде:</span> <strong id="iris-rank">Владелец</strong></div>
-                        <div class="iris-stat-item"><span>Клан:</span> <strong id="iris-clans">Ночные совы</strong></div>
-                        <div class="iris-stat-item"><span>Дата присоединение:</span> <strong id="iris-data">17.02.2026</strong></div>
-                        <div class="iris-stat-item"><span>Предупреждения:</span> <strong id="iris-warns" style="color: #22c55e;">0 / 3 (Чист)</strong></div>
+                        <div class="iris-stat-item"><span>Ранг:</span> <strong id="iris-rank">Участник</strong></div>
+                        <div class="iris-stat-item"><span>Сообщений:</span> <strong id="iris-count">0</strong></div>
+                        <div class="iris-stat-item"><span>Репутация:</span> <strong id="iris-reputation">0</strong></div>
+                        <div class="iris-stat-item"><span>Монеты:</span> <strong id="iris-coins">0</strong></div>
+                        <div class="iris-stat-item"><span>Предупреждения:</span> <strong id="iris-warns">0</strong></div>
+                        <div class="iris-stat-item"><span>В Anireil с:</span> <strong id="iris-data">—</strong></div>
                     </div>
                 </div>
             </div>
 
-            <div class="p-card" style="margin-top: 20px;">
-                <h3>🏆 Достижения (Ачивки)</h3>
-                <div class="achievements-grid" id="achievements-box">
-                    <!-- Загружается динамически через JS -->
+            <div class="p-profile-grid" style="margin-top: 20px;">
+                <div class="p-card">
+                    <h3>Анкета Anireil</h3>
+                    <div id="profile-anketa" class="profile-empty">Анкета пока не заполнена.</div>
                 </div>
-            </div>  
+
+                <div class="p-card">
+                    <h3>🏆 Награды</h3>
+                    <div id="achievements-box" class="p-games-list">
+                        <span class="p-game-tag" style="opacity: 0.6;">Наград пока нет</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1098,111 +1157,269 @@ const API_BASE = window.location.hostname === 'localhost'
 // Переопределим все fetch, чтобы использовать API_BASE
 // Можно просто во всех вызовах добавить префикс, как описано выше.
 
-        const membersDatabase = {
-            "Миямура семпай": {
-                avatar: "avatars/miyamura.jpg", badge: "Владелец Anireil",
-                games: ["Minecraft", "Genshin Impact"], tg: "Mitsukii_Sempai", tiktok: "Mitsukii_Sempai",
-                rank: "Владелец", clans: "Ночные совы", data: "17.02.2026", warns: "0 / 4 (Чист)", warnsColor: "#22c55e",
-                achievements: ["first_login", "old_member", "active_spammer"]
-            },
-            "Субару Нацуки": {
-                avatar: "avatars/subaru.jpg", badge: "Участник флуда", 
-                games: ["Minecraft", "ZZZ", "Roblox"],
-                rank: "Участник", clans: "Нету", data: "29.04.2026", warns: "0 / 4 (Чист)", warnsColor: "#22c55e",
-                achievements: ["first_login", "old_member"]
-            },
-            "Мегумин": {
-                avatar: "avatars/megumin.jpg", badge: "Страший Админ", 
-                games: ["Minecraft", "Geometry Dash"], 
-                rank: "Страший Админ", clans: "Ларп", data: "30.04.2026", warns: "2 / 4 (Плохо)", warnsColor: "#ff0000",
-                achievements: ["first_login", "active_spammer"]
-            },       
-            "Юи Хирасава": {
-                avatar: "avatars/yui_hirasava.jpg", badge: "Участница флуда",
-                games: ["Minecraft", "Genshin Impact"],
-                rank: "Участница", clans: "Нету", data: "30.04.2026", warns: "0 / 4 (Чист)", warnsColor: "#22c55e",
-                achievements: ["first_login"]
-            },
-            "Нанами": {
-                avatar: "avatars/nanami.jpg", badge: "Участница флуда", 
-                games: ["—"],
-                rank: "Участница", clans: "Нету", data: " 12.05.2026", warns: "0 / 4 (Чист)", warnsColor: "#22c55e",
-                achievements: ["first_login"]
-            },
-            "Орихиме Иноуэ": {
-                avatar: "avatars/orihime.jpg", badge: "Участница флуда", 
-                games: ["Roblox"],
-                rank: "Участница", clans: "Нету", data: " 25.06.2026", warns: "0 / 4 (Чист)", warnsColor: "#22c55e",
-                achievements: ["first_login"]
-            },  
-            "Ичиго Куросаки": {
-                avatar: "avatars/ichigo.jpg", badge: "Участник флуда", 
-                games: ["—"],
-                rank: "Участник", clans: "Нету", data: "08.07.2026", warns: "0 / 4 (Чист)", warnsColor: "#22c55e",
-                achievements: ["first_login"]
-            }, 
-            "Акира": {
-                avatar: "avatars/akira.jpg", badge: "Участница флуда", 
-                games: ["—"],
-                rank: "Участница", clans: "Нету", data: " 24.07.2026", warns: "0 / 4 (Чист)", warnsColor: "#22c55e",
-                achievements: ["first_login"]
+        let currentSiteUser = null;
+
+        function getSiteToken() {
+            return localStorage.getItem('anireil_site_token');
+        }
+
+        function setText(id, value, fallback = '—') {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value === null || value === undefined || value === '' ? fallback : String(value);
             }
-        };
+        }
 
-        const achievementsData = [
-            { id: 'first_login', title: 'Первый шаг', desc: 'Добро пожаловать на комьюнити Anireil.', icon: '🌟' },
-            { id: 'active_spammer', title: 'Самый активный', desc: 'Высший ранг активности в чате.', icon: '💬' },
-            { id: 'old_member', title: 'Олд флуда', desc: 'Находится в комьюнити с основания.', icon: '👑' }
-        ];
+        function formatProfileDate(value) {
+            if (!value) return '—';
 
-        function openProfile(username) {
-            const user = membersDatabase[username];
-            if (!user) return;
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return '—';
 
-            document.getElementById('modal-name').innerText = username;
-            document.getElementById('modal-avatar').src = user.avatar;
-            document.getElementById('modal-badge').innerText = user.badge;
-            
+            return date.toLocaleDateString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
 
-            const gamesBox = document.getElementById('modal-games');
-            if (gamesBox) {
-                gamesBox.innerHTML = '';
-                user.games.forEach(g => {
-                    if (g && g !== "—") {
-                        gamesBox.innerHTML += `<span class="p-game-tag">${g}</span>`;
+        function setTelegramLoggedOutUI() {
+            const authContainer = document.getElementById('tg-auth-container');
+            const userProfile = document.getElementById('user-profile');
+
+            if (authContainer) authContainer.style.display = 'block';
+            if (userProfile) userProfile.style.display = 'none';
+
+            currentSiteUser = null;
+        }
+
+        function updateUserUI() {
+            const authContainer = document.getElementById('tg-auth-container');
+            const userProfile = document.getElementById('user-profile');
+            const userName = document.getElementById('user-name');
+            const userAvatar = document.getElementById('user-avatar');
+
+            if (!currentSiteUser) {
+                setTelegramLoggedOutUI();
+                return;
+            }
+
+            if (authContainer) authContainer.style.display = 'none';
+            if (userProfile) userProfile.style.display = 'flex';
+
+            if (userName) {
+                userName.textContent = currentSiteUser.username
+                    ? '@' + currentSiteUser.username
+                    : currentSiteUser.name || 'Профиль';
+            }
+
+            if (userAvatar) {
+                userAvatar.src = currentSiteUser.photoUrl || 'avatars/flood.png';
+            }
+        }
+
+        async function onTelegramAuth(user) {
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/telegram`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(user)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success || !data.token) {
+                    throw new Error(data.error || 'Не удалось подтвердить Telegram-авторизацию');
+                }
+
+                localStorage.setItem('anireil_site_token', data.token);
+                localStorage.setItem('anireil_site_user', JSON.stringify(data.user));
+
+                currentSiteUser = data.user;
+                updateUserUI();
+
+                await loadMyProfile(true);
+                showToast('✅ Telegram успешно привязан к профилю Anireil.');
+            } catch (error) {
+                console.error('Ошибка Telegram авторизации:', error);
+                showToast('❌ Не удалось подтвердить авторизацию Telegram.');
+                localStorage.removeItem('anireil_site_token');
+                localStorage.removeItem('anireil_site_user');
+                setTelegramLoggedOutUI();
+            }
+        }
+
+        async function restoreTelegramSession() {
+            const token = getSiteToken();
+
+            if (!token) {
+                setTelegramLoggedOutUI();
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/me`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
                 });
-                if (gamesBox.innerHTML === '') {
-                    gamesBox.innerHTML = '<span class="p-game-tag" style="opacity: 0.6;">Не указаны</span>';
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Сессия недействительна');
+                }
+
+                const cached = JSON.parse(localStorage.getItem('anireil_site_user') || 'null');
+
+                currentSiteUser = {
+                    ...data.user,
+                    photoUrl: data.user.photoUrl || cached?.photoUrl || null
+                };
+
+                localStorage.setItem('anireil_site_user', JSON.stringify(currentSiteUser));
+                updateUserUI();
+            } catch (error) {
+                console.warn('Сессия Telegram истекла или недействительна:', error);
+                localStorage.removeItem('anireil_site_token');
+                localStorage.removeItem('anireil_site_user');
+                setTelegramLoggedOutUI();
+            }
+        }
+
+        async function openMyProfile() {
+            await loadMyProfile(true);
+        }
+
+        async function loadMyProfile(openModal = false) {
+            const token = getSiteToken();
+
+            if (!token) {
+                showToast('Сначала войди через Telegram.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/me`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Не удалось загрузить профиль');
+                }
+
+                const cachedPhoto = currentSiteUser?.photoUrl || null;
+                currentSiteUser = {
+                    ...data.user,
+                    photoUrl: data.user.photoUrl || cachedPhoto
+                };
+
+                localStorage.setItem('anireil_site_user', JSON.stringify(currentSiteUser));
+                updateUserUI();
+                renderMyProfile(currentSiteUser);
+
+                if (openModal) {
+                    document.getElementById('profile-modal').classList.add('active');
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки профиля:', error);
+                showToast('❌ Не удалось загрузить профиль.');
+            }
+        }
+
+        function renderMyProfile(user) {
+            const avatar = document.getElementById('modal-avatar');
+
+            if (avatar) {
+                avatar.src = user.photoUrl || 'avatars/flood.png';
+            }
+
+            setText('modal-name', user.name, 'Пользователь');
+            setText('modal-badge', user.rankTitle || user.status, 'Участник');
+            setText('modal-username', user.username ? '@' + user.username : 'Username не указан');
+            setText('profile-user-id', user.userId);
+            setText('profile-status', user.status);
+            setText('profile-chat-status', user.knownInBot ? (user.isLeft ? 'Вышел из чата' : 'Состоит в чате') : 'Ещё не найден ботом');
+            setText('profile-partner', user.partnerName || 'Нет');
+
+            setText('iris-rank', user.rankTitle);
+            setText('iris-count', Number(user.count || 0).toLocaleString('ru-RU'));
+            setText('iris-reputation', Number(user.reputation || 0).toLocaleString('ru-RU'));
+            setText('iris-coins', Number(user.coins || 0).toLocaleString('ru-RU'));
+            setText('iris-warns', Number(user.warns || 0).toLocaleString('ru-RU'));
+            setText('iris-data', formatProfileDate(user.joinedAt));
+
+            const syncBadge = document.getElementById('profile-sync-badge');
+            if (syncBadge) {
+                syncBadge.textContent = user.knownInBot
+                    ? 'Синхронизировано с ботом'
+                    : 'Telegram подтверждён';
+            }
+
+            const anketaBox = document.getElementById('profile-anketa');
+
+            if (anketaBox) {
+                anketaBox.innerHTML = '';
+
+                if (!user.anketa) {
+                    anketaBox.innerHTML = '<div class="profile-empty">Анкета пока не заполнена.</div>';
+                } else {
+                    const rows = [
+                        ['Роли', user.anketa.roles],
+                        ['Фандомы', user.anketa.fandoms],
+                        ['Возраст', user.anketa.age],
+                        ['Дата анкеты', user.anketa.joined]
+                    ];
+
+                    rows.forEach(([label, value]) => {
+                        const row = document.createElement('div');
+                        row.className = 'profile-info-line';
+
+                        const left = document.createElement('span');
+                        left.textContent = label;
+
+                        const right = document.createElement('strong');
+                        right.textContent = value || 'Не указано';
+
+                        row.append(left, right);
+                        anketaBox.appendChild(row);
+                    });
                 }
             }
 
-            document.getElementById('iris-rank').innerText = user.rank;
-            document.getElementById('iris-clans').innerText = user.clans;
-            document.getElementById('iris-data').innerText = user.data;
-            
-            const warnsEl = document.getElementById('iris-warns');
-            warnsEl.innerText = user.warns;
-            warnsEl.style.color = user.warnsColor;
+            const awardsBox = document.getElementById('achievements-box');
 
-            const achBox = document.getElementById('achievements-box');
-            if (achBox) {
-                achBox.innerHTML = '';
-                achievementsData.forEach(ach => {
-                    const isUnlocked = user.achievements && user.achievements.includes(ach.id);
-                    achBox.innerHTML += `
-                        <div class="achievement-item ${isUnlocked ? 'unlocked' : 'locked'}">
-                            <div class="ach-icon">${isUnlocked ? ach.icon : '🔒'}</div>
-                            <div class="ach-info">
-                                <h4>${ach.title}</h4>
-                                <p>${ach.desc}</p>
-                            </div>
-                        </div>
-                    `;
-                });
+            if (awardsBox) {
+                awardsBox.innerHTML = '';
+
+                if (!user.awards || user.awards.length === 0) {
+                    awardsBox.innerHTML = '<span class="p-game-tag" style="opacity: 0.6;">Наград пока нет</span>';
+                } else {
+                    user.awards.forEach((award) => {
+                        const tag = document.createElement('span');
+                        tag.className = 'p-game-tag';
+                        tag.title = award.date
+                            ? `Получена: ${formatProfileDate(award.date)}`
+                            : '';
+                        tag.textContent = award.title || 'Награда';
+                        awardsBox.appendChild(tag);
+                    });
+                }
             }
+        }
 
-            document.getElementById('profile-modal').classList.add('active');
+        function logoutTelegram() {
+            localStorage.removeItem('anireil_site_token');
+            localStorage.removeItem('anireil_site_user');
+            setTelegramLoggedOutUI();
+            closeProfile();
+            location.reload();
         }
 
         function closeProfile() {
@@ -1362,6 +1579,7 @@ const API_BASE = window.location.hostname === 'localhost'
         }
 
         document.addEventListener("DOMContentLoaded", function() {
+            restoreTelegramSession();
             updateUserUI();
             audioPlayer.volume = 0.7; 
 

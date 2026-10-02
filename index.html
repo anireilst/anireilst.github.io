@@ -395,6 +395,399 @@
         }
         .p-modal-close:hover { color: #fff; transform: rotate(90deg); }
 
+
+        /* ===== ANIREIL WOW PROFILE ===== */
+        .p-modal-content {
+            width: min(94vw, 920px);
+            max-width: 920px;
+            padding: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background:
+                radial-gradient(circle at 10% 0%, rgba(96,165,250,0.10), transparent 35%),
+                radial-gradient(circle at 95% 0%, rgba(192,132,252,0.12), transparent 34%),
+                linear-gradient(145deg, rgba(17,18,26,0.98), rgba(12,13,21,0.98));
+        }
+
+        .p-modal-content::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(120deg, transparent 0 35%, rgba(255,255,255,0.035) 50%, transparent 65%);
+            transform: translateX(-120%);
+            animation: profileShine 7s ease-in-out infinite;
+        }
+
+        @keyframes profileShine {
+            0%, 55%, 100% { transform: translateX(-120%); }
+            75% { transform: translateX(120%); }
+        }
+
+        .p-profile-header.p-wow-hero {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 22px;
+            align-items: center;
+            min-height: 220px;
+            padding: 34px 34px 24px;
+            margin: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            background:
+                radial-gradient(circle at 15% 50%, rgba(96,165,250,0.14), transparent 32%),
+                radial-gradient(circle at 85% 20%, rgba(192,132,252,0.16), transparent 36%);
+        }
+
+        .p-wow-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .p-wow-orb.one {
+            width: 180px; height: 180px;
+            right: -70px; top: -80px;
+            background: rgba(192,132,252,0.10);
+            box-shadow: 0 0 80px rgba(192,132,252,0.16);
+        }
+
+        .p-wow-orb.two {
+            width: 130px; height: 130px;
+            left: -55px; bottom: -70px;
+            background: rgba(96,165,250,0.10);
+            box-shadow: 0 0 70px rgba(96,165,250,0.14);
+        }
+
+        .p-wow-avatar-wrap {
+            position: relative;
+            width: 138px;
+            height: 138px;
+            display: grid;
+            place-items: center;
+            z-index: 1;
+        }
+
+        .p-wow-avatar-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #60a5fa, #c084fc, #60a5fa);
+            padding: 3px;
+            animation: profileRing 7s linear infinite;
+            box-shadow: 0 0 28px var(--neon-glow);
+        }
+
+        .p-wow-avatar-ring::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #10111a;
+        }
+
+        @keyframes profileRing {
+            to { transform: rotate(360deg); }
+        }
+
+        .p-avatar.p-wow-avatar {
+            position: relative;
+            z-index: 2;
+            width: 116px;
+            height: 116px;
+            border: 3px solid rgba(255,255,255,0.9);
+            box-shadow:
+                0 0 0 6px rgba(255,255,255,0.03),
+                0 0 30px var(--neon-glow);
+        }
+
+        .p-wow-online-dot {
+            position: absolute;
+            z-index: 3;
+            right: 8px;
+            bottom: 8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #22c55e;
+            border: 4px solid #12131c;
+            box-shadow: 0 0 16px rgba(34,197,94,0.8);
+        }
+
+        .p-header-info.p-wow-identity {
+            border: 0;
+            padding: 0;
+            margin: 0;
+            min-width: 0;
+        }
+
+        .p-wow-eyebrow {
+            color: #64748b;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            margin-bottom: 7px;
+        }
+
+        .p-wow-name {
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1;
+            letter-spacing: -0.03em;
+            color: #fff;
+            text-shadow: 0 0 28px rgba(255,255,255,0.06);
+            overflow-wrap: anywhere;
+        }
+
+        .p-wow-handle {
+            margin-top: 9px;
+            color: #94a3b8;
+            font-size: 1rem;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .p-wow-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .p-wow-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 29px;
+            padding: 0 11px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.04);
+            color: #cbd5e1;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            backdrop-filter: blur(10px);
+        }
+
+        .p-wow-badge.rank {
+            color: #fff;
+            border-color: var(--neon-color);
+            background: linear-gradient(135deg, var(--neon-glow), rgba(255,255,255,0.04));
+            box-shadow: 0 0 18px var(--neon-glow);
+        }
+
+        .p-wow-badge.linked {
+            color: #86efac;
+            border-color: rgba(34,197,94,0.28);
+            background: rgba(34,197,94,0.08);
+        }
+
+        .p-wow-hero-stats {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 2px;
+        }
+
+        .p-wow-hero-stat {
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.035);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+        }
+
+        .p-wow-hero-stat-label {
+            color: #64748b;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .p-wow-hero-stat-value {
+            margin-top: 4px;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .p-wow-body {
+            position: relative;
+            z-index: 1;
+            padding: 24px 28px 30px;
+        }
+
+        .p-wow-section-title {
+            margin: 0 0 10px;
+            color: #64748b;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+        }
+
+        .p-wow-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 16px;
+        }
+
+        .p-wow-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.055);
+            border-radius: 20px;
+            padding: 19px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018));
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.025), 0 14px 34px rgba(0,0,0,0.16);
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .p-wow-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(192,132,252,0.22);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.22), 0 0 26px rgba(192,132,252,0.06);
+        }
+
+        .p-wow-card h3 {
+            margin: 0;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+        }
+
+        .p-wow-card .profile-info-line {
+            padding: 11px 0;
+            border-bottom-color: rgba(255,255,255,0.045);
+        }
+
+        .p-wow-card .profile-info-line strong {
+            max-width: 66%;
+            overflow-wrap: anywhere;
+        }
+
+        .p-wow-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .p-wow-stat-tile {
+            padding: 14px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.025);
+        }
+
+        .p-wow-stat-tile span {
+            display: block;
+            color: #64748b;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .p-wow-stat-tile strong {
+            display: block;
+            margin-top: 5px;
+            color: #fff;
+            font-size: 1.15rem;
+        }
+
+        .p-wow-wide {
+            grid-column: 1 / -1;
+        }
+
+        .p-wow-anketa-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .p-wow-anketa-item {
+            min-width: 0;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.045);
+        }
+
+        .p-wow-anketa-item span {
+            display: block;
+            color: #64748b;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
+        }
+
+        .p-wow-anketa-item strong {
+            display: block;
+            color: #e2e8f0;
+            font-size: 0.88rem;
+            overflow-wrap: anywhere;
+        }
+
+        .p-wow-awards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 12px;
+        }
+
+        .p-wow-award {
+            position: relative;
+            padding: 9px 12px 9px 34px;
+            border-radius: 12px;
+            border: 1px solid rgba(192,132,252,0.16);
+            background: rgba(192,132,252,0.06);
+            color: #ddd6fe;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .p-wow-award::before {
+            content: "✦";
+            position: absolute;
+            left: 12px;
+            top: 8px;
+            color: #c084fc;
+        }
+
+        .p-wow-footer-note {
+            margin-top: 15px;
+            color: #475569;
+            font-size: 0.73rem;
+            line-height: 1.5;
+        }
+
+        #profile-modal[data-rank="5"] .p-wow-name { text-shadow: 0 0 28px rgba(192,132,252,0.24); }
+        #profile-modal[data-rank="4"] .p-wow-name { text-shadow: 0 0 24px rgba(96,165,250,0.22); }
+        #profile-modal[data-rank="3"] .p-wow-name { text-shadow: 0 0 24px rgba(34,197,94,0.18); }
+
+        @media (max-width: 700px) {
+            .p-profile-header.p-wow-hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                justify-items: center;
+                padding: 28px 20px 20px;
+            }
+            .p-wow-badges { justify-content: center; }
+            .p-wow-hero-stats { grid-template-columns: 1fr; width: 100%; }
+            .p-wow-body { padding: 18px 16px 22px; }
+            .p-wow-grid { grid-template-columns: 1fr; }
+            .p-wow-wide { grid-column: auto; }
+            .p-wow-anketa-grid { grid-template-columns: 1fr; }
+            .p-wow-card .profile-info-line strong { max-width: 58%; }
+        }
+
         .p-profile-header { display: flex; align-items: center; gap: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; margin-bottom: 20px; }
         .p-avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--neon-color); cursor: pointer; transition: 0.3s; }
         .p-avatar:hover { transform: scale(1.05); filter: brightness(1.2); }
@@ -1276,107 +1669,147 @@
     <!-- ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ ANIREIL -->
     <div id="profile-modal" class="p-modal">
         <div class="p-modal-overlay" onclick="closeProfile()"></div>
+
         <div class="p-modal-content">
-            <button class="p-modal-close" onclick="closeProfile()">&times;</button>
+            <button class="p-modal-close" onclick="closeProfile()" aria-label="Закрыть">&times;</button>
 
-            <div class="p-profile-header">
-                <img src="avatars/flood.png" class="p-avatar" id="modal-avatar" alt="Аватар">
-                <div class="p-header-info">
-                    <h2 id="modal-name">Мой профиль</h2>
-                    <span class="p-badge" id="modal-badge">Google</span>
-                    <div id="modal-username" style="margin-top: 7px; color: #64748b; font-size: 0.9rem;">Google</div>
+            <div class="p-profile-header p-wow-hero">
+                <div class="p-wow-orb one"></div>
+                <div class="p-wow-orb two"></div>
+
+                <div class="p-wow-avatar-wrap">
+                    <div class="p-wow-avatar-ring"></div>
+                    <img src="avatars/flood.png" class="p-avatar p-wow-avatar" id="modal-avatar" alt="Аватар профиля">
+                    <span class="p-wow-online-dot" title="Профиль открыт"></span>
                 </div>
-            </div>
 
-            <div class="p-profile-grid">
-                <div class="p-card">
-                    <h3>Аккаунт</h3>
-                    <div>
-                        <div class="profile-info-line"><span>Email</span><strong id="profile-email">—</strong></div>
-                        <div class="profile-info-line"><span>Google ID</span><strong id="profile-google-id">—</strong></div>
-                        <div class="profile-info-line"><span>Telegram ID</span><strong id="profile-user-id">—</strong></div>
-                        <div class="profile-info-line"><span>Статус</span><strong id="profile-status">—</strong></div>
-                        <div class="profile-info-line"><span>В Anireil</span><strong id="profile-chat-status">—</strong></div>
-                        <div class="profile-info-line"><span>В браке</span><strong id="profile-partner">—</strong></div>
+                <div class="p-header-info p-wow-identity">
+                    <div class="p-wow-eyebrow">ANIREIL · MEMBER PROFILE</div>
+                    <h2 id="modal-name" class="p-wow-name">Мой профиль</h2>
+                    <div id="modal-username" class="p-wow-handle">Google-профиль</div>
+
+                    <div class="p-wow-badges">
+                        <span class="p-wow-badge rank" id="modal-badge">Участник</span>
+                        <span class="p-wow-badge linked" id="profile-sync-badge">Google подтверждён</span>
                     </div>
                 </div>
 
-                <div class="p-card iris-card">
-                    <div class="iris-header">
-                        <h3>Статистика Anireil</h3>
-                        <span class="iris-sync-badge" id="profile-sync-badge">Синхронизировано</span>
+                <div class="p-wow-hero-stats">
+                    <div class="p-wow-hero-stat">
+                        <div class="p-wow-hero-stat-label">Сообщений</div>
+                        <div class="p-wow-hero-stat-value" id="profile-hero-messages">0</div>
                     </div>
-                    <div class="iris-stats">
-                        <div class="iris-stat-item"><span>Ранг:</span> <strong id="iris-rank">Участник</strong></div>
-                        <div class="iris-stat-item"><span>Сообщений:</span> <strong id="iris-count">0</strong></div>
-                        <div class="iris-stat-item"><span>Репутация:</span> <strong id="iris-reputation">0</strong></div>
-                        <div class="iris-stat-item"><span>Монеты:</span> <strong id="iris-coins">0</strong></div>
-                        <div class="iris-stat-item"><span>Предупреждения:</span> <strong id="iris-warns">0</strong></div>
-                        <div class="iris-stat-item"><span>В Anireil с:</span> <strong id="iris-data">—</strong></div>
+                    <div class="p-wow-hero-stat">
+                        <div class="p-wow-hero-stat-label">Репутация</div>
+                        <div class="p-wow-hero-stat-value" id="profile-hero-reputation">0</div>
                     </div>
-                </div>
-            </div>
-
-            <div class="p-profile-grid" style="margin-top: 20px;">
-                <div class="p-card">
-                    <h3>Анкета Anireil</h3>
-                    <div id="profile-anketa" class="profile-empty">Анкета пока не заполнена.</div>
-                </div>
-
-                <div class="p-card">
-                    <h3>🏆 Награды</h3>
-                    <div id="achievements-box" class="p-games-list">
-                        <span class="p-game-tag" style="opacity: 0.6;">Наград пока нет</span>
+                    <div class="p-wow-hero-stat">
+                        <div class="p-wow-hero-stat-label">Монеты</div>
+                        <div class="p-wow-hero-stat-value" id="profile-hero-coins">0</div>
                     </div>
                 </div>
             </div>
-            <div id="telegram-link-card" class="p-card" style="margin-top: 20px; display: none;">
-                <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
-                    <div>
-                        <h3 style="margin-bottom: 6px;">🔗 Привязка Telegram</h3>
-                        <div id="telegram-link-description" style="color: #94a3b8; font-size: 0.84rem;">
-                            Привяжи свой Telegram, чтобы подтянуть статистику Anireil.
+
+            <div class="p-wow-body">
+                <div class="p-wow-grid">
+
+                    <div class="p-wow-card">
+                        <div class="p-wow-section-title">Профиль участника</div>
+                        <h3>Личная информация</h3>
+
+                        <div>
+                            <div class="profile-info-line"><span>Email</span><strong id="profile-email">—</strong></div>
+                            <div class="profile-info-line"><span>Google ID</span><strong id="profile-google-id">—</strong></div>
+                            <div class="profile-info-line"><span>Telegram ID</span><strong id="profile-user-id">—</strong></div>
+                            <div class="profile-info-line"><span>Статус</span><strong id="profile-status">—</strong></div>
+                            <div class="profile-info-line"><span>В Anireil</span><strong id="profile-chat-status">—</strong></div>
+                            <div class="profile-info-line"><span>Пара</span><strong id="profile-partner">Нет</strong></div>
                         </div>
                     </div>
-                    <span id="telegram-link-status-pill" class="iris-sync-badge">Не привязан</span>
-                </div>
 
-                <div id="telegram-link-controls" style="margin-top: 16px;">
-                    <button
-                        id="telegram-link-button"
-                        type="button"
-                        class="autumn-admin-button"
-                        onclick="requestTelegramLinkCode()"
-                    >
-                        Получить код привязки
-                    </button>
+                    <div class="p-wow-card">
+                        <div class="p-wow-section-title">Anireil stats</div>
+                        <h3 id="iris-rank">Участник</h3>
 
-                    <div id="telegram-link-code-box" style="display: none; margin-top: 14px;">
-                        <div style="color: #94a3b8; font-size: 0.84rem; margin-bottom: 8px;">
-                            Отправь этот код нашему Telegram-боту командой:
+                        <div class="p-wow-stat-grid">
+                            <div class="p-wow-stat-tile">
+                                <span>Сообщения</span>
+                                <strong id="iris-count">0</strong>
+                            </div>
+                            <div class="p-wow-stat-tile">
+                                <span>Репутация</span>
+                                <strong id="iris-reputation">0</strong>
+                            </div>
+                            <div class="p-wow-stat-tile">
+                                <span>Монеты</span>
+                                <strong id="iris-coins">0</strong>
+                            </div>
+                            <div class="p-wow-stat-tile">
+                                <span>Предупреждения</span>
+                                <strong id="iris-warns">0</strong>
+                            </div>
                         </div>
-                        <code
-                            id="telegram-link-code"
-                            style="display: inline-block; padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,0.06); font-size: 1.15rem; letter-spacing: 2px;"
-                        >——————</code>
-                        <div style="color: #64748b; font-size: 0.78rem; margin-top: 8px;">
-                            <code>/linksite КОД</code> · код действует 10 минут и используется один раз.
+
+                        <div class="profile-info-line" style="margin-top: 8px;">
+                            <span>В Anireil с</span><strong id="iris-data">—</strong>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div id="autumn-admin-card" class="p-card autumn-admin-card" style="display: none;">
-                <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                    <div>
-                        <h3 style="margin-bottom: 6px;">🍂 Осенняя тема сайта</h3>
-                        <div style="color: #94a3b8; font-size: 0.84rem;">Глобальная настройка для всех посетителей</div>
+                    <div class="p-wow-card p-wow-wide">
+                        <div class="p-wow-section-title">Анкета</div>
+                        <h3>О человеке</h3>
+                        <div id="profile-anketa" class="p-wow-anketa-grid">
+                            <div class="profile-empty">Анкета пока не заполнена.</div>
+                        </div>
                     </div>
-                    <span id="autumn-status-pill" class="autumn-status-pill">Загрузка…</span>
-                </div>
-                <button id="autumn-toggle-button" class="autumn-admin-button" type="button" onclick="toggleAutumnTheme()">Переключить тему</button>
-            </div>
 
+                    <div class="p-wow-card p-wow-wide">
+                        <div class="p-wow-section-title">Коллекция</div>
+                        <h3>Награды участника</h3>
+                        <div id="achievements-box" class="p-wow-awards">
+                            <span class="profile-empty">Наград пока нет</span>
+                        </div>
+                    </div>
+
+                    <div id="telegram-link-card" class="p-wow-card p-wow-wide" style="display: none;">
+                        <div class="p-wow-section-title">Безопасность</div>
+                        <h3>Связь с Telegram</h3>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; margin-top:10px;">
+                            <div id="telegram-link-description" style="color:#94a3b8; font-size:0.84rem;">
+                                Привяжи свой Telegram, чтобы синхронизировать профиль.
+                            </div>
+                            <span id="telegram-link-status-pill" class="p-wow-badge">Не привязан</span>
+                        </div>
+
+                        <div id="telegram-link-controls" style="margin-top:16px;">
+                            <button id="telegram-link-button" type="button" class="autumn-admin-button" onclick="requestTelegramLinkCode()">Получить код привязки</button>
+
+                            <div id="telegram-link-code-box" style="display:none; margin-top:14px;">
+                                <div style="color:#94a3b8; font-size:0.84rem; margin-bottom:8px;">
+                                    Отправь этот код нашему Telegram-боту командой:
+                                </div>
+                                <code id="telegram-link-code" style="display:inline-block; padding:12px 15px; border-radius:12px; background:rgba(255,255,255,0.06); font-size:1.18rem; letter-spacing:3px;">——————</code>
+                                <div class="p-wow-footer-note">/linksite КОД · действует 10 минут · используется один раз.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="autumn-admin-card" class="p-wow-card p-wow-wide" style="display:none;">
+                        <div class="p-wow-section-title">Администрирование</div>
+                        <h3>Осенняя тема сайта</h3>
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-top:12px;">
+                            <span id="autumn-status-pill" class="autumn-status-pill">Загрузка…</span>
+                            <button id="autumn-toggle-button" class="autumn-admin-button" type="button" onclick="toggleAutumnTheme()">Переключить тему</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="p-wow-footer-note">
+                    Профиль синхронизируется с Anireil после входа через Google и привязки Telegram.
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1782,9 +2215,17 @@ const API_BASE = window.location.hostname === 'localhost'
                 avatar.src = user.photoUrl || 'avatars/flood.png';
             }
 
+            const profileModal = document.getElementById('profile-modal');
+            if (profileModal) {
+                profileModal.dataset.rank = String(user.rank || 0);
+            }
+
             setText('modal-name', user.name, 'Пользователь');
             setText('modal-badge', user.linkedTelegram ? (user.rankTitle || user.status) : 'Google');
-            setText('modal-username', user.email || 'Google-аккаунт');
+            setText(
+                'modal-username',
+                user.username ? '@' + user.username : 'Google-профиль'
+            );
             setText('profile-email', user.email);
             setText('profile-google-id', user.googleId);
             setText('profile-user-id', user.userId);
@@ -1799,9 +2240,16 @@ const API_BASE = window.location.hostname === 'localhost'
             setText('profile-partner', user.partnerName || 'Нет');
 
             setText('iris-rank', user.rankTitle);
-            setText('iris-count', Number(user.count || 0).toLocaleString('ru-RU'));
-            setText('iris-reputation', Number(user.reputation || 0).toLocaleString('ru-RU'));
-            setText('iris-coins', Number(user.coins || 0).toLocaleString('ru-RU'));
+            const messageCount = Number(user.count || 0);
+            const reputation = Number(user.reputation || 0);
+            const coins = Number(user.coins || 0);
+
+            setText('iris-count', messageCount.toLocaleString('ru-RU'));
+            setText('iris-reputation', reputation.toLocaleString('ru-RU'));
+            setText('iris-coins', coins.toLocaleString('ru-RU'));
+            setText('profile-hero-messages', messageCount.toLocaleString('ru-RU'));
+            setText('profile-hero-reputation', reputation.toLocaleString('ru-RU'));
+            setText('profile-hero-coins', coins.toLocaleString('ru-RU'));
             setText('iris-warns', Number(user.warns || 0).toLocaleString('ru-RU'));
             setText('iris-data', formatProfileDate(user.joinedAt));
 
@@ -1828,8 +2276,8 @@ const API_BASE = window.location.hostname === 'localhost'
                     ];
 
                     rows.forEach(([label, value]) => {
-                        const row = document.createElement('div');
-                        row.className = 'profile-info-line';
+                        const item = document.createElement('div');
+                        item.className = 'p-wow-anketa-item';
 
                         const left = document.createElement('span');
                         left.textContent = label;
@@ -1837,8 +2285,8 @@ const API_BASE = window.location.hostname === 'localhost'
                         const right = document.createElement('strong');
                         right.textContent = value || 'Не указано';
 
-                        row.append(left, right);
-                        anketaBox.appendChild(row);
+                        item.append(left, right);
+                        anketaBox.appendChild(item);
                     });
                 }
             }
@@ -1853,7 +2301,7 @@ const API_BASE = window.location.hostname === 'localhost'
                 } else {
                     user.awards.forEach((award) => {
                         const tag = document.createElement('span');
-                        tag.className = 'p-game-tag';
+                        tag.className = 'p-wow-award';
                         tag.title = award.date
                             ? 'Получена: ' + formatProfileDate(award.date)
                             : '';

@@ -772,6 +772,59 @@
         #profile-modal[data-rank="4"] .p-wow-name { text-shadow: 0 0 24px rgba(96,165,250,0.22); }
         #profile-modal[data-rank="3"] .p-wow-name { text-shadow: 0 0 24px rgba(34,197,94,0.18); }
 
+        .p-wow-accounts-list {
+            display: grid;
+            gap: 9px;
+            margin-top: 14px;
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .p-wow-account-row {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 11px 13px;
+            border: 1px solid rgba(255,255,255,0.045);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.025);
+        }
+
+        .p-wow-account-row img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.10);
+        }
+
+        .p-wow-account-main {
+            min-width: 0;
+        }
+
+        .p-wow-account-name {
+            color: #f8fafc;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .p-wow-account-meta {
+            margin-top: 3px;
+            color: #64748b;
+            font-size: 0.73rem;
+            overflow-wrap: anywhere;
+        }
+
+        .p-wow-account-status {
+            color: #86efac;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-align: right;
+            white-space: nowrap;
+        }
+
         @media (max-width: 700px) {
             .p-profile-header.p-wow-hero {
                 grid-template-columns: 1fr;
@@ -1803,8 +1856,19 @@
                             <button id="autumn-toggle-button" class="autumn-admin-button" type="button" onclick="toggleAutumnTheme()">Переключить тему</button>
                         </div>
                     </div>
-
-                </div>
+                    <div id="accounts-admin-card" class="p-wow-card p-wow-wide" style="display:none;">
+                        <div class="p-wow-section-title">Администрирование</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+                            <div>
+                                <h3 style="margin-bottom:4px;">Зарегистрированные аккаунты</h3>
+                                <div id="accounts-admin-summary" style="color:#64748b; font-size:0.78rem;">Нажми, чтобы загрузить список.</div>
+                            </div>
+                            <button id="accounts-admin-load" class="autumn-admin-button" type="button" onclick="loadSiteAccounts()">Обновить список</button>
+                        </div>
+                        <div id="accounts-admin-list" class="p-wow-accounts-list">
+                            <div class="profile-empty">Список ещё не загружен.</div>
+                        </div>
+                    </div>
 
                 <div class="p-wow-footer-note">
                     Профиль синхронизируется с Anireil после входа через Google и привязки Telegram.
@@ -1912,15 +1976,115 @@ const API_BASE = window.location.hostname === 'localhost'
 
         function updateAutumnAdminUI() {
             const card = document.getElementById('autumn-admin-card');
-            if (!card) return;
+            const accountsCard = document.getElementById('accounts-admin-card');
 
-            const isAdmin = Number(currentSiteUser?.userId) === SITE_THEME_ADMIN_ID;
-            card.style.display = isAdmin ? 'block' : 'none';
+            const isAdmin = Boolean(currentSiteUser?.isSiteAdmin);
+
+            if (card) {
+                card.style.display = isAdmin ? 'block' : 'none';
+            }
+
+            if (accountsCard) {
+                accountsCard.style.display = isAdmin ? 'block' : 'none';
+            }
+
             setAutumnMode(siteTheme.autumnRainEnabled);
         }
 
+        async function loadSiteAccounts() {
+            if (!currentSiteUser?.isSiteAdmin) {
+                showToast('⛔ Недостаточно прав.');
+                return;
+            }
+
+            const list = document.getElementById('accounts-admin-list');
+            const summary = document.getElementById('accounts-admin-summary');
+            const button = document.getElementById('accounts-admin-load');
+
+            if (button) {
+                button.disabled = true;
+                button.textContent = 'Загрузка…';
+            }
+
+            try {
+                const response = await fetch(API_BASE + '/api/site/admin/accounts', {
+                    headers: {
+                        Authorization: 'Bearer ' + getSiteToken()
+                    },
+                    cache: 'no-store'
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Не удалось получить список аккаунтов');
+                }
+
+                if (summary) {
+                    summary.textContent = 'Всего регистраций: ' + Number(data.total || 0).toLocaleString('ru-RU');
+                }
+
+                if (!list) return;
+
+                list.innerHTML = '';
+
+                if (!data.accounts?.length) {
+                    list.innerHTML = '<div class="profile-empty">Зарегистрированных аккаунтов пока нет.</div>';
+                    return;
+                }
+
+                data.accounts.forEach((account) => {
+                    const row = document.createElement('div');
+                    row.className = 'p-wow-account-row';
+
+                    const avatar = document.createElement('img');
+                    avatar.src = account.picture || 'avatars/flood.png';
+                    avatar.alt = '';
+
+                    const main = document.createElement('div');
+                    main.className = 'p-wow-account-main';
+
+                    const name = document.createElement('div');
+                    name.className = 'p-wow-account-name';
+                    name.textContent = account.telegramUsername
+                        ? '@' + account.telegramUsername
+                        : (account.telegramName || account.name || 'Google-пользователь');
+
+                    const meta = document.createElement('div');
+                    meta.className = 'p-wow-account-meta';
+                    meta.textContent = account.telegramUsername
+                        ? ((account.telegramName || account.name || '') + ' · ' + account.email)
+                        : account.email;
+
+                    main.appendChild(name);
+                    main.appendChild(meta);
+
+                    const status = document.createElement('div');
+                    status.className = 'p-wow-account-status';
+                    status.textContent = account.linkedTelegram ? 'Telegram ✓' : 'Google';
+
+                    row.appendChild(avatar);
+                    row.appendChild(main);
+                    row.appendChild(status);
+                    list.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Ошибка списка аккаунтов:', error);
+                if (list) {
+                    list.innerHTML = '<div class="profile-empty">Не удалось загрузить список аккаунтов.</div>';
+                }
+                if (summary) summary.textContent = 'Ошибка загрузки';
+                showToast('❌ Не удалось загрузить список аккаунтов.');
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = 'Обновить список';
+                }
+            }
+        }
+
         async function toggleAutumnTheme() {
-            if (Number(currentSiteUser?.userId) !== SITE_THEME_ADMIN_ID) {
+            if (!currentSiteUser?.isSiteAdmin) {
                 showToast('⛔ Недостаточно прав.');
                 return;
             }
@@ -2010,9 +2174,12 @@ const API_BASE = window.location.hostname === 'localhost'
             if (userProfile) userProfile.style.display = 'flex';
 
             if (userName) {
-                userName.textContent = currentSiteUser.email
-                    ? '@' + currentSiteUser.email
-                    : currentSiteUser.name || 'Профиль';
+                userName.textContent =
+                    currentSiteUser.username
+                        ? '@' + currentSiteUser.username
+                        : currentSiteUser.telegramName
+                            || currentSiteUser.name
+                            || 'Профиль';
             }
 
             if (userAvatar) {
@@ -2152,6 +2319,10 @@ const API_BASE = window.location.hostname === 'localhost'
                     photoUrl: data.user.photoUrl || cached?.photoUrl || null
                 };
 
+                if (data.token) {
+                    localStorage.setItem('anireil_site_token', data.token);
+                }
+
                 localStorage.setItem('anireil_site_user', JSON.stringify(currentSiteUser));
                 updateUserUI();
                 updateAutumnAdminUI();
@@ -2194,6 +2365,10 @@ const API_BASE = window.location.hostname === 'localhost'
                     photoUrl: data.user.photoUrl || cachedPhoto
                 };
 
+                if (data.token) {
+                    localStorage.setItem('anireil_site_token', data.token);
+                }
+
                 localStorage.setItem('anireil_site_user', JSON.stringify(currentSiteUser));
                 updateUserUI();
                 renderMyProfile(currentSiteUser);
@@ -2220,11 +2395,22 @@ const API_BASE = window.location.hostname === 'localhost'
                 profileModal.dataset.rank = String(user.rank || 0);
             }
 
-            setText('modal-name', user.name, 'Пользователь');
-            setText('modal-badge', user.linkedTelegram ? (user.rankTitle || user.status) : 'Google');
+            setText(
+                'modal-name',
+                user.telegramName || user.name,
+                'Пользователь'
+            );
+            setText(
+                'modal-badge',
+                user.linkedTelegram ? (user.rankTitle || user.status) : 'Google'
+            );
             setText(
                 'modal-username',
-                user.username ? '@' + user.username : 'Google-профиль'
+                user.username
+                    ? '@' + user.username
+                    : user.telegramName
+                        ? 'Telegram-профиль'
+                        : 'Google-профиль'
             );
             setText('profile-email', user.email);
             setText('profile-google-id', user.googleId);

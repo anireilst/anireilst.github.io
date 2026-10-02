@@ -349,6 +349,8 @@
             box-shadow: 0 0 10px var(--neon-color);
         }
 
+        body.profile-modal-open { overflow: hidden; }
+
         .p-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -389,18 +391,36 @@
             border-color: var(--neon-color);
         }
         .p-modal-close {
-            position: absolute; top: 20px; right: 20px;
-            background: none; border: none; color: #64748b;
-            font-size: 1.8rem; cursor: pointer; transition: 0.2s;
+            position: fixed;
+            top: max(12px, env(safe-area-inset-top));
+            right: max(12px, env(safe-area-inset-right));
+            z-index: 20;
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 50%;
+            background: rgba(15, 17, 26, 0.88);
+            color: #cbd5e1;
+            font-size: 1.8rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: 0.2s;
         }
         .p-modal-close:hover { color: #fff; transform: rotate(90deg); }
 
 
         /* ===== ANIREIL WOW PROFILE ===== */
         .p-modal-content {
-            width: min(94vw, 920px);
-            max-width: 920px;
+            box-sizing: border-box;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            max-width: none;
+            max-height: none;
             padding: 0;
+            border-radius: 0;
             overflow-x: hidden;
             overflow-y: auto;
             background:
@@ -1759,7 +1779,7 @@
         <div class="p-modal-overlay" onclick="closeProfile()"></div>
 
         <div class="p-modal-content">
-            <button class="p-modal-close" onclick="closeProfile()" aria-label="Закрыть">&times;</button>
+            <button type="button" class="p-modal-close" onclick="closeProfile()" aria-label="Закрыть профиль">&times;</button>
 
             <div class="p-profile-header p-wow-hero">
                 <div class="p-wow-orb one"></div>
@@ -1840,14 +1860,6 @@
 
                         <div class="profile-info-line" style="margin-top: 8px;">
                             <span>В Anireil с</span><strong id="iris-data">—</strong>
-                        </div>
-                    </div>
-
-                    <div class="p-wow-card p-wow-wide">
-                        <div class="p-wow-section-title">Анкета</div>
-                        <h3>О человеке</h3>
-                        <div id="profile-anketa" class="p-wow-anketa-grid">
-                            <div class="profile-empty">Анкета пока не заполнена.</div>
                         </div>
                     </div>
 
@@ -2411,6 +2423,7 @@ const API_BASE = window.location.hostname === 'localhost'
 
                 if (openModal) {
                     document.getElementById('profile-modal').classList.add('active');
+                    document.body.classList.add('profile-modal-open');
                 }
             } catch (error) {
                 console.error('Ошибка загрузки профиля:', error);
@@ -2480,37 +2493,6 @@ const API_BASE = window.location.hostname === 'localhost'
                 syncBadge.textContent = user.linkedTelegram
                     ? 'Синхронизировано с ботом'
                     : 'Google подтверждён';
-            }
-
-            const anketaBox = document.getElementById('profile-anketa');
-
-            if (anketaBox) {
-                anketaBox.innerHTML = '';
-
-                if (!user.anketa) {
-                    anketaBox.innerHTML = '<div class="profile-empty">Анкета пока не заполнена.</div>';
-                } else {
-                    const rows = [
-                        ['Роли', user.anketa.roles],
-                        ['Фандомы', user.anketa.fandoms],
-                        ['Возраст', user.anketa.age],
-                        ['Дата анкеты', user.anketa.joined]
-                    ];
-
-                    rows.forEach(([label, value]) => {
-                        const item = document.createElement('div');
-                        item.className = 'p-wow-anketa-item';
-
-                        const left = document.createElement('span');
-                        left.textContent = label;
-
-                        const right = document.createElement('strong');
-                        right.textContent = value || 'Не указано';
-
-                        item.append(left, right);
-                        anketaBox.appendChild(item);
-                    });
-                }
             }
 
             const awardsBox = document.getElementById('achievements-box');
@@ -2693,8 +2675,17 @@ const API_BASE = window.location.hostname === 'localhost'
         }
 
         function closeProfile() {
-            document.getElementById('profile-modal').classList.remove('active');
+            const modal = document.getElementById('profile-modal');
+            if (!modal) return;
+            modal.classList.remove('active');
+            document.body.classList.remove('profile-modal-open');
         }
+
+        window.closeProfile = closeProfile;
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') closeProfile();
+        });
 
         function filterTracks() {
             const query = document.getElementById('music-search').value.toLowerCase().trim();

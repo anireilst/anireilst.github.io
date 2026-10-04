@@ -837,12 +837,51 @@
             overflow-wrap: anywhere;
         }
 
+        .p-wow-account-actions {
+            display: grid;
+            justify-items: end;
+            gap: 7px;
+        }
+
         .p-wow-account-status {
             color: #86efac;
             font-size: 0.72rem;
             font-weight: 700;
             text-align: right;
             white-space: nowrap;
+        }
+
+        .p-wow-account-status.blocked {
+            color: #fca5a5;
+        }
+
+        .p-wow-account-access-button {
+            border: 1px solid rgba(248, 113, 113, 0.28);
+            border-radius: 9px;
+            padding: 7px 10px;
+            background: rgba(248, 113, 113, 0.09);
+            color: #fecaca;
+            cursor: pointer;
+            font: inherit;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .p-wow-account-access-button.unblock {
+            border-color: rgba(74, 222, 128, 0.28);
+            background: rgba(74, 222, 128, 0.09);
+            color: #bbf7d0;
+        }
+
+        .p-wow-account-access-button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .p-wow-account-block-reason {
+            color: #fca5a5;
+            font-size: 0.72rem;
+            overflow-wrap: anywhere;
         }
 
         @media (max-width: 700px) {
@@ -1909,6 +1948,7 @@
                             <div>
                                 <h3 style="margin-bottom:4px;">Зарегистрированные аккаунты</h3>
                                 <div id="accounts-admin-summary" style="color:#64748b; font-size:0.78rem;">Нажми, чтобы загрузить список.</div>
+                                <div class="p-wow-account-meta">Блокировка закрывает вход на сайт, но не ограничивает Telegram-аккаунт.</div>
                             </div>
                             <button id="accounts-admin-load" class="autumn-admin-button" type="button" onclick="loadSiteAccounts()">Обновить список</button>
                         </div>
@@ -2068,7 +2108,10 @@ const API_BASE = window.location.hostname === 'localhost'
                 }
 
                 if (summary) {
-                    summary.textContent = 'Всего регистраций: ' + Number(data.total || 0).toLocaleString('ru-RU');
+                    const blockedCount = (data.accounts || []).filter((account) => account.siteAccessBlocked).length;
+                    summary.textContent = 'Всего регистраций: ' +
+                        Number(data.total || 0).toLocaleString('ru-RU') +
+                        ' · ограничен доступ: ' + blockedCount;
                 }
 
                 if (!list) return;
@@ -2106,13 +2149,45 @@ const API_BASE = window.location.hostname === 'localhost'
                     main.appendChild(name);
                     main.appendChild(meta);
 
+                    if (account.siteAccessBlocked && account.siteAccessBlockReason) {
+                        const reason = document.createElement('div');
+                        reason.className = 'p-wow-account-block-reason';
+                        reason.textContent = 'Причина: ' + account.siteAccessBlockReason;
+                        main.appendChild(reason);
+                    }
+
+                    const actions = document.createElement('div');
+                    actions.className = 'p-wow-account-actions';
+
                     const status = document.createElement('div');
-                    status.className = 'p-wow-account-status';
-                    status.textContent = account.linkedTelegram ? 'Telegram ✓' : 'Google';
+                    status.className = 'p-wow-account-status' + (account.siteAccessBlocked ? ' blocked' : '');
+                    status.textContent = account.siteAccessBlocked
+                        ? 'Доступ закрыт'
+                        : (account.linkedTelegram ? 'Telegram ✓' : 'Google');
+                    actions.appendChild(status);
+
+                    if (!account.isSiteAdmin) {
+                        const accessButton = document.createElement('button');
+                        accessButton.type = 'button';
+                        accessButton.className = 'p-wow-account-access-button' +
+                            (account.siteAccessBlocked ? ' unblock' : '');
+                        accessButton.textContent = account.siteAccessBlocked
+                            ? 'Разблокировать'
+                            : 'Заблокировать';
+                        accessButton.addEventListener('click', () =>
+                            changeSiteAccountAccess(account, accessButton)
+                        );
+                        actions.appendChild(accessButton);
+                    } else {
+                        const adminLabel = document.createElement('div');
+                        adminLabel.className = 'p-wow-account-meta';
+                        adminLabel.textContent = 'Администратор';
+                        actions.appendChild(adminLabel);
+                    }
 
                     row.appendChild(avatar);
                     row.appendChild(main);
-                    row.appendChild(status);
+                    row.appendChild(actions);
                     list.appendChild(row);
                 });
             } catch (error) {
@@ -2121,12 +2196,58 @@ const API_BASE = window.location.hostname === 'localhost'
                     list.innerHTML = '<div class="profile-empty">Не удалось загрузить список аккаунтов.</div>';
                 }
                 if (summary) summary.textContent = 'Ошибка загрузки';
-                showToast('❌ Не удалось загрузить список аккаунтов.');
+                showToast('❌ ' + (error.message || 'Не удалось загрузить список аккаунтов.'));
             } finally {
                 if (button) {
                     button.disabled = false;
                     button.textContent = 'Обновить список';
                 }
+            }
+        }
+
+        async function changeSiteAccountAccess(account, button) {
+            const shouldBlock = !account.siteAccessBlocked;
+            let reason = '';
+
+            if (shouldBlock) {
+                if (!window.confirm('Заблокировать доступ этому аккаунту к сайту?')) return;
+                reason = String(window.prompt('Укажи причину блокировки:') || '').trim();
+                if (!reason) {
+                    showToast('Укажи причину, чтобы продолжить.');
+                    return;
+                }
+            } else if (!window.confirm('Снять блокировку с этого аккаунта?')) {
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = shouldBlock ? 'Блокируем…' : 'Снимаем…';
+
+            try {
+                const response = await fetch(
+                    API_BASE + '/api/site/admin/accounts/' + encodeURIComponent(account.id) + '/access',
+                    {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: 'Bearer ' + getSiteToken()
+                        },
+                        body: JSON.stringify({ blocked: shouldBlock, reason })
+                    }
+                );
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Не удалось изменить доступ');
+                }
+
+                showToast(shouldBlock ? 'Доступ к сайту заблокирован.' : 'Доступ к сайту восстановлен.');
+                await loadSiteAccounts();
+            } catch (error) {
+                console.error('Ошибка управления доступом к аккаунту:', error);
+                showToast('❌ ' + (error.message || 'Не удалось изменить доступ.'));
+            } finally {
+                button.disabled = false;
             }
         }
 
@@ -2376,6 +2497,9 @@ const API_BASE = window.location.hostname === 'localhost'
                 updateAutumnAdminUI();
             } catch (error) {
                 console.warn('Google-сессия истекла или недействительна:', error);
+                if (String(error.message || '').startsWith('Доступ к сайту заблокирован')) {
+                    showToast('⛔ ' + error.message);
+                }
                 localStorage.removeItem('anireil_site_token');
                 localStorage.removeItem('anireil_site_user');
                 setGoogleLoggedOutUI();

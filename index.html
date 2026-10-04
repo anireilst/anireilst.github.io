@@ -1329,6 +1329,27 @@
         .analytics-updated{color:#64748b;font-size:.72rem}
         @media(max-width:960px){.analytics-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.analytics-grid,.analytics-bottom-grid{grid-template-columns:1fr}}
         @media(max-width:640px){.analytics-hero{flex-direction:column;align-items:flex-start}.analytics-kpi-grid{grid-template-columns:1fr 1fr;gap:10px}.analytics-kpi{padding:14px}.analytics-kpi-value{font-size:1.35rem}.analytics-chart-box{height:260px}}
+
+/* Contact social links */
+#contacts.content-section { padding: 44px 5%; }
+#contacts .contact-community-card { width: min(100%, 690px); margin: 0 auto; padding: clamp(25px, 6vw, 48px); border: 1px solid #ffffff20; border-radius: 28px; background: linear-gradient(145deg, rgba(33,27,48,.96), rgba(23,22,33,.97)); box-shadow: 0 24px 90px #0008, inset 0 1px #ffffff12; }
+#contacts .contact-eyebrow { display:flex; align-items:center; gap:9px; color:#c7aaff; font-size:11px; font-weight:800; letter-spacing:.18em; }
+#contacts .contact-eyebrow span { width:8px; height:8px; border-radius:50%; background:#b887ff; box-shadow:0 0 14px #b887ff; }
+#contacts .contact-community-card h1 { margin:17px 0 7px; color:#f7f4ff; font-size:clamp(34px,7vw,48px); line-height:1.1; letter-spacing:-.045em; }
+#contacts .contact-intro { margin:0 0 28px; color:#bcb6ca; font-size:15px; line-height:1.65; }
+#contacts .contact-social-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+#contacts .contact-social-link { min-height:82px; display:flex; align-items:center; gap:14px; padding:14px; color:#f7f4ff; text-decoration:none; border:1px solid #ffffff15; border-radius:17px; background:#ffffff07; transition:transform .18s ease,border-color .18s ease,background .18s ease; }
+#contacts a.contact-social-link:hover { transform:translateY(-2px); border-color:#b887ff80; background:#ffffff0d; }
+#contacts .contact-icon { width:48px; height:48px; flex:0 0 48px; display:grid; place-items:center; border-radius:14px; background:#ffffff0d; }
+#contacts .contact-icon svg { width:26px; height:26px; }
+#contacts .contact-discord .contact-icon { color:#7289da; background:#5865f222; } #contacts .contact-tiktok .contact-icon { color:#fe2c55; background:#ee2a7b1c; } #contacts .contact-youtube .contact-icon { color:#ff3344; background:#ff32321a; } #contacts .contact-github .contact-icon { color:#f5f3fa; background:#ffffff12; } #contacts .contact-minecraft .contact-icon { color:#62d987; background:#55c8781b; }
+#contacts .contact-copy { min-width:0; display:grid; gap:4px; } #contacts .contact-copy strong { font-size:15px; font-weight:800; } #contacts .contact-copy small { color:#a9a3b5; font-size:11px; line-height:1.35; }
+#contacts .contact-arrow { margin-left:auto; color:#bcb3cd; font-size:19px; } #contacts .contact-coming-soon { cursor:default; opacity:.82; }
+#contacts .contact-soon { margin-left:auto; padding:6px 9px; border-radius:999px; background:#b887ff20; color:#d8bfff; font-size:10px; font-weight:800; white-space:nowrap; }
+#contacts .contact-footer-note { margin:24px 0 0; color:#a9a3b5; font-size:12px; text-align:center; }
+#contacts .contact-extra-links { display:flex; flex-wrap:wrap; justify-content:center; gap:10px 18px; margin-top:18px; font-size:12px; } #contacts .contact-extra-links a { color:#c7aaff; text-decoration:none; } #contacts .contact-extra-links a:hover { text-decoration:underline; }
+@media (max-width:520px) { #contacts .contact-social-grid { grid-template-columns:1fr; } #contacts .contact-community-card { border-radius:23px; } }
+@media (prefers-reduced-motion:reduce) { #contacts .contact-social-link { transition-duration:.01ms; } }
 </style>
 </head>
 <body>          
@@ -1760,48 +1781,29 @@
         </section>
 
         <section id="contacts" class="content-section">
-            <div class="grid-2col">
-                <div class="hero-text fade-in-element">
-                    <h1>Оставайся на связи</h1>
-                    <p style="margin-bottom: 20px;">Есть крутая идея насчет проекта? Нашел баг? Или хочешь предложить сотрудничество? Наша администрация всегда открыта для диалога.</p>
-                    <a href="rules.html" target="_blank" style="
-                        color: var(--neon-color); font-weight: 600; text-decoration: none; border: 1px solid var(--neon-color);
-                        padding: 10px 18px; border-radius: 8px; background: var(--neon-glow); display: inline-block; font-size: 0.9rem;
-                        transition: all 0.2s ease;
-                    " onmouseover="this.style.background='var(--neon-glow)'; this.style.boxShadow='0 0 15px var(--neon-glow)'" onmouseout="this.style.background='var(--neon-glow)'; this.style.boxShadow='none'">
-                        📜 Пользовательское соглашение
+            <div class="contact-community-card fade-in-element">
+                <div class="contact-eyebrow"><span></span> ANIREIL COMMUNITY</div>
+                <h1>Мы на связи</h1>
+                <p class="contact-intro">Новости, видео и общение — выбирай удобную площадку.</p>
+                <div class="contact-social-grid">
+                    <a class="contact-social-link contact-discord" href="https://discord.gg/QyjJCbxjMx" target="_blank" rel="noopener noreferrer">
+                        <span class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.7 5.2A18.5 18.5 0 0 0 15.1 3.8l-.6 1.2a17 17 0 0 0-5 0l-.6-1.2a18.5 18.5 0 0 0-4.6 1.4C1.4 9.5.6 13.7 1 17.9a18.7 18.7 0 0 0 5.7 2.9l1.2-2a12 12 0 0 1-1.9-.9l.5-.4a13.4 13.4 0 0 0 11 0l.5.4a12 12 0 0 1-1.9.9l1.2 2a18.7 18.7 0 0 0 5.7-2.9c.5-4.9-.8-9-3.3-12.7ZM8.7 15.5c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2Zm6.6 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2Z"/></svg></span><span class="contact-copy"><strong>Discord</strong><small>Наш сервер и общение</small></span><span class="contact-arrow" aria-hidden="true">↗</span>
                     </a>
+                    <a class="contact-social-link contact-tiktok" href="https://www.tiktok.com/@anireil?_r=1&_t=ZS-99N3RwEUjEC" target="_blank" rel="noopener noreferrer">
+                        <span class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 3c.3 2.6 1.8 4.2 4.4 4.4v4a10.1 10.1 0 0 1-4.4-1.3v6.7a7 7 0 1 1-7-7c.5 0 1 0 1.5.2v4.2a3 3 0 1 0 1.5 2.6V3h4Z"/></svg></span><span class="contact-copy"><strong>TikTok</strong><small>Короткие видео</small></span><span class="contact-arrow" aria-hidden="true">↗</span>
+                    </a>
+                    <a class="contact-social-link contact-youtube" href="https://youtube.com/@anireil?si=stAGiMyXwHWg8j1N" target="_blank" rel="noopener noreferrer">
+                        <span class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.8v-7.6l6.3 3.8-6.3 3.8Z"/></svg></span><span class="contact-copy"><strong>YouTube</strong><small>Видео и обновления</small></span><span class="contact-arrow" aria-hidden="true">↗</span>
+                    </a>
+                    <a class="contact-social-link contact-github" href="https://github.com/anireilst" target="_blank" rel="noopener noreferrer">
+                        <span class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .8a11.2 11.2 0 0 0-3.5 21.8c.6.1.8-.3.8-.6v-2.1c-3.1.7-3.8-1.3-3.8-1.3-.5-1.3-1.2-1.6-1.2-1.6-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 .1.7 2.5 3.7 1.8.1-.7.4-1.2.7-1.5-2.5-.3-5.1-1.3-5.1-5.5 0-1.2.4-2.1 1.1-2.9-.1-.3-.5-1.4.1-2.9 0 0 .9-.3 3 1.1a10.4 10.4 0 0 1 5.5 0c2.1-1.4 3-1.1 3-1.1.6 1.5.2 2.6.1 2.9.7.8 1.1 1.7 1.1 2.9 0 4.2-2.6 5.2-5.1 5.5.4.3.8 1 .8 2v2.9c0 .3.2.7.8.6A11.2 11.2 0 0 0 12 .8Z"/></svg></span><span class="contact-copy"><strong>GitHub</strong><small>Наши проекты</small></span><span class="contact-arrow" aria-hidden="true">↗</span>
+                    </a>
+                    <div class="contact-social-link contact-minecraft contact-coming-soon" aria-label="Minecraft сервер — скоро">
+                        <span class="contact-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1 22 6.5v11L12 23 2 17.5v-11L12 1Zm0 2.3L4.5 7.4v8.9l6.5 3.6v-7l-6.2-3.4 1.1-2 6.1 3.4 6.1-3.4 1.1 2-6.2 3.4v7l6.5-3.6V7.4L12 3.3Z"/></svg></span><span class="contact-copy"><strong>Minecraft</strong><small>Игровой сервер</small></span><span class="contact-soon">Скоро</span>
+                    </div>
                 </div>
-                
-                <div class="hero-card fade-in-element">
-                    <h3>Главный Создатель</h3>
-                    <p>По любым вопросам пиши напрямую в Telegram:</p>
-                    <p style="color: #60a5fa; font-weight: bold; font-size: 1.2rem; margin-top: 15px;">@Mitsukii_Sempai</p>
-                     <div style="margin-top: 25px; text-align: center;">
-                         <a href="creator.html" class="creator-link-btn" style="
-                             display: inline-flex;
-                             align-items: center;
-                             justify-content: center;
-                             gap: 10px;
-                             padding: 14px 28px;
-                             background: linear-gradient(135deg, rgba(192, 132, 252, 0.2), rgba(13, 14, 21, 0.8));
-                             border: 1px solid #c084fc;
-                             border-radius: 12px;
-                             color: #ffffff;
-                             text-decoration: none;
-                             font-weight: 600;
-                             font-size: 1rem;
-                             box-shadow: 0 0 20px rgba(192, 132, 252, 0.25);
-                             backdrop-filter: blur(8px);
-                             transition: all 0.3s ease;
-                         " 
-                         onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 0 30px rgba(192, 132, 252, 0.5)';" 
-                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 0 20px rgba(192, 132, 252, 0.25)';"
-                         >
-                             👑 Страница Создателя (Mitsukii_Sempai) &rarr;
-                         </a>
-                     </div>
-                </div>
+                <p class="contact-footer-note">Присоединяйся к Anireil 💜</p>
+                <div class="contact-extra-links"><a href="rules.html" target="_blank" rel="noopener noreferrer">📜 Пользовательское соглашение</a><a href="creator.html">👑 Страница создателя</a></div>
             </div>
         </section>
 

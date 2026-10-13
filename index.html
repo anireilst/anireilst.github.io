@@ -1350,9 +1350,167 @@
 #contacts .contact-extra-links { display:flex; flex-wrap:wrap; justify-content:center; gap:10px 18px; margin-top:18px; font-size:12px; } #contacts .contact-extra-links a { color:#c7aaff; text-decoration:none; } #contacts .contact-extra-links a:hover { text-decoration:underline; }
 @media (max-width:520px) { #contacts .contact-social-grid { grid-template-columns:1fr; } #contacts .contact-community-card { border-radius:23px; } }
 @media (prefers-reduced-motion:reduce) { #contacts .contact-social-link { transition-duration:.01ms; } }
-</style>
+
+        /* ===== REIL OPTIONAL AVATAR CONSENT ===== */
+        .reil-consent-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: rgba(7, 8, 14, 0.88);
+            -webkit-backdrop-filter: blur(18px);
+            backdrop-filter: blur(18px);
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.45s ease, visibility 0.45s ease;
+        }
+        .reil-consent-overlay.is-closing {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .reil-consent-card {
+            width: min(100%, 520px);
+            box-sizing: border-box;
+            padding: clamp(24px, 5vw, 38px);
+            border: 1px solid rgba(192, 132, 252, 0.24);
+            border-radius: 26px;
+            background: linear-gradient(145deg, rgba(28, 27, 43, 0.98), rgba(15, 16, 25, 0.98));
+            box-shadow: 0 28px 90px rgba(0, 0, 0, 0.48), 0 0 42px rgba(192, 132, 252, 0.08);
+            color: #e2e8f0;
+            text-align: left;
+            animation: reilCardEnter 0.55s cubic-bezier(0.2, 0.75, 0.25, 1) both;
+        }
+        .reil-consent-brand {
+            margin: 0 0 8px;
+            color: #c084fc;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .reil-consent-title {
+            margin: 0;
+            color: #f8fafc;
+            font-size: clamp(1.65rem, 5vw, 2.15rem);
+            line-height: 1.2;
+            text-align: center;
+        }
+        .reil-consent-description {
+            margin: 16px 0 22px;
+            color: #b7b4c8;
+            font-size: 1rem;
+            line-height: 1.7;
+            text-align: center;
+        }
+        .reil-consent-warning {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 0 0 22px;
+            padding: 15px 16px;
+            border: 1px solid rgba(248, 113, 113, 0.24);
+            border-radius: 15px;
+            background: rgba(127, 29, 29, 0.16);
+            color: #ff7777;
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+        .reil-consent-warning strong {
+            display: block;
+            margin-bottom: 3px;
+            color: #ff7777;
+        }
+        .reil-consent-actions {
+            display: grid;
+            gap: 11px;
+        }
+        .reil-consent-button {
+            width: 100%;
+            min-height: 50px;
+            padding: 13px 18px;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+        .reil-consent-button:not(:disabled):hover { transform: translateY(-2px); }
+        .reil-consent-button:focus-visible {
+            outline: 3px solid rgba(192, 132, 252, 0.8);
+            outline-offset: 3px;
+        }
+        .reil-consent-accept {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.22);
+        }
+        .reil-consent-accept:disabled {
+            background: #40364f;
+            color: #b5a9c6;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.82;
+        }
+        .reil-consent-skip {
+            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.035);
+            color: #d6d3e0;
+        }
+        .reil-consent-skip:hover { background: rgba(255, 255, 255, 0.075); }
+        .reil-consent-countdown {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+        @keyframes reilCardEnter {
+            from { opacity: 0; transform: translateY(12px) scale(0.985); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @media (max-width: 480px) {
+            .reil-consent-overlay { padding: 16px; }
+            .reil-consent-card { border-radius: 21px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .reil-consent-overlay, .reil-consent-button { transition: none; }
+            .reil-consent-card { animation: none; }
+        }
+
+    </style>
 </head>
-<body>          
+<body>
+
+    <section id="reil-consent-overlay" class="reil-consent-overlay" role="dialog" aria-modal="true" aria-labelledby="reil-consent-title" aria-describedby="reil-consent-description">
+        <div class="reil-consent-card">
+            <p class="reil-consent-brand">Anireil · Optional experience</p>
+            <h1 id="reil-consent-title" class="reil-consent-title">Добавить Reil на сайт?</h1>
+            <p id="reil-consent-description" class="reil-consent-description">
+                Reil может стать вашим спутником на главной странице Anireil. Вы сами решаете, включать ли персонажа.
+            </p>
+            <div class="reil-consent-warning" role="note">
+                <span aria-hidden="true">!</span>
+                <div><strong>Внимание: производительность</strong>
+                    Отображение 3D-персонажа может снизить производительность на слабых устройствах и увеличить время загрузки.
+                </div>
+            </div>
+            <div class="reil-consent-actions">
+                <button id="reil-consent-accept" class="reil-consent-button reil-consent-accept" type="button" disabled>
+                    Добавить Reil
+                    <span id="reil-consent-countdown" class="reil-consent-countdown">Кнопка станет доступна через 5 секунд</span>
+                </button>
+                <button id="reil-consent-skip" class="reil-consent-button reil-consent-skip" type="button">
+                    Продолжить без персонажа
+                </button>
+            </div>
+        </div>
+    </section>
+          
     
     <div class="custom-cursor"></div>
     <div class="custom-cursor-effects"></div>
@@ -3409,6 +3567,76 @@ const savedGlow = localStorage.getItem('neon-glow');
 if (savedColor && savedGlow) {
   changeTheme(savedColor, savedGlow);
 }
+
+    
+    
+    /* ===== REIL OPTIONAL AVATAR CONSENT ===== */
+    (() => {
+        const overlay = document.getElementById('reil-consent-overlay');
+        const acceptButton = document.getElementById('reil-consent-accept');
+        const skipButton = document.getElementById('reil-consent-skip');
+        const countdown = document.getElementById('reil-consent-countdown');
+
+        if (!overlay || !acceptButton || !skipButton || !countdown) return;
+
+        const preferenceKey = 'anireil-reil-preference';
+        const savedPreference = sessionStorage.getItem(preferenceKey);
+
+        const closeConsent = (preference) => {
+            sessionStorage.setItem(preferenceKey, preference);
+            document.documentElement.dataset.reilPreference = preference;
+            overlay.classList.add('is-closing');
+            window.setTimeout(() => overlay.remove(), 480);
+
+            if (preference === 'enabled') {
+                window.dispatchEvent(new CustomEvent('anireil:reil-consent', {
+                    detail: { enabled: true }
+                }));
+            }
+        };
+
+        if (savedPreference === 'enabled' || savedPreference === 'disabled') {
+            overlay.remove();
+            document.documentElement.dataset.reilPreference = savedPreference;
+            if (savedPreference === 'enabled') {
+                window.dispatchEvent(new CustomEvent('anireil:reil-consent', {
+                    detail: { enabled: true }
+                }));
+            }
+            return;
+        }
+
+        let secondsLeft = 5;
+        const countdownTimer = window.setInterval(() => {
+            secondsLeft -= 1;
+            if (secondsLeft <= 0) {
+                window.clearInterval(countdownTimer);
+                acceptButton.disabled = false;
+                countdown.textContent = 'Можно продолжить с персонажем';
+            } else {
+                countdown.textContent = 'Кнопка станет доступна через ' + secondsLeft + ' сек.';
+            }
+        }, 1000);
+
+        acceptButton.addEventListener('click', () => {
+            if (acceptButton.disabled) return;
+            closeConsent('enabled');
+        });
+
+        skipButton.addEventListener('click', () => {
+            window.clearInterval(countdownTimer);
+            closeConsent('disabled');
+        });
+
+        overlay.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                window.clearInterval(countdownTimer);
+                closeConsent('disabled');
+            }
+        });
+
+        skipButton.focus({ preventScroll: true });
+    })();
 
     </script>
 </body>

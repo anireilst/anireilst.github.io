@@ -5,7 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anireil Flood — Официальный сайт</title>
     <link rel="icon" type="image/jpeg" href="avatars/flood.png">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // Paint the last known site theme before the first render to prevent a theme flash.
+        (function () {
+            try {
+                if (localStorage.getItem('anireil-autumn-mode') !== 'false') {
+                    document.documentElement.classList.add('autumn-mode-preload');
+                }
+            } catch (error) {
+                document.documentElement.classList.add('autumn-mode-preload');
+            }
+        })();
+    </script>
+
+
     <style>
         :root {
             --neon-color: #c084fc; 
@@ -1200,26 +1213,26 @@
                 radial-gradient(circle at 82% 78%, rgba(180,83,9,0.15), transparent 38%),
                 linear-gradient(180deg, rgba(17,24,39,0.10), rgba(69,26,3,0.12));
         }
-        .autumn-mode .autumn-layer { opacity: 1; }
-        .autumn-mode { --neon-color: #f59e0b; --neon-glow: rgba(245,158,11,0.34); }
-        .autumn-mode .background-glow {
+        :is(.autumn-mode, html.autumn-mode-preload) .autumn-layer { opacity: 1; }
+        :is(.autumn-mode, html.autumn-mode-preload) { --neon-color: #f59e0b; --neon-glow: rgba(245,158,11,0.34); }
+        :is(.autumn-mode, html.autumn-mode-preload) .background-glow {
             background:
                 radial-gradient(circle at 18% 26%, rgba(245,158,11,0.14), transparent 40%),
                 radial-gradient(circle at 80% 72%, rgba(120,53,15,0.18), transparent 43%);
         }
-        .autumn-mode header {
+        :is(.autumn-mode, html.autumn-mode-preload) header {
             background: rgba(18,16,16,0.76) !important;
             border-bottom-color: rgba(245,158,11,0.18);
             box-shadow: 0 12px 38px rgba(0,0,0,0.18);
         }
-        .autumn-mode .hero-card, .autumn-mode .game-card, .autumn-mode .user-card,
-        .autumn-mode .p-card, .autumn-mode .quote-card, .autumn-mode .meme-card,
-        .autumn-mode .stat-summary-card {
+        :is(.autumn-mode, html.autumn-mode-preload) .hero-card, :is(.autumn-mode, html.autumn-mode-preload) .game-card, :is(.autumn-mode, html.autumn-mode-preload) .user-card,
+        :is(.autumn-mode, html.autumn-mode-preload) .p-card, :is(.autumn-mode, html.autumn-mode-preload) .quote-card, :is(.autumn-mode, html.autumn-mode-preload) .meme-card,
+        :is(.autumn-mode, html.autumn-mode-preload) .stat-summary-card {
             border-color: rgba(245,158,11,0.12);
             box-shadow: 0 18px 45px rgba(30,18,8,0.22);
         }
         .rain-container, .leaf-container { z-index: 9998; opacity: 0; transition: opacity 0.6s ease; }
-        .autumn-mode .rain-container, .autumn-mode .leaf-container { opacity: 1; }
+        :is(.autumn-mode, html.autumn-mode-preload) .rain-container, :is(.autumn-mode, html.autumn-mode-preload) .leaf-container { opacity: 1; }
         .rain-drop {
             position: absolute; top: -14vh; width: 1.2px; height: var(--rain-height,72px);
             border-radius: 999px;
@@ -2149,7 +2162,15 @@ const API_BASE = window.location.hostname === 'localhost'
   : 'https://anireil-bot-0ygc.onrender.com';
         
         const SITE_THEME_ADMIN_ID = 6120367732;
-        let siteTheme = { autumnRainEnabled: true };
+        let siteTheme = {
+            autumnRainEnabled: (() => {
+                try {
+                    return localStorage.getItem('anireil-autumn-mode') !== 'false';
+                } catch (error) {
+                    return true;
+                }
+            })()
+        };
 
         function createAutumnAtmosphere() {
             const rainBox = document.getElementById('rain-box');
@@ -2188,6 +2209,14 @@ const API_BASE = window.location.hostname === 'localhost'
         function setAutumnMode(enabled) {
             siteTheme.autumnRainEnabled = Boolean(enabled);
             document.body.classList.toggle('autumn-mode', siteTheme.autumnRainEnabled);
+            document.documentElement.classList.remove('autumn-mode-preload');
+
+            // Cache the server-controlled choice for the next visit.
+            try {
+                localStorage.setItem('anireil-autumn-mode', siteTheme.autumnRainEnabled ? 'true' : 'false');
+            } catch (error) {
+                // The server setting still works without browser storage.
+            }
 
             const status = document.getElementById('autumn-status-pill');
             const button = document.getElementById('autumn-toggle-button');
@@ -3102,8 +3131,22 @@ const API_BASE = window.location.hostname === 'localhost'
         }
 
         document.addEventListener("DOMContentLoaded", async function() {
-            await restoreSiteSession();
+            // Start fetching the theme in parallel with session restoration.
             loadSiteTheme();
+
+            // Reveal content before waiting for any network-dependent authentication.
+            const animatedElements = document.querySelectorAll('.fade-in-element');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.05 });
+            animatedElements.forEach(el => observer.observe(el));
+
+            await restoreSiteSession();
+            updateAutumnAdminUI();
 
             if (!currentSiteUser) {
                 await initGoogleAuth();
@@ -3115,15 +3158,7 @@ const API_BASE = window.location.hostname === 'localhost'
             syncAnalyticsAdminPanel();
             audioPlayer.volume = 0.7; 
 
-            const animatedElements = document.querySelectorAll('.fade-in-element');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.05 });
-            animatedElements.forEach(el => observer.observe(el));
+
 
             const cursor = document.querySelector('.custom-cursor');
             const cursorEffect = document.querySelector('.custom-cursor-effects');
@@ -3163,6 +3198,34 @@ const API_BASE = window.location.hostname === 'localhost'
             });
         });
 
+        let chartJsPromise = null;
+
+        // Download Chart.js only when a chart is needed; do not block the first page render.
+        function ensureChartJs() {
+            if (window.Chart) return Promise.resolve(window.Chart);
+            if (!chartJsPromise) {
+                chartJsPromise = new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+                    script.async = true;
+                    script.dataset.anireilChartjs = 'true';
+                    script.onload = () => {
+                        if (window.Chart) resolve(window.Chart);
+                        else {
+                            chartJsPromise = null;
+                            reject(new Error('Chart.js загрузился, но библиотека недоступна.'));
+                        }
+                    };
+                    script.onerror = () => {
+                        chartJsPromise = null;
+                        reject(new Error('Не удалось загрузить Chart.js.'));
+                    };
+                    document.head.appendChild(script);
+                });
+            }
+            return chartJsPromise;
+        }
+
         let chartInstance = null;
 
 async function loadChart(days = 30) {
@@ -3178,6 +3241,8 @@ async function loadChart(days = 30) {
       console.error('Ошибка получения данных');
       return;
     }
+
+    await ensureChartJs();
 
     // Обновляем итоговые цифры
     const totalMsgs = data.datasets.messages.reduce((a, b) => a + b, 0);
@@ -3430,6 +3495,8 @@ async function loadAdminAnalytics() {
         if (!response.ok || !data.success) {
             throw new Error(data.error || 'Не удалось загрузить аналитику');
         }
+
+        await ensureChartJs();
 
         const o = data.overview;
         setText('analytics-total-users', analyticsNumber(o.totalUsers));

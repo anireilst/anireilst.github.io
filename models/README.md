@@ -6,9 +6,9 @@ The homepage loads the 3D mascot only after a visitor chooses **“Добави�
 
 Upload the exported avatar model as:
 
-`models/reil.vrm`
+`models/Reil.vrm`
 
-Use the **VRM** download from the avatar editor, not the backup file or the Unity package. Keep this filename exact because `index.html` loads it from `./models/reil.vrm`.
+Use the **VRM** download from the avatar editor, not the backup file or the Unity package. Keep this filename exact because `index.html` loads it from `./models/Reil.vrm`.
 
 The model is loaded in the browser using Three.js and `@pixiv/three-vrm`. It is not downloaded until the visitor opts in.
 

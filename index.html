@@ -5,7 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anireil Flood — Официальный сайт</title>
     <link rel="icon" type="image/jpeg" href="avatars/flood.png">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // Paint the last known site theme before the first render to prevent a theme flash.
+        (function () {
+            try {
+                if (localStorage.getItem('anireil-autumn-mode') !== 'false') {
+                    document.documentElement.classList.add('autumn-mode-preload');
+                }
+            } catch (error) {
+                document.documentElement.classList.add('autumn-mode-preload');
+            }
+        })();
+    </script>
+
+
     <style>
         :root {
             --neon-color: #c084fc; 
@@ -1200,26 +1213,26 @@
                 radial-gradient(circle at 82% 78%, rgba(180,83,9,0.15), transparent 38%),
                 linear-gradient(180deg, rgba(17,24,39,0.10), rgba(69,26,3,0.12));
         }
-        .autumn-mode .autumn-layer { opacity: 1; }
-        .autumn-mode { --neon-color: #f59e0b; --neon-glow: rgba(245,158,11,0.34); }
-        .autumn-mode .background-glow {
+        :is(.autumn-mode, html.autumn-mode-preload) .autumn-layer { opacity: 1; }
+        :is(.autumn-mode, html.autumn-mode-preload) { --neon-color: #f59e0b; --neon-glow: rgba(245,158,11,0.34); }
+        :is(.autumn-mode, html.autumn-mode-preload) .background-glow {
             background:
                 radial-gradient(circle at 18% 26%, rgba(245,158,11,0.14), transparent 40%),
                 radial-gradient(circle at 80% 72%, rgba(120,53,15,0.18), transparent 43%);
         }
-        .autumn-mode header {
+        :is(.autumn-mode, html.autumn-mode-preload) header {
             background: rgba(18,16,16,0.76) !important;
             border-bottom-color: rgba(245,158,11,0.18);
             box-shadow: 0 12px 38px rgba(0,0,0,0.18);
         }
-        .autumn-mode .hero-card, .autumn-mode .game-card, .autumn-mode .user-card,
-        .autumn-mode .p-card, .autumn-mode .quote-card, .autumn-mode .meme-card,
-        .autumn-mode .stat-summary-card {
+        :is(.autumn-mode, html.autumn-mode-preload) .hero-card, :is(.autumn-mode, html.autumn-mode-preload) .game-card, :is(.autumn-mode, html.autumn-mode-preload) .user-card,
+        :is(.autumn-mode, html.autumn-mode-preload) .p-card, :is(.autumn-mode, html.autumn-mode-preload) .quote-card, :is(.autumn-mode, html.autumn-mode-preload) .meme-card,
+        :is(.autumn-mode, html.autumn-mode-preload) .stat-summary-card {
             border-color: rgba(245,158,11,0.12);
             box-shadow: 0 18px 45px rgba(30,18,8,0.22);
         }
         .rain-container, .leaf-container { z-index: 9998; opacity: 0; transition: opacity 0.6s ease; }
-        .autumn-mode .rain-container, .autumn-mode .leaf-container { opacity: 1; }
+        :is(.autumn-mode, html.autumn-mode-preload) .rain-container, :is(.autumn-mode, html.autumn-mode-preload) .leaf-container { opacity: 1; }
         .rain-drop {
             position: absolute; top: -14vh; width: 1.2px; height: var(--rain-height,72px);
             border-radius: 999px;
@@ -1350,9 +1363,248 @@
 #contacts .contact-extra-links { display:flex; flex-wrap:wrap; justify-content:center; gap:10px 18px; margin-top:18px; font-size:12px; } #contacts .contact-extra-links a { color:#c7aaff; text-decoration:none; } #contacts .contact-extra-links a:hover { text-decoration:underline; }
 @media (max-width:520px) { #contacts .contact-social-grid { grid-template-columns:1fr; } #contacts .contact-community-card { border-radius:23px; } }
 @media (prefers-reduced-motion:reduce) { #contacts .contact-social-link { transition-duration:.01ms; } }
+
+        /* ===== REIL OPTIONAL AVATAR CONSENT ===== */
+        .reil-consent-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: rgba(7, 8, 14, 0.88);
+            -webkit-backdrop-filter: blur(18px);
+            backdrop-filter: blur(18px);
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.45s ease, visibility 0.45s ease;
+        }
+        .reil-consent-overlay.is-closing {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .reil-consent-card {
+            width: min(100%, 520px);
+            box-sizing: border-box;
+            padding: clamp(24px, 5vw, 38px);
+            border: 1px solid rgba(192, 132, 252, 0.24);
+            border-radius: 26px;
+            background: linear-gradient(145deg, rgba(28, 27, 43, 0.98), rgba(15, 16, 25, 0.98));
+            box-shadow: 0 28px 90px rgba(0, 0, 0, 0.48), 0 0 42px rgba(192, 132, 252, 0.08);
+            color: #e2e8f0;
+            text-align: left;
+            animation: reilCardEnter 0.55s cubic-bezier(0.2, 0.75, 0.25, 1) both;
+        }
+        .reil-consent-brand {
+            margin: 0 0 8px;
+            color: #c084fc;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .reil-consent-title {
+            margin: 0;
+            color: #f8fafc;
+            font-size: clamp(1.65rem, 5vw, 2.15rem);
+            line-height: 1.2;
+            text-align: center;
+        }
+        .reil-consent-description {
+            margin: 16px 0 22px;
+            color: #b7b4c8;
+            font-size: 1rem;
+            line-height: 1.7;
+            text-align: center;
+        }
+        .reil-consent-warning {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 0 0 22px;
+            padding: 15px 16px;
+            border: 1px solid rgba(248, 113, 113, 0.24);
+            border-radius: 15px;
+            background: rgba(127, 29, 29, 0.16);
+            color: #ff7777;
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+        .reil-consent-warning strong {
+            display: block;
+            margin-bottom: 3px;
+            color: #ff7777;
+        }
+        .reil-consent-actions {
+            display: grid;
+            gap: 11px;
+        }
+        .reil-consent-button {
+            width: 100%;
+            min-height: 50px;
+            padding: 13px 18px;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+        .reil-consent-button:not(:disabled):hover { transform: translateY(-2px); }
+        .reil-consent-button:focus-visible {
+            outline: 3px solid rgba(192, 132, 252, 0.8);
+            outline-offset: 3px;
+        }
+        .reil-consent-accept {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.22);
+        }
+        .reil-consent-accept:disabled {
+            background: #40364f;
+            color: #b5a9c6;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.82;
+        }
+        .reil-consent-skip {
+            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.035);
+            color: #d6d3e0;
+        }
+        .reil-consent-skip:hover { background: rgba(255, 255, 255, 0.075); }
+        .reil-consent-countdown {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+        @keyframes reilCardEnter {
+            from { opacity: 0; transform: translateY(12px) scale(0.985); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @media (max-width: 480px) {
+            .reil-consent-overlay { padding: 16px; }
+            .reil-consent-card { border-radius: 21px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .reil-consent-overlay, .reil-consent-button { transition: none; }
+            .reil-consent-card { animation: none; }
+        }
+
+    
+        /* ===== REIL SITTING ON THE LOCAL-RULES CARD ===== */
+        .local-rules-card {
+            position: relative;
+            margin-top: 176px;
+            overflow: visible;
+            isolation: isolate;
+        }
+        .local-rules-copy {
+            position: relative;
+            z-index: 2;
+            width: calc(100% - 132px);
+            min-width: 0;
+        }
+        .reil-avatar-stage {
+            display: none;
+            position: absolute;
+            z-index: 5;
+            top: -218px;
+            right: -30px;
+            width: 258px;
+            height: 346px;
+            pointer-events: none;
+            filter: drop-shadow(0 12px 16px rgba(0,0,0,0.18));
+        }
+        html[data-reil-preference="enabled"] .reil-avatar-stage { display: block; }
+        .reil-avatar-stage canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.45s ease;
+        }
+        .reil-avatar-stage.is-ready canvas { opacity: 1; }
+        .reil-avatar-status {
+            position: absolute;
+            inset: 32% 8% auto;
+            color: #d7c6ef;
+            font-size: 0.78rem;
+            line-height: 1.5;
+            text-align: center;
+            text-shadow: 0 1px 8px #100c18;
+        }
+        .reil-avatar-stage.is-ready .reil-avatar-status { display: none; }
+        .reil-avatar-stage.is-error .reil-avatar-status { color: #ff9a9a; }
+        .local-rules-card > div:not(.local-rules-copy):not(.reil-avatar-stage) {
+            position: relative;
+            z-index: 2;
+        }
+        @media (max-width: 768px) {
+            .local-rules-card { margin-top: 210px; }
+            .local-rules-copy { width: calc(100% - 86px); }
+            .reil-avatar-stage {
+                top: -202px;
+                right: -8px;
+                width: 205px;
+                height: 292px;
+            }
+        }
+        @media (max-width: 420px) {
+            .local-rules-card { margin-top: 190px; }
+            .local-rules-copy { width: calc(100% - 65px); }
+            .reil-avatar-stage {
+                top: -190px;
+                right: -5px;
+                width: 178px;
+                height: 258px;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .reil-avatar-stage canvas { transition: none; }
+        }
 </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
+        "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@3/lib/three-vrm.module.min.js"
+      }
+    }
+    </script>
 </head>
-<body>          
+<body>
+
+    <section id="reil-consent-overlay" class="reil-consent-overlay" role="dialog" aria-modal="true" aria-labelledby="reil-consent-title" aria-describedby="reil-consent-description">
+        <div class="reil-consent-card">
+            <p class="reil-consent-brand">Anireil · Optional experience</p>
+            <h1 id="reil-consent-title" class="reil-consent-title">Добавить Reil на сайт?</h1>
+            <p id="reil-consent-description" class="reil-consent-description">
+                Reil может стать вашим спутником на главной странице Anireil. Вы сами решаете, включать ли персонажа.
+            </p>
+            <div class="reil-consent-warning" role="note">
+                <span aria-hidden="true">!</span>
+                <div><strong>Внимание: производительность</strong>
+                    Отображение 3D-персонажа может снизить производительность на слабых устройствах и увеличить время загрузки.
+                </div>
+            </div>
+            <div class="reil-consent-actions">
+                <button id="reil-consent-accept" class="reil-consent-button reil-consent-accept" type="button" disabled>
+                    Добавить Reil
+                    <span id="reil-consent-countdown" class="reil-consent-countdown">Кнопка станет доступна через 5 секунд</span>
+                </button>
+                <button id="reil-consent-skip" class="reil-consent-button reil-consent-skip" type="button">
+                    Продолжить без персонажа
+                </button>
+            </div>
+        </div>
+    </section>
+          
     
     <div class="custom-cursor"></div>
     <div class="custom-cursor-effects"></div>
@@ -1523,7 +1775,12 @@
                     </div>
                 </div>
 
-                <div class="hero-card fade-in-element"> 
+                <div class="hero-card fade-in-element local-rules-card">
+                    <div id="reil-avatar-stage" class="reil-avatar-stage" aria-hidden="true">
+                        <canvas id="reil-avatar-canvas" aria-label="3D-персонаж Reil"></canvas>
+                        <div id="reil-avatar-status" class="reil-avatar-status" role="status" aria-live="polite">Готовим Reil…</div>
+                    </div>
+                    <div class="local-rules-copy">
                     <h3>Локальные правила</h3>
                     <ul>
                         <li>Общаемся на абсолютно любые темы</li>
@@ -1539,6 +1796,7 @@
                         " onmouseover="this.style.background='var(--neon-glow)'; this.style.borderColor='var(--neon-color)'; this.style.boxShadow='0 0 15px var(--neon-glow)';" onmouseout="this.style.background='rgba(192, 132, 252, 0.03)'; this.style.borderColor='var(--neon-color)'; this.style.boxShadow='none';">
                             Читать полные правила и соглашение &rarr;
                         </a>
+                    </div>
                     </div>
                     
                     <div style="background: rgba(20, 20, 28, 0.4); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-top: 30px; display: flex; align-items: center; justify-content: space-between; max-width: 400px;">
@@ -1991,7 +2249,15 @@ const API_BASE = window.location.hostname === 'localhost'
   : 'https://anireil-bot-0ygc.onrender.com';
         
         const SITE_THEME_ADMIN_ID = 6120367732;
-        let siteTheme = { autumnRainEnabled: true };
+        let siteTheme = {
+            autumnRainEnabled: (() => {
+                try {
+                    return localStorage.getItem('anireil-autumn-mode') !== 'false';
+                } catch (error) {
+                    return true;
+                }
+            })()
+        };
 
         function createAutumnAtmosphere() {
             const rainBox = document.getElementById('rain-box');
@@ -2030,6 +2296,14 @@ const API_BASE = window.location.hostname === 'localhost'
         function setAutumnMode(enabled) {
             siteTheme.autumnRainEnabled = Boolean(enabled);
             document.body.classList.toggle('autumn-mode', siteTheme.autumnRainEnabled);
+            document.documentElement.classList.remove('autumn-mode-preload');
+
+            // Cache the server-controlled choice for the next visit.
+            try {
+                localStorage.setItem('anireil-autumn-mode', siteTheme.autumnRainEnabled ? 'true' : 'false');
+            } catch (error) {
+                // The server setting still works without browser storage.
+            }
 
             const status = document.getElementById('autumn-status-pill');
             const button = document.getElementById('autumn-toggle-button');
@@ -2944,8 +3218,22 @@ const API_BASE = window.location.hostname === 'localhost'
         }
 
         document.addEventListener("DOMContentLoaded", async function() {
-            await restoreSiteSession();
+            // Start fetching the theme in parallel with session restoration.
             loadSiteTheme();
+
+            // Reveal content before waiting for any network-dependent authentication.
+            const animatedElements = document.querySelectorAll('.fade-in-element');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.05 });
+            animatedElements.forEach(el => observer.observe(el));
+
+            await restoreSiteSession();
+            updateAutumnAdminUI();
 
             if (!currentSiteUser) {
                 await initGoogleAuth();
@@ -2957,15 +3245,7 @@ const API_BASE = window.location.hostname === 'localhost'
             syncAnalyticsAdminPanel();
             audioPlayer.volume = 0.7; 
 
-            const animatedElements = document.querySelectorAll('.fade-in-element');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.05 });
-            animatedElements.forEach(el => observer.observe(el));
+
 
             const cursor = document.querySelector('.custom-cursor');
             const cursorEffect = document.querySelector('.custom-cursor-effects');
@@ -3005,6 +3285,34 @@ const API_BASE = window.location.hostname === 'localhost'
             });
         });
 
+        let chartJsPromise = null;
+
+        // Download Chart.js only when a chart is needed; do not block the first page render.
+        function ensureChartJs() {
+            if (window.Chart) return Promise.resolve(window.Chart);
+            if (!chartJsPromise) {
+                chartJsPromise = new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+                    script.async = true;
+                    script.dataset.anireilChartjs = 'true';
+                    script.onload = () => {
+                        if (window.Chart) resolve(window.Chart);
+                        else {
+                            chartJsPromise = null;
+                            reject(new Error('Chart.js загрузился, но библиотека недоступна.'));
+                        }
+                    };
+                    script.onerror = () => {
+                        chartJsPromise = null;
+                        reject(new Error('Не удалось загрузить Chart.js.'));
+                    };
+                    document.head.appendChild(script);
+                });
+            }
+            return chartJsPromise;
+        }
+
         let chartInstance = null;
 
 async function loadChart(days = 30) {
@@ -3020,6 +3328,8 @@ async function loadChart(days = 30) {
       console.error('Ошибка получения данных');
       return;
     }
+
+    await ensureChartJs();
 
     // Обновляем итоговые цифры
     const totalMsgs = data.datasets.messages.reduce((a, b) => a + b, 0);
@@ -3273,6 +3583,8 @@ async function loadAdminAnalytics() {
             throw new Error(data.error || 'Не удалось загрузить аналитику');
         }
 
+        await ensureChartJs();
+
         const o = data.overview;
         setText('analytics-total-users', analyticsNumber(o.totalUsers));
         setText('analytics-current-members', analyticsNumber(o.currentMembers));
@@ -3410,6 +3722,243 @@ if (savedColor && savedGlow) {
   changeTheme(savedColor, savedGlow);
 }
 
+    
+    
+    /* ===== REIL OPTIONAL AVATAR CONSENT ===== */
+    (() => {
+        const overlay = document.getElementById('reil-consent-overlay');
+        const acceptButton = document.getElementById('reil-consent-accept');
+        const skipButton = document.getElementById('reil-consent-skip');
+        const countdown = document.getElementById('reil-consent-countdown');
+
+        if (!overlay || !acceptButton || !skipButton || !countdown) return;
+
+        const preferenceKey = 'anireil-reil-preference';
+        const savedPreference = sessionStorage.getItem(preferenceKey);
+
+        const closeConsent = (preference) => {
+            sessionStorage.setItem(preferenceKey, preference);
+            document.documentElement.dataset.reilPreference = preference;
+            overlay.classList.add('is-closing');
+            window.setTimeout(() => overlay.remove(), 480);
+
+            if (preference === 'enabled') {
+                window.dispatchEvent(new CustomEvent('anireil:reil-consent', {
+                    detail: { enabled: true }
+                }));
+            }
+        };
+
+        if (savedPreference === 'enabled' || savedPreference === 'disabled') {
+            overlay.remove();
+            document.documentElement.dataset.reilPreference = savedPreference;
+            if (savedPreference === 'enabled') {
+                window.dispatchEvent(new CustomEvent('anireil:reil-consent', {
+                    detail: { enabled: true }
+                }));
+            }
+            return;
+        }
+
+        let secondsLeft = 5;
+        const countdownTimer = window.setInterval(() => {
+            secondsLeft -= 1;
+            if (secondsLeft <= 0) {
+                window.clearInterval(countdownTimer);
+                acceptButton.disabled = false;
+                countdown.textContent = 'Можно продолжить с персонажем';
+            } else {
+                countdown.textContent = 'Кнопка станет доступна через ' + secondsLeft + ' сек.';
+            }
+        }, 1000);
+
+        acceptButton.addEventListener('click', () => {
+            if (acceptButton.disabled) return;
+            closeConsent('enabled');
+        });
+
+        skipButton.addEventListener('click', () => {
+            window.clearInterval(countdownTimer);
+            closeConsent('disabled');
+        });
+
+        overlay.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                window.clearInterval(countdownTimer);
+                closeConsent('disabled');
+            }
+        });
+
+        skipButton.focus({ preventScroll: true });
+    })();
+
     </script>
+
+    <script type="module">
+        let reilInitPromise = null;
+
+        function setReilStatus(message, isError = false) {
+            const stage = document.getElementById('reil-avatar-stage');
+            const status = document.getElementById('reil-avatar-status');
+            if (status) status.textContent = message;
+            if (stage) stage.classList.toggle('is-error', isError);
+        }
+
+        async function initReilAvatar() {
+            if (reilInitPromise) return reilInitPromise;
+
+            const stage = document.getElementById('reil-avatar-stage');
+            const canvas = document.getElementById('reil-avatar-canvas');
+            if (!stage || !canvas) return;
+
+            stage.setAttribute('aria-hidden', 'false');
+            stage.classList.add('is-loading');
+            setReilStatus('Загружаем Reil…');
+
+            reilInitPromise = (async () => {
+                try {
+                    // Packages and the VRM model are requested only after consent.
+                    const [THREE, loaderModule, vrmModule] = await Promise.all([
+                        import('three'),
+                        import('three/addons/loaders/GLTFLoader.js'),
+                        import('@pixiv/three-vrm')
+                    ]);
+                    const { GLTFLoader } = loaderModule;
+                    const { VRMLoaderPlugin, VRMUtils } = vrmModule;
+
+                    const lowPowerDevice =
+                        window.matchMedia('(max-width: 768px)').matches ||
+                        (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+
+                    const renderer = new THREE.WebGLRenderer({
+                        canvas,
+                        alpha: true,
+                        antialias: !lowPowerDevice,
+                        powerPreference: 'low-power',
+                        preserveDrawingBuffer: false
+                    });
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPowerDevice ? 1 : 1.35));
+                    renderer.setClearColor(0x000000, 0);
+                    renderer.outputColorSpace = THREE.SRGBColorSpace;
+                    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                    renderer.toneMappingExposure = 1.08;
+
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.PerspectiveCamera(27, 1, 0.1, 100);
+                    scene.add(new THREE.HemisphereLight(0xf3edff, 0x75647e, 1.7));
+
+                    const keyLight = new THREE.DirectionalLight(0xffffff, 2.0);
+                    keyLight.position.set(2.5, 4, 3.5);
+                    scene.add(keyLight);
+
+                    const fillLight = new THREE.DirectionalLight(0xc8a5ff, 0.85);
+                    fillLight.position.set(-3, 2, 2);
+                    scene.add(fillLight);
+
+                    const resizeStage = () => {
+                        const width = Math.max(1, stage.clientWidth);
+                        const height = Math.max(1, stage.clientHeight);
+                        renderer.setSize(width, height, false);
+                        camera.aspect = width / height;
+                        camera.updateProjectionMatrix();
+                    };
+                    resizeStage();
+
+                    const loader = new GLTFLoader();
+                    loader.register(parser => new VRMLoaderPlugin(parser));
+
+                    const modelUrl = new URL('./models/reil.vrm', document.baseURI).href;
+                    setReilStatus('Загружаем модель Reil…');
+                    const gltf = await loader.loadAsync(modelUrl);
+                    const vrm = gltf.userData.vrm;
+                    if (!vrm) throw new Error('Файл загрузился, но не распознан как VRM.');
+
+                    if (vrm.meta?.metaVersion === '0' && typeof VRMUtils.rotateVRM0 === 'function') {
+                        VRMUtils.rotateVRM0(vrm);
+                    }
+
+                    // Initial sitting pose: thighs forward, shins down, arms relaxed.
+                    const humanoid = vrm.humanoid;
+                    const rotateBone = (name, x, y, z) => {
+                        const bone = humanoid?.getNormalizedBoneNode?.(name);
+                        if (bone) bone.rotation.set(x, y, z, 'XYZ');
+                    };
+                    rotateBone('leftUpperLeg', -1.08, 0, 0);
+                    rotateBone('rightUpperLeg', -1.08, 0, 0);
+                    rotateBone('leftLowerLeg', 1.28, 0, 0);
+                    rotateBone('rightLowerLeg', 1.28, 0, 0);
+                    rotateBone('leftUpperArm', 0, 0, -0.48);
+                    rotateBone('rightUpperArm', 0, 0, 0.48);
+                    rotateBone('leftLowerArm', -0.35, 0, 0);
+                    rotateBone('rightLowerArm', -0.35, 0, 0);
+                    rotateBone('neck', 0, 0, 0.035);
+                    rotateBone('head', 0, 0, -0.035);
+
+                    try {
+                        if (vrm.expressionManager?.getExpression?.('happy')) {
+                            vrm.expressionManager.setValue('happy', 0.28);
+                        }
+                    } catch (_) {}
+
+                    scene.add(vrm.scene);
+                    const bounds = new THREE.Box3().setFromObject(vrm.scene);
+                    const size = bounds.getSize(new THREE.Vector3());
+                    const center = bounds.getCenter(new THREE.Vector3());
+                    const modelHeight = Math.max(size.y || 1.5, 1.35);
+                    vrm.scene.position.x -= center.x;
+
+                    const cameraDistance = Math.max(modelHeight * 2.3, 2.8);
+                    camera.position.set(0, modelHeight * 0.55, cameraDistance);
+                    camera.lookAt(0, modelHeight * 0.53, 0);
+                    resizeStage();
+
+                    stage.classList.add('is-ready');
+                    stage.classList.remove('is-error', 'is-loading');
+                    setReilStatus('');
+
+                    let lastFrame = 0;
+                    let stageVisible = true;
+                    const visibilityObserver = new IntersectionObserver(entries => {
+                        stageVisible = Boolean(entries[0]?.isIntersecting);
+                        if (stageVisible && !document.hidden) renderer.render(scene, camera);
+                    }, { threshold: 0.01 });
+                    visibilityObserver.observe(stage);
+
+                    const resizeObserver = new ResizeObserver(resizeStage);
+                    resizeObserver.observe(stage);
+                    window.addEventListener('resize', resizeStage, { passive: true });
+
+                    const clock = new THREE.Clock();
+                    renderer.setAnimationLoop(now => {
+                        if (!stageVisible || document.hidden) return;
+                        if (now - lastFrame < 42) return;
+                        lastFrame = now;
+                        const delta = Math.min(clock.getDelta(), 0.05);
+                        vrm.update(delta);
+                        renderer.render(scene, camera);
+                    });
+
+                    document.addEventListener('visibilitychange', () => {
+                        if (!document.hidden && stageVisible) renderer.render(scene, camera);
+                    });
+                } catch (error) {
+                    console.error('Не удалось загрузить 3D-персонажа Reil:', error);
+                    setReilStatus('Не удалось загрузить модель. Добавь файл models/reil.vrm в репозиторий.', true);
+                }
+            })();
+
+            return reilInitPromise;
+        }
+
+        window.addEventListener('anireil:reil-consent', event => {
+            if (event.detail?.enabled) void initReilAvatar();
+        });
+
+        // The consent script runs earlier; restore an already accepted choice here.
+        if (document.documentElement.dataset.reilPreference === 'enabled') {
+            void initReilAvatar();
+        }
+    </script>
+
 </body>
 </html>

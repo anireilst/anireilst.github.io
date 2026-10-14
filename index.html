@@ -3867,7 +3867,7 @@ if (savedColor && savedGlow) {
                     const loader = new GLTFLoader();
                     loader.register(parser => new VRMLoaderPlugin(parser));
 
-                    const modelUrl = new URL('./models/reil.vrm', document.baseURI).href;
+                    const modelUrl = new URL('./models/Reil.vrm', document.baseURI).href;
                     setReilStatus('Загружаем модель Reil…');
                     const gltf = await loader.loadAsync(modelUrl);
                     const vrm = gltf.userData.vrm;

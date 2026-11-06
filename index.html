@@ -1599,7 +1599,7 @@
     .project-card-commands { --project-accent: 184, 135, 255; }
     .project-card-rules { --project-accent: 114, 137, 218; }
     .project-card-minecraft { --project-accent: 98, 217, 135; }
-    .project-card-games { --project-accent: 235, 150, 165; }
+    .project-card-games { --project-accent: 235, 150, 165; grid-column: 1 / -1; width: calc(50% - 6px); justify-self: center; }
 
     .project-mark {
         display: grid; width: 48px; height: 48px; flex: 0 0 48px; place-items: center;
@@ -1628,7 +1628,7 @@
 
     @media (max-width: 700px) {
         .projects-grid { grid-template-columns: 1fr; gap: 10px; }
-        .projects-card-games { grid-column: auto; width: auto; }
+        .project-card-games { grid-column: auto; width: auto; }
         .projects-intro { margin-bottom: 24px; }
     }
     @media (max-width: 420px) {

@@ -1637,6 +1637,12 @@
     }
     .project-card-bot { --project-accent: 96, 165, 250; }
     .project-card-commands { --project-accent: 192, 132, 252; }
+    .project-card-rules { --project-accent: 96, 165, 250; }
+    .project-card-games {
+        grid-column: 1 / -1;
+        width: calc(50% - 10px);
+        justify-self: center;
+    }
     .project-card-minecraft { --project-accent: 74, 190, 133; }
     .project-card-games { --project-accent: 235, 150, 165; }
     .project-card-top {
@@ -1738,6 +1744,7 @@
     .projects-shell .analytics-admin-accounts { margin-top: 24px; }
     @media (max-width: 700px) {
         .projects-grid { grid-template-columns: 1fr; gap: 14px; }
+        .project-card-games { grid-column: auto; width: auto; }
         .project-card { min-height: 235px; padding: 21px; }
         .projects-intro { margin-bottom: 27px; }
         .projects-description { font-size: .9rem; }
@@ -2087,16 +2094,30 @@
                 </a>
             </article>
 
+            <article class="project-card project-card-rules">
+                <div class="project-card-top">
+                    <div class="project-mark project-mark-rules" aria-hidden="true">AR</div>
+                    <span class="project-status project-status-available">Доступен</span>
+                </div>
+                <h3 class="project-name">Anireil Rules</h3>
+                <p class="project-description">
+                    Официальная база правил Anireil: нормы сообщества, пояснения и условия участия.
+                </p>
+                <a class="project-link" href="https://anireilst.github.io/Anireil-Rules/" target="_blank" rel="noopener noreferrer">
+                    Открыть правила <span aria-hidden="true">↗</span>
+                </a>
+            </article>
+
             <article class="project-card project-card-minecraft">
                 <div class="project-card-top">
                     <div class="project-mark project-mark-minecraft">
                         <img src="logos/minecraft.jpg" alt="Minecraft">
                     </div>
-                    <span class="project-status project-status-preparing">Подготовка</span>
+                    <span class="project-status project-status-planned">В планах</span>
                 </div>
                 <h3 class="project-name">Anireil Minecraft</h3>
                 <p class="project-description">
-                    Отдельное игровое пространство Anireil. Здесь собирается информация о проекте и подготовке собственного Minecraft-сервера.
+                    Идея собственного Minecraft-сервера Anireil. Сайт проекта уже существует, но сам сервер пока не запущен и остаётся в планах.
                 </p>
                 <a class="project-link" href="https://anireilmine.github.io/" target="_blank" rel="noopener noreferrer">
                     Сайт проекта <span aria-hidden="true">↗</span>

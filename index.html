@@ -1824,8 +1824,8 @@
                             
         <nav class="nav-links" style="display: flex; gap: 25px; align-items: center; margin: 0 auto;">
             <button class="nav-link active" onclick="switchSection('home')">Главная</button>
-            <button class="nav-link" onclick="switchSection('stats')">Статистика</button>
-            <button id="analytics-nav" class="nav-link" onclick="switchSection('analytics')">Проекты</button>
+            <button class="nav-link" onclick="switchSection('stats')">Проекты</button>
+            <button id="analytics-nav" class="nav-link" onclick="switchSection('analytics')">Аналитика</button>
             <button class="nav-link" onclick="switchSection('wall')">Цитаты сообщества</button>
             <button class="nav-link" onclick="switchSection('gallery')">Галерея</button>
             <button class="nav-link" onclick="switchSection('about')">О нас</button>
@@ -2046,36 +2046,7 @@
             </div>
         </section>
 
-        <section id="stats" class="content-section">
-  <h2 class="section-title">Статистика чата</h2>
-  <div style="max-width: 1000px; margin: 0 auto;">
-    <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
-      <button class="period-btn active" data-days="7" onclick="loadChart(7)">7 дней</button>
-      <button class="period-btn" data-days="30" onclick="loadChart(30)">30 дней</button>
-      <button class="period-btn" data-days="90" onclick="loadChart(90)">3 месяца</button>
-    </div>
-    <div style="background: rgba(20, 20, 35, 0.5); border-radius: 16px; padding: 20px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.05); width: 100%; min-height: 500px;">
-      <canvas id="statsChart" style="width:100%; height:500px;"></canvas>
-    </div>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-top: 20px;">
-      <div class="stat-summary-card" style="background: rgba(20,20,35,0.4); border-radius: 12px; padding: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
-        <div style="font-size: 0.8rem; color: #94a3b8;">Сообщений (всего)</div>
-        <div id="total-msgs" style="font-size: 1.8rem; font-weight: 700; color: #60a5fa;">0</div>
-      </div>
-      <div class="stat-summary-card" style="background: rgba(20,20,35,0.4); border-radius: 12px; padding: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
-        <div style="font-size: 0.8rem; color: #94a3b8;">Новых участников</div>
-        <div id="total-joins" style="font-size: 1.8rem; font-weight: 700; color: #22c55e;">0</div>
-      </div>
-      <div class="stat-summary-card" style="background: rgba(20,20,35,0.4); border-radius: 12px; padding: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
-        <div style="font-size: 0.8rem; color: #94a3b8;">Активных дней</div>
-        <div id="total-active" style="font-size: 1.8rem; font-weight: 700; color: #c084fc;">0</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-        
-<section id="analytics" class="content-section" aria-labelledby="projects-title">
+        <section id="stats" class="content-section" aria-labelledby="projects-title">
     <div class="projects-shell">
         <div class="projects-intro">
             <div class="projects-kicker">ANIREIL · PROJECTS</div>
@@ -2159,7 +2130,75 @@
             </article>
         </div>
 
-        <div id="analytics-admin-accounts" class="analytics-card analytics-admin-accounts" style="display:none;">
+        
+    </div>
+</section>
+
+        
+<section id="analytics" class="content-section">
+            <div class="analytics-shell">
+                <div class="analytics-hero">
+                    <div>
+                        <div class="analytics-kicker">🌐 PUBLIC ANALYTICS · ANIREIL</div>
+                        <h2>Центр аналитики</h2>
+                        <p>Общие показатели аудитории, активности и роста Anireil — доступны всем посетителям без регистрации.</p>
+                    </div>
+                    <div class="analytics-actions">
+                        <span id="analytics-status" class="analytics-status">● Готово</span>
+                        <button class="analytics-refresh" type="button" onclick="loadAdminAnalytics()">↻ Обновить</button>
+                    </div>
+                </div>
+
+                <div class="analytics-kpi-grid">
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(96,165,250,.16)"><div class="analytics-kpi-label">Пользователей в базе</div><div id="analytics-total-users" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">все известные аккаунты</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(34,197,94,.15)"><div class="analytics-kpi-label">Сейчас в чате</div><div id="analytics-current-members" class="analytics-kpi-value">—</div><div id="analytics-telegram-count" class="analytics-kpi-sub">Telegram: —</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(168,85,247,.15)"><div class="analytics-kpi-label">Активны за 24 часа</div><div id="analytics-active-24h" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">по последней активности</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(245,158,11,.15)"><div class="analytics-kpi-label">Сообщений за 24 часа</div><div id="analytics-messages-24h" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">из журнала сообщений</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(96,165,250,.12)"><div class="analytics-kpi-label">Активны за 7 дней</div><div id="analytics-active-7d" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">уникальная аудитория</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(34,197,94,.13)"><div class="analytics-kpi-label">Новых за 30 дней</div><div id="analytics-joins-30d" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">по дате вступления</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(239,68,68,.13)"><div class="analytics-kpi-label">Ушли за 30 дней</div><div id="analytics-leaves-30d" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">по истории выхода</div></div>
+                    <div class="analytics-kpi" style="--kpi-glow:rgba(192,132,252,.16)"><div class="analytics-kpi-label">В чёрном списке</div><div id="analytics-blacklist" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">ограниченных аккаунтов</div></div>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <div class="analytics-card-head"><div><h3>Активность за 7 дней</h3><span>сообщения и уникальные активные пользователи</span></div><span id="analytics-updated" class="analytics-updated">—</span></div>
+                        <div class="analytics-chart-box"><canvas id="analyticsActivityChart"></canvas></div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-head"><div><h3>Самые активные за 7 дней</h3><span>по журналу сообщений</span></div></div>
+                        <div id="analytics-top-users" class="analytics-list"></div>
+                    </div>
+                </div>
+
+                <div class="analytics-card" style="margin-bottom:18px">
+                    <div class="analytics-card-head"><div><h3>Рост аудитории за 30 дней</h3><span>вступления против выходов</span></div></div>
+                    <div class="analytics-chart-box"><canvas id="analyticsGrowthChart"></canvas></div>
+                </div>
+
+                <div class="analytics-bottom-grid">
+                    <div class="analytics-card">
+                        <div class="analytics-card-head"><div><h3>Популярные команды</h3><span>slash-команды за 7 дней</span></div></div>
+                        <div id="analytics-commands" class="analytics-list"></div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-head"><div><h3>Типы активности</h3><span>накопительные счётчики</span></div></div>
+                        <div class="analytics-chart-box" style="height:260px"><canvas id="analyticsMediaChart"></canvas></div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-head"><div><h3>Удержание базы</h3><span>текущая доля оставшихся</span></div></div>
+                        <div id="analytics-retention" class="analytics-retention"></div>
+                        <div class="analytics-note">Операционный показатель по текущей базе, не классический cohort-retention.</div>
+                    </div>
+                </div>
+
+                <div class="analytics-card" style="margin-top:18px">
+                    <div class="analytics-card-head"><div><h3>Топ за всё время</h3><span>по накопленному счётчику сообщений</span></div></div>
+                    <div id="analytics-lifetime-top" class="analytics-list"></div>
+                </div>
+
+
+                <div id="analytics-admin-accounts" class="analytics-card analytics-admin-accounts" style="display:none;">
                     <div class="analytics-admin-accounts-head">
                         <div>
                             <div class="analytics-card-head" style="margin-bottom:6px;">
@@ -2174,8 +2213,10 @@
                     </div>
                     <div id="analytics-admin-accounts-list" class="analytics-admin-accounts-list"></div>
                 </div>
-    </div>
-</section>
+
+                <div class="analytics-note">Оперативная история сообщений хранится 7 дней; рост пользователей и накопительная статистика доступны дольше.</div>
+            </div>
+        </section>
 
 
         <section id="wall" class="content-section">
@@ -3557,7 +3598,7 @@ const API_BASE = window.location.hostname === 'localhost'
 
             updateUserUI();
             syncAnalyticsNav();
-            // Public analytics were replaced by the projects showcase.
+            loadAdminAnalytics();
             syncAnalyticsAdminPanel();
             audioPlayer.volume = 0.7; 
 

@@ -1809,10 +1809,10 @@
                     <div class="community-theme-picker">
                         <span>Цвет акцента</span>
                         <div class="community-theme-swatches" aria-label="Выбрать цвет оформления">
-                            <button type="button" aria-label="Фиолетовый акцент" onclick="changeTheme('#a78bfa', 'rgba(167, 139, 250, 0.28)')" style="--swatch-color:#a78bfa" class="is-selected"></button>
-                            <button type="button" aria-label="Голубой акцент" onclick="changeTheme('#67c9ed', 'rgba(103, 201, 237, 0.28)')" style="--swatch-color:#67c9ed"></button>
-                            <button type="button" aria-label="Мятный акцент" onclick="changeTheme('#75d6b3', 'rgba(117, 214, 179, 0.28)')" style="--swatch-color:#75d6b3"></button>
-                            <button type="button" aria-label="Розовый акцент" onclick="changeTheme('#f08cae', 'rgba(240, 140, 174, 0.28)')" style="--swatch-color:#f08cae"></button>
+                            <button type="button" aria-label="Фиолетовый акцент" onclick="selectCommunityTheme(this, '#a78bfa', 'rgba(167, 139, 250, 0.28)')" style="--swatch-color:#a78bfa" class="is-selected"></button>
+                            <button type="button" aria-label="Голубой акцент" onclick="selectCommunityTheme(this, '#67c9ed', 'rgba(103, 201, 237, 0.28)')" style="--swatch-color:#67c9ed"></button>
+                            <button type="button" aria-label="Мятный акцент" onclick="selectCommunityTheme(this, '#75d6b3', 'rgba(117, 214, 179, 0.28)')" style="--swatch-color:#75d6b3"></button>
+                            <button type="button" aria-label="Розовый акцент" onclick="selectCommunityTheme(this, '#f08cae', 'rgba(240, 140, 174, 0.28)')" style="--swatch-color:#f08cae"></button>
                         </div>
                     </div>
                 </aside>
@@ -3206,7 +3206,7 @@ const API_BASE = window.location.hostname === 'localhost'
             const targetSection = document.getElementById(sectionId);
             if (targetSection) targetSection.classList.add('active');
             
-            if (window.event && window.event.currentTarget) {
+            if (window.event && window.event.currentTarget && window.event.currentTarget.classList.contains('nav-link')) {
                 window.event.currentTarget.classList.add('active');
             } else {
                 const targetBtn = Array.from(document.querySelectorAll('.nav-link')).find(btn => btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(sectionId));
@@ -3759,6 +3759,19 @@ const savedGlow = localStorage.getItem('neon-glow');
 if (savedColor && savedGlow) {
   changeTheme(savedColor, savedGlow);
 }
+
+function selectCommunityTheme(button, color, glow) {
+  changeTheme(color, glow);
+  document.querySelectorAll('.community-theme-swatches button').forEach(swatch => {
+    swatch.classList.toggle('is-selected', swatch === button);
+  });
+}
+
+const activeThemeColor = (savedColor || '#a78bfa').toLowerCase();
+document.querySelectorAll('.community-theme-swatches button').forEach(swatch => {
+  const swatchColor = swatch.style.getPropertyValue('--swatch-color').trim().toLowerCase();
+  swatch.classList.toggle('is-selected', swatchColor === activeThemeColor);
+});
 
     
     

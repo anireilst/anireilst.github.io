@@ -874,3 +874,443 @@ a,button,input,textarea,select { -webkit-tap-highlight-color:transparent; }
     .analytics-kpi-label { font-size:.56rem; }
 }
 
+/* Phase 3 — profile, player, consent and interaction polish */
+#profile-modal {
+    z-index:11000;
+    box-sizing:border-box;
+    padding:clamp(12px,3vw,28px);
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    background:rgba(3,7,14,.76);
+    -webkit-backdrop-filter:blur(16px);
+    backdrop-filter:blur(16px);
+}
+#profile-modal .p-modal-overlay {
+    background:transparent;
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+}
+#profile-modal .p-modal-content {
+    position:relative;
+    width:min(100%,980px);
+    height:auto;
+    max-width:980px;
+    max-height:min(90dvh,940px);
+    min-height:0;
+    margin:auto;
+    padding:0;
+    overflow-x:hidden;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    border:1px solid rgba(190,204,231,.15);
+    border-radius:26px;
+    background:
+        radial-gradient(ellipse at 5% 0%,rgba(100,125,184,.14),transparent 34%),
+        radial-gradient(ellipse at 95% 0%,rgba(145,119,197,.13),transparent 32%),
+        linear-gradient(150deg,#111927 0%,#0c121e 72%,#0b111b 100%);
+    box-shadow:0 34px 110px rgba(0,0,0,.58),0 0 0 1px rgba(255,255,255,.025);
+    transform:translateY(14px) scale(.99);
+    scrollbar-color:rgba(145,157,184,.35) transparent;
+}
+#profile-modal.active .p-modal-content {
+    transform:translateY(0) scale(1);
+    border-color:rgba(167,139,250,.24);
+}
+#profile-modal .p-modal-content::before {
+    opacity:.55;
+    background:linear-gradient(120deg,transparent 0 35%,rgba(255,255,255,.025) 50%,transparent 65%);
+}
+#profile-modal .p-modal-close {
+    position:absolute;
+    top:17px;
+    right:17px;
+    width:42px;
+    height:42px;
+    border:1px solid rgba(210,222,245,.14);
+    border-radius:13px;
+    background:rgba(8,13,22,.72);
+    color:#d9e2f0;
+    font-size:1.55rem;
+    box-shadow:0 8px 24px rgba(0,0,0,.18);
+}
+#profile-modal .p-modal-close:hover {
+    transform:translateY(-1px);
+    border-color:rgba(167,139,250,.42);
+    background:rgba(167,139,250,.12);
+}
+#profile-modal .p-profile-header.p-wow-hero {
+    min-height:0;
+    grid-template-columns:auto minmax(0,1fr);
+    gap:22px;
+    padding:35px 76px 23px 30px;
+    border-bottom-color:var(--community-line);
+    background:
+        radial-gradient(ellipse at 12% 42%,rgba(105,135,190,.15),transparent 37%),
+        radial-gradient(ellipse at 88% 6%,rgba(151,130,207,.13),transparent 37%);
+}
+#profile-modal .p-wow-avatar-wrap { width:116px; height:116px; }
+#profile-modal .p-avatar.p-wow-avatar { width:96px; height:96px; }
+#profile-modal .p-wow-avatar-ring { box-shadow:0 0 25px rgba(167,139,250,.18); }
+#profile-modal .p-wow-eyebrow { color:#8292aa; font-size:.61rem; letter-spacing:.17em; }
+#profile-modal .p-wow-name { color:#f0f4fb; font-size:clamp(1.75rem,4vw,2.7rem); font-weight:800; letter-spacing:-.06em; }
+#profile-modal .p-wow-handle { color:#93a1b5; font-size:.84rem; }
+#profile-modal .p-wow-badge {
+    min-height:27px;
+    padding:0 10px;
+    border-color:var(--community-line);
+    background:rgba(255,255,255,.045);
+    color:#c5d0df;
+    font-size:.68rem;
+    box-shadow:none;
+}
+#profile-modal .p-wow-badge.rank {
+    border-color:rgba(167,139,250,.27);
+    background:rgba(167,139,250,.11);
+    color:#d8cdfc;
+}
+#profile-modal .p-wow-badge.linked {
+    border-color:rgba(121,200,164,.22);
+    background:rgba(121,200,164,.08);
+    color:#a7dfc4;
+}
+#profile-modal .p-wow-hero-stats { gap:10px; margin-top:1px; }
+#profile-modal .p-wow-hero-stat {
+    padding:12px 15px;
+    border-color:rgba(210,222,245,.09);
+    border-radius:14px;
+    background:rgba(255,255,255,.035);
+}
+#profile-modal .p-wow-hero-stat-label { color:#7e8da4; font-size:.61rem; letter-spacing:.1em; }
+#profile-modal .p-wow-hero-stat-value { color:#eff3fb; font-size:1.3rem; font-variant-numeric:tabular-nums; }
+#profile-modal .p-wow-body { padding:22px 25px 26px; }
+#profile-modal .p-wow-grid { gap:13px; }
+#profile-modal .p-wow-card {
+    padding:18px;
+    border-color:rgba(210,222,245,.09);
+    border-radius:17px;
+    background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+    box-shadow:inset 0 1px rgba(255,255,255,.025);
+}
+#profile-modal .p-wow-card:hover {
+    transform:translateY(-1px);
+    border-color:rgba(167,139,250,.2);
+    box-shadow:0 14px 35px rgba(0,0,0,.18);
+}
+#profile-modal .p-wow-section-title { color:#8796ad; font-size:.6rem; letter-spacing:.14em; }
+#profile-modal .p-wow-card h3 { color:#e7edf7; font-size:.91rem; }
+#profile-modal .p-wow-card .profile-info-line { border-bottom-color:rgba(210,222,245,.075); }
+#profile-modal .p-wow-card .profile-info-line > span { color:#8290a5; }
+#profile-modal .p-wow-card .profile-info-line strong { color:#dbe4f1; }
+#profile-modal .p-wow-stat-tile,
+#profile-modal .p-wow-anketa-item {
+    border-color:rgba(210,222,245,.08);
+    border-radius:13px;
+    background:rgba(255,255,255,.03);
+}
+#profile-modal .p-wow-stat-tile span,
+#profile-modal .p-wow-anketa-item span { color:#8290a5; }
+#profile-modal .p-wow-stat-tile strong,
+#profile-modal .p-wow-anketa-item strong { color:#e7edf7; }
+#profile-modal .p-wow-award {
+    border-color:rgba(167,139,250,.18);
+    border-radius:11px;
+    background:rgba(167,139,250,.07);
+    color:#d7ccfa;
+}
+#profile-modal .p-wow-award::before { color:#b8a8f1; }
+#profile-modal .p-wow-footer-note { color:#77869d; }
+#profile-modal .autumn-admin-button,
+#profile-modal .p-wow-account-access-button {
+    min-height:36px;
+    border-radius:10px;
+    font-family:inherit;
+    font-weight:800;
+}
+#profile-modal .p-wow-accounts-list { scrollbar-color:rgba(145,157,184,.3) transparent; }
+#profile-modal .p-wow-account-row {
+    border-color:rgba(210,222,245,.08);
+    background:rgba(255,255,255,.025);
+}
+
+/* Music dropdown and controls. */
+#music-menu {
+    padding-top:5px !important;
+    border-color:rgba(190,204,231,.15) !important;
+    background:rgba(14,21,33,.98) !important;
+    -webkit-backdrop-filter:blur(24px) !important;
+    backdrop-filter:blur(24px) !important;
+    box-shadow:0 24px 70px rgba(0,0,0,.48) !important;
+}
+#music-menu > div:first-child {
+    padding:13px 14px 5px !important;
+    color:#8493aa !important;
+    font-size:.61rem !important;
+    font-weight:800;
+    letter-spacing:.16em !important;
+}
+#music-menu #music-search {
+    width:calc(100% - 24px);
+    min-height:40px;
+    margin:8px 12px 10px;
+    padding:0 12px;
+    border-radius:11px !important;
+    outline:none;
+    font:inherit;
+    font-size:.75rem;
+}
+#music-menu #music-search:focus-visible {
+    border-color:rgba(167,139,250,.55) !important;
+    box-shadow:0 0 0 3px rgba(167,139,250,.12) !important;
+}
+#music-menu .tracks-list-container { max-height:190px; padding:3px 8px 8px; overflow-y:auto; }
+#music-menu .track-item {
+    display:flex;
+    align-items:center;
+    min-height:42px;
+    margin:2px 0;
+    padding:10px 11px !important;
+    border:1px solid transparent;
+    border-radius:10px;
+    color:#c3cedd !important;
+    font-size:.75rem !important;
+    line-height:1.45;
+    transition:background .18s ease,border-color .18s ease,color .18s ease;
+}
+#music-menu .track-item:hover,
+#music-menu .track-item:focus-visible {
+    border-color:rgba(167,139,250,.16);
+    background:rgba(167,139,250,.09) !important;
+    color:#f1edff !important;
+    outline:none;
+}
+#music-menu .player-controls-box {
+    margin-top:3px;
+    padding:13px 14px;
+    border-top:1px solid rgba(210,222,245,.08);
+    background:rgba(4,9,16,.32);
+}
+#music-menu .progress-bar-container {
+    height:7px;
+    margin:0 0 13px;
+    border-radius:999px;
+    background:rgba(210,222,245,.13);
+    outline:none;
+    touch-action:pan-y;
+}
+#music-menu .progress-bar-container:focus-visible { box-shadow:0 0 0 3px rgba(167,139,250,.2); }
+#music-menu .progress-bar-fill {
+    border-radius:inherit;
+    background:linear-gradient(90deg,#75c9ed,#a78bfa);
+    box-shadow:0 0 12px rgba(167,139,250,.22);
+    pointer-events:none;
+}
+#music-menu .volume-box { color:#8594aa; }
+#music-menu .volume-slider { height:5px; accent-color:#a78bfa; }
+#music-menu .yandex-music-btn { margin:5px 12px 10px; border-radius:10px; font-size:.73rem; }
+#music-menu [onclick="stopMusic()"] {
+    padding:12px 14px !important;
+    border-top-color:rgba(210,222,245,.08) !important;
+    background:rgba(239,68,68,.035) !important;
+    color:#e6a0a4 !important;
+    font-size:.73rem !important;
+}
+#music-menu [onclick="stopMusic()"]:hover {
+    background:rgba(239,68,68,.10) !important;
+    color:#ffc0c2 !important;
+}
+
+/* Optional Reil dialog. */
+.reil-consent-overlay {
+    z-index:12000;
+    padding:20px;
+    background:rgba(4,8,15,.82);
+    -webkit-backdrop-filter:blur(20px);
+    backdrop-filter:blur(20px);
+}
+.reil-consent-card {
+    width:min(100%,540px);
+    padding:clamp(23px,4vw,36px);
+    border-color:rgba(190,204,231,.16);
+    border-radius:25px;
+    background:
+        radial-gradient(ellipse at 10% 0%,rgba(100,125,184,.15),transparent 40%),
+        linear-gradient(145deg,#141e2e,#0e1521);
+    box-shadow:0 32px 100px rgba(0,0,0,.58);
+}
+.reil-consent-brand { color:#a99ae2; font-size:.64rem; letter-spacing:.18em; }
+.reil-consent-title { color:#f1f4fb; font-weight:800; letter-spacing:-.045em; }
+.reil-consent-description { color:#9caabe; font-size:.87rem; line-height:1.8; }
+.reil-consent-warning {
+    border-color:rgba(235,170,120,.17);
+    border-radius:14px;
+    background:rgba(184,115,67,.08);
+    color:#d2a98a;
+    font-size:.77rem;
+    line-height:1.7;
+}
+.reil-consent-warning strong { color:#e5ba9a; }
+.reil-consent-actions { gap:10px; }
+.reil-consent-button {
+    min-height:48px;
+    padding:12px 15px;
+    border-radius:12px;
+    font-family:inherit;
+    font-size:.78rem;
+    font-weight:800;
+}
+.reil-consent-accept {
+    border-color:rgba(167,139,250,.3);
+    background:linear-gradient(115deg,#6455b8,#7667cb 58%,#5887ba);
+    box-shadow:0 10px 27px rgba(93,91,185,.18);
+}
+.reil-consent-accept:disabled {
+    border-color:rgba(210,222,245,.10);
+    background:rgba(255,255,255,.07);
+    color:#748197;
+    box-shadow:none;
+}
+.reil-consent-skip {
+    border-color:rgba(210,222,245,.13);
+    background:rgba(255,255,255,.035);
+    color:#c5d0df;
+}
+.reil-consent-skip:hover { background:rgba(255,255,255,.075); }
+.reil-consent-countdown { color:rgba(255,255,255,.75); font-size:.66rem; }
+
+/* Accessible lightbox for gallery images. */
+.gallery-lightbox-open { overflow:hidden; }
+.gallery-lightbox {
+    position:fixed;
+    inset:0;
+    z-index:13000;
+    display:grid;
+    place-items:center;
+    padding:clamp(16px,4vw,42px);
+    background:rgba(3,7,14,0);
+    -webkit-backdrop-filter:blur(0);
+    backdrop-filter:blur(0);
+    opacity:0;
+    transition:opacity .18s ease,background .18s ease,backdrop-filter .18s ease;
+}
+.gallery-lightbox.is-visible {
+    opacity:1;
+    background:rgba(3,7,14,.93);
+    -webkit-backdrop-filter:blur(15px);
+    backdrop-filter:blur(15px);
+}
+.gallery-lightbox.is-closing { opacity:0; }
+.gallery-lightbox-close {
+    position:absolute;
+    top:max(16px,env(safe-area-inset-top));
+    right:max(16px,env(safe-area-inset-right));
+    z-index:2;
+    display:grid;
+    place-items:center;
+    width:46px;
+    height:46px;
+    border:1px solid rgba(210,222,245,.19);
+    border-radius:14px;
+    background:rgba(17,25,39,.8);
+    color:#edf2fb;
+    font:inherit;
+    font-size:1.8rem;
+    line-height:1;
+    cursor:pointer;
+}
+.gallery-lightbox-close:hover {
+    border-color:rgba(167,139,250,.45);
+    background:rgba(167,139,250,.13);
+}
+.gallery-lightbox-frame {
+    display:grid;
+    justify-items:center;
+    gap:13px;
+    width:min(100%,1200px);
+    max-height:100%;
+    margin:0;
+}
+.gallery-lightbox-image {
+    display:block;
+    max-width:100%;
+    max-height:calc(100dvh - 115px);
+    object-fit:contain;
+    border:1px solid rgba(210,222,245,.12);
+    border-radius:18px;
+    background:rgba(255,255,255,.025);
+    box-shadow:0 30px 100px rgba(0,0,0,.48);
+}
+.gallery-lightbox-caption { color:#aab7ca; font-size:.76rem; font-weight:700; text-align:center; }
+.meme-img[role="button"] { cursor:zoom-in; }
+.meme-img[role="button"]:focus-visible { outline:2px solid rgba(167,139,250,.9); outline-offset:4px; }
+
+/* Touch devices use their native pointer; avoid decorative cursor and tilt. */
+@media (hover:none),(pointer:coarse) {
+    .custom-cursor,.custom-cursor-effects { display:none !important; }
+    .user-card,.game-card {
+        transform:none !important;
+        transform-style:flat !important;
+        will-change:auto !important;
+    }
+}
+@media (max-width:760px) {
+    #profile-modal { align-items:flex-start; padding:10px; }
+    #profile-modal .p-modal-content {
+        width:100%;
+        max-height:calc(100dvh - 20px);
+        border-radius:19px;
+    }
+    #profile-modal .p-profile-header.p-wow-hero {
+        grid-template-columns:auto minmax(0,1fr);
+        gap:15px;
+        padding:25px 60px 18px 18px;
+    }
+    #profile-modal .p-wow-avatar-wrap { width:82px; height:82px; }
+    #profile-modal .p-avatar.p-wow-avatar { width:68px; height:68px; }
+    #profile-modal .p-wow-online-dot { right:3px; bottom:3px; width:15px; height:15px; border-width:3px; }
+    #profile-modal .p-wow-name { font-size:clamp(1.35rem,6vw,1.9rem); }
+    #profile-modal .p-wow-handle { margin-top:5px; font-size:.73rem; }
+    #profile-modal .p-wow-badges { gap:6px; margin-top:9px; }
+    #profile-modal .p-wow-badge { min-height:24px; padding-inline:8px; font-size:.61rem; }
+    #profile-modal .p-wow-hero-stats {
+        grid-column:1 / -1;
+        grid-template-columns:repeat(3,minmax(0,1fr));
+        gap:7px;
+        margin-top:4px;
+    }
+    #profile-modal .p-wow-hero-stat { padding:9px 10px; }
+    #profile-modal .p-wow-hero-stat-label { font-size:.52rem; }
+    #profile-modal .p-wow-hero-stat-value { font-size:1.1rem; }
+    #profile-modal .p-wow-body { padding:14px; }
+    #profile-modal .p-wow-grid { grid-template-columns:1fr; gap:10px; }
+    #profile-modal .p-wow-wide { grid-column:auto; }
+    #profile-modal .p-wow-card { padding:15px; }
+    #profile-modal .p-wow-card .profile-info-line strong { max-width:60%; }
+    #profile-modal .p-wow-account-row { grid-template-columns:auto minmax(0,1fr); }
+    #profile-modal .p-wow-account-actions { grid-column:2; justify-items:start; }
+    #profile-modal .p-modal-close { top:10px; right:10px; width:36px; height:36px; }
+    .gallery-lightbox { padding:14px; }
+    .gallery-lightbox-image { max-height:calc(100dvh - 100px); border-radius:12px; }
+}
+@media (max-width:420px) {
+    #profile-modal .p-profile-header.p-wow-hero {
+        grid-template-columns:1fr;
+        justify-items:center;
+        padding:24px 48px 16px;
+        text-align:center;
+    }
+    #profile-modal .p-wow-badges { justify-content:center; }
+    #profile-modal .p-wow-hero-stats { width:100%; }
+    #profile-modal .p-wow-hero-stat { padding:8px 7px; text-align:center; }
+    #profile-modal .p-wow-hero-stat-label { font-size:.48rem; letter-spacing:.06em; }
+    #profile-modal .p-wow-hero-stat-value { font-size:1rem; }
+    #profile-modal .p-wow-body { padding:12px; }
+    #profile-modal .p-wow-card { padding:13px; }
+}
+@media (prefers-reduced-motion:reduce) {
+    #profile-modal .p-modal-content::before,
+    #profile-modal .p-wow-avatar-ring { animation:none !important; }
+    #profile-modal .p-modal-content,
+    .gallery-lightbox { transition:none !important; }
+    .gallery-lightbox.is-visible { opacity:1; }
+}
+

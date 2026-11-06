@@ -1577,6 +1577,177 @@
       }
     }
     </script>
+
+<style id="anireil-projects-styles">
+    .projects-shell {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .projects-intro {
+        max-width: 760px;
+        margin: 0 auto 34px;
+        text-align: center;
+    }
+    .projects-kicker {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 12px;
+        color: var(--neon-color);
+        font-size: .72rem;
+        font-weight: 800;
+        letter-spacing: .2em;
+    }
+    .projects-title { margin: 0 0 18px; }
+    .projects-description {
+        max-width: 670px;
+        margin: 0 auto;
+        color: #94a3b8;
+        font-size: .98rem;
+        line-height: 1.75;
+    }
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+        align-items: stretch;
+    }
+    .project-card {
+        --project-accent: 192, 132, 252;
+        position: relative;
+        display: flex;
+        min-width: 0;
+        min-height: 265px;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 25px;
+        border: 1px solid rgba(255,255,255,.075);
+        border-radius: 20px;
+        background:
+            radial-gradient(circle at 100% 0%, rgba(var(--project-accent), .13), transparent 48%),
+            linear-gradient(145deg, rgba(26,27,41,.84), rgba(17,19,31,.88));
+        box-shadow: 0 16px 38px rgba(0,0,0,.16);
+        backdrop-filter: blur(8px);
+        transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+    .project-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(var(--project-accent), .38);
+        box-shadow: 0 20px 46px rgba(0,0,0,.25), 0 0 28px rgba(var(--project-accent), .08);
+    }
+    .project-card-bot { --project-accent: 96, 165, 250; }
+    .project-card-commands { --project-accent: 192, 132, 252; }
+    .project-card-minecraft { --project-accent: 74, 190, 133; }
+    .project-card-games { --project-accent: 235, 150, 165; }
+    .project-card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+    }
+    .project-mark {
+        display: grid;
+        width: 58px;
+        height: 58px;
+        flex: 0 0 58px;
+        place-items: center;
+        overflow: hidden;
+        border: 1px solid rgba(var(--project-accent), .26);
+        border-radius: 16px;
+        background: rgba(var(--project-accent), .12);
+        color: #f2efff;
+        font-size: 1rem;
+        font-weight: 800;
+        letter-spacing: .08em;
+        box-shadow: inset 0 1px rgba(255,255,255,.06);
+    }
+    .project-mark img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .project-mark-bot img {
+        object-fit: contain;
+        padding: 7px;
+        box-sizing: border-box;
+    }
+    .project-status {
+        display: inline-flex;
+        align-items: center;
+        min-height: 27px;
+        padding: 0 10px;
+        border: 1px solid rgba(255,255,255,.09);
+        border-radius: 999px;
+        background: rgba(255,255,255,.045);
+        color: #cbd5e1;
+        font-size: .67rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .project-status-active {
+        border-color: rgba(96,165,250,.25);
+        background: rgba(96,165,250,.09);
+        color: #a9d1ff;
+    }
+    .project-status-available {
+        border-color: rgba(192,132,252,.25);
+        background: rgba(192,132,252,.09);
+        color: #d8b9ff;
+    }
+    .project-status-preparing {
+        border-color: rgba(74,190,133,.22);
+        background: rgba(74,190,133,.08);
+        color: #a9e2c3;
+    }
+    .project-status-planned {
+        border-color: rgba(235,150,165,.22);
+        background: rgba(235,150,165,.08);
+        color: #e9bec8;
+    }
+    .project-name {
+        margin: 23px 0 9px;
+        color: #f1f5f9;
+        font-size: 1.28rem;
+        font-weight: 800;
+        letter-spacing: -.025em;
+    }
+    .project-card .project-description {
+        margin: 0;
+        color: #9aa8bc;
+        font-size: .88rem;
+        line-height: 1.7;
+    }
+    .project-link {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        gap: 9px;
+        margin-top: auto;
+        padding-top: 22px;
+        color: #c9b8fa;
+        font-size: .82rem;
+        font-weight: 800;
+        text-decoration: none;
+        transition: color .2s ease, gap .2s ease;
+    }
+    .project-link:hover { gap: 13px; color: #fff; }
+    .project-link span { font-size: 1rem; }
+    .project-link-muted { color: #738096; cursor: default; }
+    .project-link-muted:hover { gap: 9px; color: #738096; }
+    .projects-shell .analytics-admin-accounts { margin-top: 24px; }
+    @media (max-width: 700px) {
+        .projects-grid { grid-template-columns: 1fr; gap: 14px; }
+        .project-card { min-height: 235px; padding: 21px; }
+        .projects-intro { margin-bottom: 27px; }
+        .projects-description { font-size: .9rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .project-card, .project-link { transition: none; }
+        .project-card:hover { transform: none; }
+    }
+</style>
+
 </head>
 <body>
 
@@ -1625,7 +1796,7 @@
         <nav class="nav-links" style="display: flex; gap: 25px; align-items: center; margin: 0 auto;">
             <button class="nav-link active" onclick="switchSection('home')">Главная</button>
             <button class="nav-link" onclick="switchSection('stats')">Статистика</button>
-            <button id="analytics-nav" class="nav-link" onclick="switchSection('analytics')">Аналитика</button>
+            <button id="analytics-nav" class="nav-link" onclick="switchSection('analytics')">Проекты</button>
             <button class="nav-link" onclick="switchSection('wall')">Цитаты сообщества</button>
             <button class="nav-link" onclick="switchSection('gallery')">Галерея</button>
             <button class="nav-link" onclick="switchSection('about')">О нас</button>
@@ -1874,70 +2045,78 @@
   </div>
 </section>
 
-        <section id="analytics" class="content-section">
-            <div class="analytics-shell">
-                <div class="analytics-hero">
-                    <div>
-                        <div class="analytics-kicker">🌐 PUBLIC ANALYTICS · ANIREIL</div>
-                        <h2>Центр аналитики</h2>
-                        <p>Общие показатели аудитории, активности и роста Anireil — доступны всем посетителям без регистрации.</p>
+        
+<section id="analytics" class="content-section" aria-labelledby="projects-title">
+    <div class="projects-shell">
+        <div class="projects-intro">
+            <div class="projects-kicker">ANIREIL · PROJECTS</div>
+            <h2 id="projects-title" class="section-title projects-title">Проекты Anireil</h2>
+            <p class="projects-description">
+                Anireil — это не только сообщество. Мы создаём собственные инструменты, игровые пространства и небольшие проекты, которые постепенно становятся частью одной экосистемы.
+            </p>
+        </div>
+
+        <div class="projects-grid">
+            <article class="project-card project-card-bot">
+                <div class="project-card-top">
+                    <div class="project-mark project-mark-bot">
+                        <img src="avatars/flood.png" alt="Логотип Anireil">
                     </div>
-                    <div class="analytics-actions">
-                        <span id="analytics-status" class="analytics-status">● Готово</span>
-                        <button class="analytics-refresh" type="button" onclick="loadAdminAnalytics()">↻ Обновить</button>
-                    </div>
+                    <span class="project-status project-status-active">Активен</span>
                 </div>
+                <h3 class="project-name">Anireil Bot</h3>
+                <p class="project-description">
+                    Telegram-бот сообщества: профили участников, команды, активности и инструменты для повседневного общения.
+                </p>
+                <a class="project-link" href="https://t.me/Anireil_bot" target="_blank" rel="noopener noreferrer">
+                    Открыть бота <span aria-hidden="true">↗</span>
+                </a>
+            </article>
 
-                <div class="analytics-kpi-grid">
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(96,165,250,.16)"><div class="analytics-kpi-label">Пользователей в базе</div><div id="analytics-total-users" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">все известные аккаунты</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(34,197,94,.15)"><div class="analytics-kpi-label">Сейчас в чате</div><div id="analytics-current-members" class="analytics-kpi-value">—</div><div id="analytics-telegram-count" class="analytics-kpi-sub">Telegram: —</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(168,85,247,.15)"><div class="analytics-kpi-label">Активны за 24 часа</div><div id="analytics-active-24h" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">по последней активности</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(245,158,11,.15)"><div class="analytics-kpi-label">Сообщений за 24 часа</div><div id="analytics-messages-24h" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">из журнала сообщений</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(96,165,250,.12)"><div class="analytics-kpi-label">Активны за 7 дней</div><div id="analytics-active-7d" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">уникальная аудитория</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(34,197,94,.13)"><div class="analytics-kpi-label">Новых за 30 дней</div><div id="analytics-joins-30d" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">по дате вступления</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(239,68,68,.13)"><div class="analytics-kpi-label">Ушли за 30 дней</div><div id="analytics-leaves-30d" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">по истории выхода</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(192,132,252,.16)"><div class="analytics-kpi-label">В чёрном списке</div><div id="analytics-blacklist" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">ограниченных аккаунтов</div></div>
+            <article class="project-card project-card-commands">
+                <div class="project-card-top">
+                    <div class="project-mark project-mark-commands" aria-hidden="true">AC</div>
+                    <span class="project-status project-status-available">Доступен</span>
                 </div>
+                <h3 class="project-name">Anireil Commands</h3>
+                <p class="project-description">
+                    Веб-каталог команд Anireil Bot с описаниями возможностей и удобным интерфейсом для работы с командами.
+                </p>
+                <a class="project-link" href="https://anireil-bot-0ygc.onrender.com/commands" target="_blank" rel="noopener noreferrer">
+                    Открыть каталог <span aria-hidden="true">↗</span>
+                </a>
+            </article>
 
-                <div class="analytics-grid">
-                    <div class="analytics-card">
-                        <div class="analytics-card-head"><div><h3>Активность за 7 дней</h3><span>сообщения и уникальные активные пользователи</span></div><span id="analytics-updated" class="analytics-updated">—</span></div>
-                        <div class="analytics-chart-box"><canvas id="analyticsActivityChart"></canvas></div>
+            <article class="project-card project-card-minecraft">
+                <div class="project-card-top">
+                    <div class="project-mark project-mark-minecraft">
+                        <img src="logos/minecraft.jpg" alt="Minecraft">
                     </div>
-                    <div class="analytics-card">
-                        <div class="analytics-card-head"><div><h3>Самые активные за 7 дней</h3><span>по журналу сообщений</span></div></div>
-                        <div id="analytics-top-users" class="analytics-list"></div>
-                    </div>
+                    <span class="project-status project-status-preparing">Подготовка</span>
                 </div>
+                <h3 class="project-name">Anireil Minecraft</h3>
+                <p class="project-description">
+                    Отдельное игровое пространство Anireil. Здесь собирается информация о проекте и подготовке собственного Minecraft-сервера.
+                </p>
+                <a class="project-link" href="https://anireilmine.github.io/" target="_blank" rel="noopener noreferrer">
+                    Сайт проекта <span aria-hidden="true">↗</span>
+                </a>
+            </article>
 
-                <div class="analytics-card" style="margin-bottom:18px">
-                    <div class="analytics-card-head"><div><h3>Рост аудитории за 30 дней</h3><span>вступления против выходов</span></div></div>
-                    <div class="analytics-chart-box"><canvas id="analyticsGrowthChart"></canvas></div>
+            <article class="project-card project-card-games">
+                <div class="project-card-top">
+                    <div class="project-mark project-mark-games" aria-hidden="true">AG</div>
+                    <span class="project-status project-status-planned">В планах</span>
                 </div>
+                <h3 class="project-name">Anireil Games</h3>
+                <p class="project-description">
+                    Будущая площадка с игровыми рекомендациями и подборками, чтобы находить интересные игры и делиться ими с сообществом.
+                </p>
+                <span class="project-link project-link-muted">Проект готовится</span>
+            </article>
+        </div>
 
-                <div class="analytics-bottom-grid">
-                    <div class="analytics-card">
-                        <div class="analytics-card-head"><div><h3>Популярные команды</h3><span>slash-команды за 7 дней</span></div></div>
-                        <div id="analytics-commands" class="analytics-list"></div>
-                    </div>
-                    <div class="analytics-card">
-                        <div class="analytics-card-head"><div><h3>Типы активности</h3><span>накопительные счётчики</span></div></div>
-                        <div class="analytics-chart-box" style="height:260px"><canvas id="analyticsMediaChart"></canvas></div>
-                    </div>
-                    <div class="analytics-card">
-                        <div class="analytics-card-head"><div><h3>Удержание базы</h3><span>текущая доля оставшихся</span></div></div>
-                        <div id="analytics-retention" class="analytics-retention"></div>
-                        <div class="analytics-note">Операционный показатель по текущей базе, не классический cohort-retention.</div>
-                    </div>
-                </div>
-
-                <div class="analytics-card" style="margin-top:18px">
-                    <div class="analytics-card-head"><div><h3>Топ за всё время</h3><span>по накопленному счётчику сообщений</span></div></div>
-                    <div id="analytics-lifetime-top" class="analytics-list"></div>
-                </div>
-
-
-                <div id="analytics-admin-accounts" class="analytics-card analytics-admin-accounts" style="display:none;">
+        <div id="analytics-admin-accounts" class="analytics-card analytics-admin-accounts" style="display:none;">
                     <div class="analytics-admin-accounts-head">
                         <div>
                             <div class="analytics-card-head" style="margin-bottom:6px;">
@@ -1952,10 +2131,9 @@
                     </div>
                     <div id="analytics-admin-accounts-list" class="analytics-admin-accounts-list"></div>
                 </div>
+    </div>
+</section>
 
-                <div class="analytics-note">Оперативная история сообщений хранится 7 дней; рост пользователей и накопительная статистика доступны дольше.</div>
-            </div>
-        </section>
 
         <section id="wall" class="content-section">
             <h2 class="section-title">Цитаты сообщества</h2>
@@ -3237,7 +3415,7 @@ const API_BASE = window.location.hostname === 'localhost'
 
             updateUserUI();
             syncAnalyticsNav();
-            loadAdminAnalytics();
+            // Public analytics were replaced by the projects showcase.
             syncAnalyticsAdminPanel();
             audioPlayer.volume = 0.7; 
 

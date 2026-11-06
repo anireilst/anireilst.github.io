@@ -1585,7 +1585,7 @@
 </head>
 <body>
 
-    <section id="reil-consent-overlay" class="reil-consent-overlay" role="dialog" aria-modal="true" aria-labelledby="reil-consent-title" aria-describedby="reil-consent-description">
+    <section id="reil-consent-overlay" class="reil-consent-overlay" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="reil-consent-title" aria-describedby="reil-consent-description">
         <div class="reil-consent-card">
             <p class="reil-consent-brand">Anireil · Optional experience</p>
             <h1 id="reil-consent-title" class="reil-consent-title">Добавить Reil на сайт?</h1>
@@ -1601,7 +1601,7 @@
             <div class="reil-consent-actions">
                 <button id="reil-consent-accept" class="reil-consent-button reil-consent-accept" type="button" disabled>
                     Добавить Reil
-                    <span id="reil-consent-countdown" class="reil-consent-countdown">Кнопка станет доступна через 5 секунд</span>
+                    <span id="reil-consent-countdown" class="reil-consent-countdown" aria-live="polite">Кнопка станет доступна через 5 секунд</span>
                 </button>
                 <button id="reil-consent-skip" class="reil-consent-button reil-consent-skip" type="button">
                     Продолжить без персонажа
@@ -1645,7 +1645,7 @@
                 <button class="nav-link" type="button" onclick="switchSection('contacts')">Площадки</button>
             </div>
                 <div class="player-container" style="position: relative; display: inline-block;">
-                    <button id="music-btn" onclick="toggleMusicMenu()" style="
+                    <button id="music-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="music-menu" aria-label="Открыть музыкальный плеер" onclick="toggleMusicMenu()" style="
                         background: var(--neon-glow);
                         border: 1px solid var(--neon-color);
                         color: #fff;
@@ -1662,7 +1662,7 @@
                     </button>
 
                     <!-- УЛУЧШЕННОЕ МЕНЮ МУЗЫКИ С ПОИСКОМ -->
-                    <div id="music-menu" style="
+                    <div id="music-menu" role="region" aria-label="Музыкальный плеер" aria-hidden="true" style="
                         display: none;
                         position: absolute;
                         top: 45px;
@@ -1680,7 +1680,7 @@
                             Поиск атмосферы:
                         </div>
                         
-                        <input type="text" id="music-search" class="music-search-input" placeholder="Введите название песни..." oninput="filterTracks()">
+                        <input type="search" id="music-search" class="music-search-input" aria-label="Поиск музыки" placeholder="Введите название песни..." autocomplete="off" oninput="filterTracks()">
                         
                         <div class="tracks-list-container" id="tracks-list">
                             <div class="track-item" data-title="пачка сигарет кино" onclick="selectTrack('Пачка Сигарет', 'music/pachka_sigoret.m4a')" style="padding: 10px 15px; color: #cbd5e1; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='var(--neon-glow)'; this.style.color='#fff'" onmouseout="this.style.background='transparent'; this.style.color='#cbd5e1'">
@@ -1701,7 +1701,7 @@
                         
                         <!-- Панель управления (Комфорт-фичи) -->
                         <div class="player-controls-box">
-                            <div class="progress-bar-container" onclick="seekAudio(event)">
+                            <div class="progress-bar-container" role="slider" tabindex="0" aria-label="Позиция воспроизведения" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Начало трека" onclick="seekAudio(event)" onkeydown="handleProgressKeydown(event)">
                                 <div class="progress-bar-fill" id="track-progress"></div>
                             </div>
                             <div class="volume-box">
@@ -2142,7 +2142,7 @@
     </footer>
 
     <!-- ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ ANIREIL -->
-    <div id="profile-modal" class="p-modal">
+    <div id="profile-modal" class="p-modal" role="dialog" aria-modal="true" aria-labelledby="modal-name" aria-hidden="true" tabindex="-1">
         <div class="p-modal-overlay" onclick="closeProfile()"></div>
 
         <div class="p-modal-content">
@@ -2890,8 +2890,7 @@ const API_BASE = window.location.hostname === 'localhost'
                 renderMyProfile(currentSiteUser);
 
                 if (openModal) {
-                    document.getElementById('profile-modal').classList.add('active');
-                    document.body.classList.add('profile-modal-open');
+                    openProfileModal();
                 }
             } catch (error) {
                 console.error('Ошибка загрузки профиля:', error);
@@ -3142,17 +3141,68 @@ const API_BASE = window.location.hostname === 'localhost'
             location.reload();
         }
 
-        function closeProfile() {
+        function openProfileModal() {
             const modal = document.getElementById('profile-modal');
             if (!modal) return;
+
+            window.__anireilProfileReturnFocus = document.activeElement;
+            modal.setAttribute('aria-hidden', 'false');
+            modal.classList.add('active');
+            document.body.classList.add('profile-modal-open');
+
+            window.setTimeout(() => {
+                modal.querySelector('.p-modal-close')?.focus({ preventScroll: true });
+            }, 40);
+        }
+
+        function closeProfile() {
+            const modal = document.getElementById('profile-modal');
+            if (!modal || !modal.classList.contains('active')) return;
+
             modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('profile-modal-open');
+
+            const returnTarget = window.__anireilProfileReturnFocus;
+            window.__anireilProfileReturnFocus = null;
+            if (returnTarget && returnTarget.isConnected && typeof returnTarget.focus === 'function') {
+                returnTarget.focus({ preventScroll: true });
+            }
         }
 
         window.closeProfile = closeProfile;
 
         document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') closeProfile();
+            const modal = document.getElementById('profile-modal');
+            if (!modal || !modal.classList.contains('active')) return;
+
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                closeProfile();
+                return;
+            }
+
+            if (event.key !== 'Tab') return;
+
+            const focusable = Array.from(modal.querySelectorAll(
+                'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            )).filter(element => element.getClientRects().length > 0);
+
+            if (!focusable.length) {
+                event.preventDefault();
+                modal.focus();
+                return;
+            }
+
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
         });
 
         function filterTracks() {
@@ -3185,15 +3235,28 @@ const API_BASE = window.location.hostname === 'localhost'
         const trackTitleDisplay = document.getElementById('current-track-title');
         const progressBarFill = document.getElementById('track-progress');
 
+        function setMusicMenuOpen(isOpen) {
+            if (!musicMenu) return;
+            const open = Boolean(isOpen);
+            musicMenu.style.display = open ? 'block' : 'none';
+            musicMenu.setAttribute('aria-hidden', String(!open));
+
+            const button = document.getElementById('music-btn');
+            if (button) {
+                button.setAttribute('aria-expanded', String(open));
+                button.setAttribute('aria-label', open ? 'Закрыть музыкальный плеер' : 'Открыть музыкальный плеер');
+            }
+        }
+
         function toggleMusicMenu() {
-            musicMenu.style.display = musicMenu.style.display === 'block' ? 'none' : 'block';
+            setMusicMenuOpen(musicMenu && musicMenu.style.display !== 'block');
         }
 
         function selectTrack(name, src) {
             audioPlayer.src = src;
             audioPlayer.play().then(() => {
                 trackTitleDisplay.innerText = name;
-                musicMenu.style.display = 'none';
+                setMusicMenuOpen(false);
             }).catch(err => console.log("Ошибка автовоспроизведения: ", err));
         }
 
@@ -3201,7 +3264,7 @@ const API_BASE = window.location.hostname === 'localhost'
             audioPlayer.pause();
             audioPlayer.src = "";
             trackTitleDisplay.innerText = "Музыка: Выкл";
-            musicMenu.style.display = 'none';
+            setMusicMenuOpen(false);
         }
 
         function changeVolume(value) {
@@ -3209,24 +3272,62 @@ const API_BASE = window.location.hostname === 'localhost'
         }
 
         audioPlayer.addEventListener('timeupdate', () => {
-            if (audioPlayer.duration) {
-                const percentage = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-                progressBarFill.style.width = percentage + '%';
+            if (!audioPlayer.duration) return;
+
+            const percentage = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progressBarFill.style.width = percentage + '%';
+
+            const progressBar = document.querySelector('.progress-bar-container');
+            if (progressBar) {
+                progressBar.setAttribute('aria-valuenow', String(Math.round(percentage)));
+                const current = Math.floor(audioPlayer.currentTime);
+                const total = Math.floor(audioPlayer.duration);
+                const formatTime = seconds => {
+                    const minutes = Math.floor(seconds / 60);
+                    const remainder = seconds % 60;
+                    return minutes + ':' + String(remainder).padStart(2, '0');
+                };
+                progressBar.setAttribute('aria-valuetext', formatTime(current) + ' из ' + formatTime(total));
             }
         });
 
         function seekAudio(event) {
+            if (!audioPlayer.duration) return;
             const rect = event.currentTarget.getBoundingClientRect();
-            const clickX = event.clientX - rect.left;
-            const width = rect.width;
-            if (audioPlayer.duration) {
-                audioPlayer.currentTime = (clickX / width) * audioPlayer.duration;
-            }
+            if (!rect.width) return;
+
+            const clickX = Math.min(rect.width, Math.max(0, event.clientX - rect.left));
+            audioPlayer.currentTime = (clickX / rect.width) * audioPlayer.duration;
         }
 
-        window.addEventListener('click', function(e) {
-            if (!document.getElementById('music-btn').contains(e.target) && !musicMenu.contains(e.target)) {
-                musicMenu.style.display = 'none';
+        function handleProgressKeydown(event) {
+            if (!audioPlayer.duration) return;
+
+            const step = event.shiftKey ? 15 : 5;
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
+                audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - step);
+            } else if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
+                audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + step);
+            } else if (event.key === 'Home') {
+                audioPlayer.currentTime = 0;
+            } else if (event.key === 'End') {
+                audioPlayer.currentTime = audioPlayer.duration;
+            } else {
+                return;
+            }
+
+            event.preventDefault();
+        }
+
+        window.addEventListener('click', function(event) {
+            const musicButton = document.getElementById('music-btn');
+            if (
+                musicButton &&
+                musicMenu &&
+                !musicButton.contains(event.target) &&
+                !musicMenu.contains(event.target)
+            ) {
+                setMusicMenuOpen(false);
             }
         });
 
@@ -3308,6 +3409,81 @@ const API_BASE = window.location.hostname === 'localhost'
             starsBox.appendChild(star);
         }
 
+        function closeGalleryLightbox(lightbox) {
+            if (!lightbox || !lightbox.isConnected) return;
+
+            const returnTarget = lightbox.__returnFocus;
+            lightbox.classList.add('is-closing');
+            document.body.classList.remove('gallery-lightbox-open');
+            window.setTimeout(() => lightbox.remove(), 180);
+
+            if (returnTarget && returnTarget.isConnected && typeof returnTarget.focus === 'function') {
+                returnTarget.focus({ preventScroll: true });
+            }
+        }
+
+        function openGalleryLightbox(sourceImage) {
+            if (!sourceImage) return;
+
+            const previousLightbox = document.querySelector('.gallery-lightbox');
+            if (previousLightbox) previousLightbox.remove();
+
+            const overlay = document.createElement('div');
+            overlay.className = 'gallery-lightbox';
+            overlay.setAttribute('role', 'dialog');
+            overlay.setAttribute('aria-modal', 'true');
+            overlay.setAttribute('aria-label', sourceImage.alt || 'Просмотр изображения');
+            overlay.__returnFocus = sourceImage;
+
+            const closeButton = document.createElement('button');
+            closeButton.type = 'button';
+            closeButton.className = 'gallery-lightbox-close';
+            closeButton.setAttribute('aria-label', 'Закрыть изображение');
+            closeButton.textContent = '×';
+
+            const frame = document.createElement('figure');
+            frame.className = 'gallery-lightbox-frame';
+
+            const image = document.createElement('img');
+            image.className = 'gallery-lightbox-image';
+            image.src = sourceImage.currentSrc || sourceImage.src;
+            image.alt = sourceImage.alt || 'Изображение из галереи';
+
+            const card = sourceImage.closest('.meme-card');
+            const titleElement = card ? card.querySelector('.meme-title') : null;
+            const title = titleElement ? titleElement.textContent.trim() : '';
+
+            frame.appendChild(image);
+            if (title) {
+                const caption = document.createElement('figcaption');
+                caption.className = 'gallery-lightbox-caption';
+                caption.textContent = title;
+                frame.appendChild(caption);
+            }
+
+            overlay.appendChild(closeButton);
+            overlay.appendChild(frame);
+
+            closeButton.addEventListener('click', () => closeGalleryLightbox(overlay));
+            overlay.addEventListener('click', event => {
+                if (event.target === overlay) closeGalleryLightbox(overlay);
+            });
+            overlay.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    closeGalleryLightbox(overlay);
+                } else if (event.key === 'Tab') {
+                    event.preventDefault();
+                    closeButton.focus();
+                }
+            });
+
+            document.body.appendChild(overlay);
+            document.body.classList.add('gallery-lightbox-open');
+            window.requestAnimationFrame(() => overlay.classList.add('is-visible'));
+            closeButton.focus({ preventScroll: true });
+        }
+
         document.addEventListener("DOMContentLoaded", async function() {
             // Start fetching the theme in parallel with session restoration.
             loadSiteTheme();
@@ -3338,40 +3514,49 @@ const API_BASE = window.location.hostname === 'localhost'
 
 
 
-            const cursor = document.querySelector('.custom-cursor');
-            const cursorEffect = document.querySelector('.custom-cursor-effects');
-            document.addEventListener('mousemove', (e) => {
-                if (cursor && cursorEffect) {
-                    cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-                    cursorEffect.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-                }
-            });
-            
-            document.querySelectorAll('a, button, .user-card, .game-card, .track-item, .progress-bar-container').forEach(link => {
-                link.addEventListener('mouseenter', () => cursor && cursor.classList.add('hover'));
-                link.addEventListener('mouseleave', () => cursor && cursor.classList.remove('hover'));
-            });
+            const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-            document.querySelectorAll('.user-card, .game-card').forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const rotateX = ((rect.height / 2 - (e.clientY - rect.top)) / (rect.height / 2)) * 10; 
-                    const rotateY = (((e.clientX - rect.left) - rect.width / 2) / (rect.width / 2)) * 10;
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                });
-                card.style.transition = "transform 0.1s ease-out";
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                });
-            });
+            if (hasFinePointer) {
+                const cursor = document.querySelector('.custom-cursor');
+                const cursorEffect = document.querySelector('.custom-cursor-effects');
 
-            document.querySelectorAll('.meme-img').forEach(img => {
-                img.addEventListener('click', () => {
-                    const modal = document.createElement('div');
-                    modal.style = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:20000;cursor:pointer;';
-                    modal.innerHTML = `<img src="${img.src}" style="max-width:90%;max-height:90%;border-radius:12px;box-shadow:0 0 30px var(--neon-color)">`;
-                    modal.onclick = () => modal.remove();
-                    document.body.appendChild(modal);
+                document.addEventListener('mousemove', event => {
+                    if (!cursor || !cursorEffect) return;
+                    cursor.style.transform = 'translate3d(' + event.clientX + 'px, ' + event.clientY + 'px, 0)';
+                    cursorEffect.style.transform = 'translate3d(' + event.clientX + 'px, ' + event.clientY + 'px, 0)';
+                }, { passive: true });
+
+                document.querySelectorAll('a, button, .user-card, .game-card, .track-item, .progress-bar-container').forEach(link => {
+                    link.addEventListener('mouseenter', () => cursor && cursor.classList.add('hover'));
+                    link.addEventListener('mouseleave', () => cursor && cursor.classList.remove('hover'));
+                });
+
+                document.querySelectorAll('.user-card, .game-card').forEach(card => {
+                    card.addEventListener('mousemove', event => {
+                        const rect = card.getBoundingClientRect();
+                        const halfWidth = Math.max(rect.width / 2, 1);
+                        const halfHeight = Math.max(rect.height / 2, 1);
+                        const rotateX = ((rect.height / 2 - (event.clientY - rect.top)) / halfHeight) * 5;
+                        const rotateY = (((event.clientX - rect.left) - rect.width / 2) / halfWidth) * 5;
+                        card.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-2px)';
+                    }, { passive: true });
+
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = '';
+                    });
+                });
+            }
+
+            document.querySelectorAll('.meme-img').forEach(image => {
+                image.setAttribute('role', 'button');
+                image.setAttribute('tabindex', '0');
+                image.setAttribute('aria-label', 'Открыть изображение: ' + (image.alt || 'из галереи'));
+                image.addEventListener('click', () => openGalleryLightbox(image));
+                image.addEventListener('keydown', event => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        openGalleryLightbox(image);
+                    }
                 });
             });
         });
@@ -3888,8 +4073,31 @@ document.querySelectorAll('.community-theme-swatches button').forEach(swatch => 
 
         overlay.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
+                event.preventDefault();
                 window.clearInterval(countdownTimer);
                 closeConsent('disabled');
+                return;
+            }
+
+            if (event.key !== 'Tab') return;
+            const focusable = Array.from(overlay.querySelectorAll(
+                'button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            )).filter(element => element.getClientRects().length > 0);
+
+            if (!focusable.length) {
+                event.preventDefault();
+                overlay.focus();
+                return;
+            }
+
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
             }
         });
 

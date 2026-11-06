@@ -1579,179 +1579,68 @@
     </script>
 
 <style id="anireil-projects-styles">
-    .projects-shell {
-        width: 100%;
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-    .projects-intro {
-        max-width: 760px;
-        margin: 0 auto 34px;
-        text-align: center;
-    }
-    .projects-kicker {
-        display: inline-flex;
-        align-items: center;
-        margin-bottom: 12px;
-        color: var(--neon-color);
-        font-size: .72rem;
-        font-weight: 800;
-        letter-spacing: .2em;
-    }
-    .projects-title { margin: 0 0 18px; }
-    .projects-description {
-        max-width: 670px;
-        margin: 0 auto;
-        color: #94a3b8;
-        font-size: .98rem;
-        line-height: 1.75;
-    }
-    .projects-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 20px;
-        align-items: stretch;
-    }
+    .projects-shell { width: 100%; max-width: 1100px; margin: 0 auto; }
+    .projects-intro { max-width: 760px; margin: 0 auto 30px; text-align: center; }
+    .projects-kicker { display: inline-flex; align-items: center; margin-bottom: 12px; color: #c7aaff; font-size: 11px; font-weight: 800; letter-spacing: .18em; }
+    .projects-title { margin: 0 0 14px; }
+    .projects-intro .projects-description { max-width: 670px; margin: 0 auto; color: #bcb6ca; font-size: 15px; line-height: 1.65; }
+    .projects-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; width: min(100%, 850px); margin: 0 auto; align-items: stretch; }
+
+    /* Compact horizontal cards matching the Contacts section. */
     .project-card {
-        --project-accent: 192, 132, 252;
-        position: relative;
-        display: flex;
-        min-width: 0;
-        min-height: 265px;
-        flex-direction: column;
-        overflow: hidden;
-        padding: 25px;
-        border: 1px solid rgba(255,255,255,.075);
-        border-radius: 20px;
-        background:
-            radial-gradient(circle at 100% 0%, rgba(var(--project-accent), .13), transparent 48%),
-            linear-gradient(145deg, rgba(26,27,41,.84), rgba(17,19,31,.88));
-        box-shadow: 0 16px 38px rgba(0,0,0,.16);
-        backdrop-filter: blur(8px);
-        transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+        --project-accent: 184, 135, 255;
+        display: flex; min-width: 0; min-height: 82px; align-items: center; gap: 14px;
+        padding: 14px; color: #f7f4ff; text-decoration: none;
+        border: 1px solid #ffffff15; border-radius: 17px; background: #ffffff07;
+        transition: transform .18s ease, border-color .18s ease, background .18s ease;
     }
-    .project-card:hover {
-        transform: translateY(-5px);
-        border-color: rgba(var(--project-accent), .38);
-        box-shadow: 0 20px 46px rgba(0,0,0,.25), 0 0 28px rgba(var(--project-accent), .08);
-    }
+    a.project-card:hover { transform: translateY(-2px); border-color: rgba(var(--project-accent), .5); background: #ffffff0d; }
     .project-card-bot { --project-accent: 96, 165, 250; }
-    .project-card-commands { --project-accent: 192, 132, 252; }
-    .project-card-rules { --project-accent: 96, 165, 250; }
-    .project-card-games {
-        grid-column: 1 / -1;
-        width: calc(50% - 10px);
-        justify-self: center;
-    }
-    .project-card-minecraft { --project-accent: 74, 190, 133; }
-    .project-card-games { --project-accent: 235, 150, 165; }
-    .project-card-top {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 12px;
-    }
+    .project-card-commands { --project-accent: 184, 135, 255; }
+    .project-card-rules { --project-accent: 114, 137, 218; }
+    .project-card-minecraft { --project-accent: 98, 217, 135; }
+    .project-card-games { --project-accent: 235, 150, 165; grid-column: 1 / -1; width: calc(50% - 6px); justify-self: center; }
+
     .project-mark {
-        display: grid;
-        width: 58px;
-        height: 58px;
-        flex: 0 0 58px;
-        place-items: center;
-        overflow: hidden;
-        border: 1px solid rgba(var(--project-accent), .26);
-        border-radius: 16px;
-        background: rgba(var(--project-accent), .12);
-        color: #f2efff;
-        font-size: 1rem;
-        font-weight: 800;
-        letter-spacing: .08em;
-        box-shadow: inset 0 1px rgba(255,255,255,.06);
+        display: grid; width: 48px; height: 48px; flex: 0 0 48px; place-items: center;
+        overflow: hidden; border-radius: 14px; background: rgba(var(--project-accent), .13);
+        color: #f5f3fa; font-size: 14px; font-weight: 800; letter-spacing: .04em;
     }
-    .project-mark img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    .project-mark-bot img {
-        object-fit: contain;
-        padding: 7px;
-        box-sizing: border-box;
-    }
+    .project-mark img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .project-mark-bot img { object-fit: contain; padding: 5px; box-sizing: border-box; }
+
+    .project-copy { display: grid; min-width: 0; flex: 1 1 auto; gap: 4px; }
+    .project-name { margin: 0; color: #f7f4ff; font-size: 15px; font-weight: 800; line-height: 1.25; letter-spacing: 0; }
+    .project-card .project-description { margin: 0; color: #a9a3b5; font-size: 11px; font-weight: 400; line-height: 1.4; }
+    .project-card .project-note { color: #8e879c; font-size: 10px; line-height: 1.35; }
+
     .project-status {
-        display: inline-flex;
-        align-items: center;
-        min-height: 27px;
-        padding: 0 10px;
-        border: 1px solid rgba(255,255,255,.09);
-        border-radius: 999px;
-        background: rgba(255,255,255,.045);
-        color: #cbd5e1;
-        font-size: .67rem;
-        font-weight: 700;
-        white-space: nowrap;
+        display: inline-flex; min-height: 26px; flex: 0 0 auto; align-items: center; justify-content: center;
+        margin-left: auto; padding: 6px 9px; border-radius: 999px;
+        background: rgba(var(--project-accent), .13); color: #d8bfff;
+        font-size: 10px; font-weight: 800; line-height: 1.2; white-space: nowrap;
     }
-    .project-status-active {
-        border-color: rgba(96,165,250,.25);
-        background: rgba(96,165,250,.09);
-        color: #a9d1ff;
-    }
-    .project-status-available {
-        border-color: rgba(192,132,252,.25);
-        background: rgba(192,132,252,.09);
-        color: #d8b9ff;
-    }
-    .project-status-preparing {
-        border-color: rgba(74,190,133,.22);
-        background: rgba(74,190,133,.08);
-        color: #a9e2c3;
-    }
-    .project-status-planned {
-        border-color: rgba(235,150,165,.22);
-        background: rgba(235,150,165,.08);
-        color: #e9bec8;
-    }
-    .project-name {
-        margin: 23px 0 9px;
-        color: #f1f5f9;
-        font-size: 1.28rem;
-        font-weight: 800;
-        letter-spacing: -.025em;
-    }
-    .project-card .project-description {
-        margin: 0;
-        color: #9aa8bc;
-        font-size: .88rem;
-        line-height: 1.7;
-    }
-    .project-link {
-        display: inline-flex;
-        align-items: center;
-        align-self: flex-start;
-        gap: 9px;
-        margin-top: auto;
-        padding-top: 22px;
-        color: #c9b8fa;
-        font-size: .82rem;
-        font-weight: 800;
-        text-decoration: none;
-        transition: color .2s ease, gap .2s ease;
-    }
-    .project-link:hover { gap: 13px; color: #fff; }
-    .project-link span { font-size: 1rem; }
-    .project-link-muted { color: #738096; cursor: default; }
-    .project-link-muted:hover { gap: 9px; color: #738096; }
+    .project-status-active { background: #5865f222; color: #a9d1ff; }
+    .project-status-available, .project-status-planned { background: #b887ff20; color: #d8bfff; }
+    .project-arrow { flex: 0 0 auto; margin-left: 2px; color: #bcb3cd; font-size: 19px; line-height: 1; }
+    .project-card-static { cursor: default; opacity: .82; }
     .projects-shell .analytics-admin-accounts { margin-top: 24px; }
+
     @media (max-width: 700px) {
-        .projects-grid { grid-template-columns: 1fr; gap: 14px; }
+        .projects-grid { grid-template-columns: 1fr; gap: 10px; }
         .project-card-games { grid-column: auto; width: auto; }
-        .project-card { min-height: 235px; padding: 21px; }
-        .projects-intro { margin-bottom: 27px; }
-        .projects-description { font-size: .9rem; }
+        .projects-intro { margin-bottom: 24px; }
+    }
+    @media (max-width: 420px) {
+        .project-card { gap: 11px; padding: 12px; }
+        .project-mark { width: 44px; height: 44px; flex-basis: 44px; }
+        .project-status { padding: 5px 7px; font-size: 9px; }
+        .project-name { font-size: 14px; }
+        .project-card .project-description { font-size: 10px; }
     }
     @media (prefers-reduced-motion: reduce) {
-        .project-card, .project-link { transition: none; }
-        .project-card:hover { transform: none; }
+        .project-card { transition: none; }
+        a.project-card:hover { transform: none; }
     }
 </style>
 
@@ -2051,86 +1940,60 @@
         <div class="projects-intro">
             <div class="projects-kicker">ANIREIL · PROJECTS</div>
             <h2 id="projects-title" class="section-title projects-title">Проекты Anireil</h2>
-            <p class="projects-description">
-                Anireil — это не только сообщество. Мы создаём собственные инструменты, игровые пространства и небольшие проекты, которые постепенно становятся частью одной экосистемы.
-            </p>
+            <p class="projects-description">Anireil — это не только сообщество. Мы создаём собственные инструменты, игровые пространства и небольшие проекты, которые постепенно становятся частью одной экосистемы.</p>
         </div>
 
         <div class="projects-grid">
-            <article class="project-card project-card-bot">
-                <div class="project-card-top">
-                    <div class="project-mark project-mark-bot">
-                        <img src="avatars/flood.png" alt="Логотип Anireil">
-                    </div>
-                    <span class="project-status project-status-active">Активен</span>
-                </div>
-                <h3 class="project-name">Anireil Bot</h3>
-                <p class="project-description">
-                    Telegram-бот сообщества: профили участников, команды, активности и инструменты для повседневного общения.
-                </p>
-                <a class="project-link" href="https://t.me/Anireil_Bot" target="_blank" rel="noopener noreferrer">
-                    Открыть бота <span aria-hidden="true">↗</span>
-                </a>
-            </article>
+            <a class="project-card project-card-bot" href="https://t.me/Anireil_Bot" target="_blank" rel="noopener noreferrer" aria-label="Открыть Anireil Bot">
+                <span class="project-mark project-mark-bot" aria-hidden="true"><img src="avatars/flood.png" alt=""></span>
+                <span class="project-copy">
+                    <strong class="project-name">Anireil Bot</strong>
+                    <small class="project-description">Telegram-бот сообщества: профили участников, команды, активности и инструменты для повседневного общения.</small>
+                </span>
+                <span class="project-status project-status-active">Активен</span>
+                <span class="project-arrow" aria-hidden="true">↗</span>
+            </a>
 
-            <article class="project-card project-card-commands">
-                <div class="project-card-top">
-                    <div class="project-mark project-mark-commands" aria-hidden="true">AC</div>
-                    <span class="project-status project-status-available">Доступен</span>
-                </div>
-                <h3 class="project-name">Anireil Commands</h3>
-                <p class="project-description">
-                    Веб-каталог команд Anireil Bot с описаниями возможностей и удобным интерфейсом для работы с командами.
-                </p>
-                <a class="project-link" href="https://anireil-bot-0ygc.onrender.com/commands" target="_blank" rel="noopener noreferrer">
-                    Открыть каталог <span aria-hidden="true">↗</span>
-                </a>
-            </article>
+            <a class="project-card project-card-commands" href="https://anireil-bot-0ygc.onrender.com/commands" target="_blank" rel="noopener noreferrer" aria-label="Открыть Anireil Commands">
+                <span class="project-mark" aria-hidden="true">AC</span>
+                <span class="project-copy">
+                    <strong class="project-name">Anireil Commands</strong>
+                    <small class="project-description">Веб-каталог команд Anireil Bot с описаниями возможностей и удобным интерфейсом для работы с командами.</small>
+                </span>
+                <span class="project-status project-status-available">Доступен</span>
+                <span class="project-arrow" aria-hidden="true">↗</span>
+            </a>
 
-            <article class="project-card project-card-rules">
-                <div class="project-card-top">
-                    <div class="project-mark project-mark-rules" aria-hidden="true">AR</div>
-                    <span class="project-status project-status-available">Доступен</span>
-                </div>
-                <h3 class="project-name">Anireil Rules</h3>
-                <p class="project-description">
-                    Официальная база правил Anireil: нормы сообщества, пояснения и условия участия.
-                </p>
-                <a class="project-link" href="https://anireilst.github.io/Anireil-Rules/" target="_blank" rel="noopener noreferrer">
-                    Открыть правила <span aria-hidden="true">↗</span>
-                </a>
-            </article>
+            <a class="project-card project-card-rules" href="https://anireilst.github.io/Anireil-Rules/" target="_blank" rel="noopener noreferrer" aria-label="Открыть Anireil Rules">
+                <span class="project-mark" aria-hidden="true">AR</span>
+                <span class="project-copy">
+                    <strong class="project-name">Anireil Rules</strong>
+                    <small class="project-description">Официальная база правил Anireil: нормы сообщества, пояснения и условия участия.</small>
+                </span>
+                <span class="project-status project-status-available">Доступен</span>
+                <span class="project-arrow" aria-hidden="true">↗</span>
+            </a>
 
-            <article class="project-card project-card-minecraft">
-                <div class="project-card-top">
-                    <div class="project-mark project-mark-minecraft">
-                        <img src="logos/minecraft.jpg" alt="Minecraft">
-                    </div>
-                    <span class="project-status project-status-planned">В планах</span>
-                </div>
-                <h3 class="project-name">Anireil Minecraft</h3>
-                <p class="project-description">
-                    Идея собственного Minecraft-сервера Anireil. Сайт проекта уже существует, но сам сервер пока не запущен и остаётся в планах.
-                </p>
-                <a class="project-link" href="https://anireilmine.github.io/" target="_blank" rel="noopener noreferrer">
-                    Сайт проекта <span aria-hidden="true">↗</span>
-                </a>
-            </article>
+            <a class="project-card project-card-minecraft" href="https://anireilmine.github.io/" target="_blank" rel="noopener noreferrer" aria-label="Открыть сайт Anireil Minecraft">
+                <span class="project-mark" aria-hidden="true"><img src="logos/minecraft.jpg" alt=""></span>
+                <span class="project-copy">
+                    <strong class="project-name">Anireil Minecraft</strong>
+                    <small class="project-description">Идея собственного Minecraft-сервера Anireil. Сайт проекта уже существует, но сам сервер пока не запущен и остаётся в планах.</small>
+                </span>
+                <span class="project-status project-status-planned">В планах</span>
+                <span class="project-arrow" aria-hidden="true">↗</span>
+            </a>
 
-            <article class="project-card project-card-games">
-                <div class="project-card-top">
-                    <div class="project-mark project-mark-games" aria-hidden="true">AG</div>
-                    <span class="project-status project-status-planned">В планах</span>
-                </div>
-                <h3 class="project-name">Anireil Games</h3>
-                <p class="project-description">
-                    Будущая площадка с игровыми рекомендациями и подборками, чтобы находить интересные игры и делиться ими с сообществом.
-                </p>
-                <span class="project-link project-link-muted">Проект готовится</span>
+            <article class="project-card project-card-games project-card-static" aria-label="Anireil Games — проект в планах">
+                <span class="project-mark" aria-hidden="true">AG</span>
+                <span class="project-copy">
+                    <strong class="project-name">Anireil Games</strong>
+                    <small class="project-description">Будущая площадка с игровыми рекомендациями и подборками, чтобы находить интересные игры и делиться ими с сообществом.</small>
+                    <small class="project-note">Проект готовится</small>
+                </span>
+                <span class="project-status project-status-planned">В планах</span>
             </article>
         </div>
-
-        
     </div>
 </section>
 

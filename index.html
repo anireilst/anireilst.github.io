@@ -1755,6 +1755,28 @@
     }
 </style>
 
+    <style id="profile-refresh-status-styles">
+        .profile-refresh-status {
+            margin: 0 0 16px;
+            padding: 9px 13px;
+            border: 1px solid rgba(96, 165, 250, 0.18);
+            border-radius: 11px;
+            background: rgba(96, 165, 250, 0.07);
+            color: #a9c9ed;
+            font-size: 0.76rem;
+            line-height: 1.5;
+        }
+
+        .profile-refresh-status.is-error {
+            border-color: rgba(245, 158, 11, 0.2);
+            background: rgba(245, 158, 11, 0.07);
+            color: #e5c39a;
+        }
+
+        .profile-refresh-status[hidden] {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -2274,6 +2296,8 @@
         <div class="p-modal-content">
             <button type="button" class="p-modal-close" onclick="closeProfile()" aria-label="Закрыть профиль">&times;</button>
 
+            <div id="profile-refresh-status" class="profile-refresh-status" role="status" aria-live="polite" hidden></div>
+
             <div class="p-profile-header p-wow-hero">
                 <div class="p-wow-orb one"></div>
                 <div class="p-wow-orb two"></div>
@@ -2762,6 +2786,7 @@ const API_BASE = window.location.hostname === 'localhost'
 // Можно просто во всех вызовах добавить префикс, как описано выше.
 
         let currentSiteUser = null;
+        let profileRefreshPromise = null;
 
         function getSiteToken() {
             return localStorage.getItem('anireil_site_token');
@@ -2918,7 +2943,9 @@ const API_BASE = window.location.hostname === 'localhost'
                 currentSiteUser = data.user;
                 updateUserUI();
 
-                await loadMyProfile(true);
+                renderMyProfile(currentSiteUser);
+                openProfileDialog();
+                setProfileRefreshStatus('');
 
                 showToast('✅ Google успешно вошёл в Anireil.');
             } catch (error) {
@@ -2976,6 +3003,41 @@ const API_BASE = window.location.hostname === 'localhost'
             }
         }
 
+        function getCachedSiteUser() {
+            if (currentSiteUser) return currentSiteUser;
+
+            try {
+                const cachedUser = JSON.parse(localStorage.getItem('anireil_site_user') || 'null');
+                return cachedUser && typeof cachedUser === 'object' ? cachedUser : null;
+            } catch (error) {
+                console.warn('Не удалось прочитать сохранённый профиль:', error);
+                return null;
+            }
+        }
+
+        function openProfileDialog() {
+            const modal = document.getElementById('profile-modal');
+            if (!modal) return;
+
+            modal.classList.add('active');
+            document.body.classList.add('profile-modal-open');
+        }
+
+        function setProfileRefreshStatus(message = '', isError = false) {
+            const status = document.getElementById('profile-refresh-status');
+            const content = document.querySelector('#profile-modal .p-modal-content');
+
+            if (status) {
+                status.textContent = message;
+                status.hidden = !message;
+                status.classList.toggle('is-error', Boolean(isError));
+            }
+
+            if (content) {
+                content.setAttribute('aria-busy', message && !isError ? 'true' : 'false');
+            }
+        }
+
         async function openMyProfile() {
             await loadMyProfile(true);
         }
@@ -2985,43 +3047,102 @@ const API_BASE = window.location.hostname === 'localhost'
 
             if (!token) {
                 showToast('Сначала войди через Google.');
-                return;
+                return false;
             }
 
-            try {
-                const response = await fetch(API_BASE + '/api/me', {
-                    headers: {
-                        Authorization: 'Bearer ' + token
+            if (openModal) {
+                const cachedUser = getCachedSiteUser();
+
+                if (cachedUser) {
+                    currentSiteUser = cachedUser;
+                    renderMyProfile(cachedUser);
+                } else {
+                    setText('modal-name', 'Загружаем профиль…');
+                }
+
+                openProfileDialog();
+                setProfileRefreshStatus(
+                    cachedUser ? 'Обновляем данные…' : 'Загружаем данные…'
+                );
+            }
+
+            if (profileRefreshPromise) {
+                return profileRefreshPromise;
+            }
+
+            profileRefreshPromise = (async () => {
+                try {
+                    const response = await fetch(API_BASE + '/api/me', {
+                        headers: {
+                            Authorization: 'Bearer ' + token
+                        },
+                        cache: 'no-store'
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success) {
+                        const error = new Error(data.error || 'Не удалось загрузить профиль');
+                        error.status = response.status;
+                        throw error;
                     }
-                });
 
-                const data = await response.json();
+                    const cachedUser = getCachedSiteUser();
+                    const cachedPhoto = currentSiteUser?.photoUrl || cachedUser?.photoUrl || null;
 
-                if (!response.ok || !data.success) {
-                    throw new Error(data.error || 'Не удалось загрузить профиль');
+                    currentSiteUser = {
+                        ...data.user,
+                        photoUrl: data.user.photoUrl || cachedPhoto
+                    };
+
+                    if (data.token) {
+                        localStorage.setItem('anireil_site_token', data.token);
+                    }
+
+                    localStorage.setItem('anireil_site_user', JSON.stringify(currentSiteUser));
+                    updateUserUI();
+                    renderMyProfile(currentSiteUser);
+                    setProfileRefreshStatus('');
+
+                    return true;
+                } catch (error) {
+                    console.error('Ошибка загрузки профиля:', error);
+
+                    if (error.status === 401 || error.status === 403) {
+                        const message = error.status === 403
+                            ? error.message
+                            : 'Сессия истекла. Войди через Google ещё раз.';
+
+                        localStorage.removeItem('anireil_site_token');
+                        localStorage.removeItem('anireil_site_user');
+                        setGoogleLoggedOutUI();
+                        closeProfile();
+                        setProfileRefreshStatus('');
+                        showToast(error.status === 403 ? '⛔ ' + message : message);
+
+                        return false;
+                    }
+
+                    const modal = document.getElementById('profile-modal');
+                    if (modal?.classList.contains('active')) {
+                        setProfileRefreshStatus(
+                            currentSiteUser
+                                ? 'Не удалось обновить данные. Показаны сохранённые сведения.'
+                                : 'Не удалось загрузить профиль. Попробуй позже.',
+                            true
+                        );
+                    } else if (!openModal) {
+                        showToast('Не удалось обновить профиль. Попробуй позже.');
+                    }
+
+                    return false;
                 }
+            })();
 
-                const cachedPhoto = currentSiteUser?.photoUrl || null;
-                currentSiteUser = {
-                    ...data.user,
-                    photoUrl: data.user.photoUrl || cachedPhoto
-                };
-
-                if (data.token) {
-                    localStorage.setItem('anireil_site_token', data.token);
-                }
-
-                localStorage.setItem('anireil_site_user', JSON.stringify(currentSiteUser));
-                updateUserUI();
-                renderMyProfile(currentSiteUser);
-
-                if (openModal) {
-                    document.getElementById('profile-modal').classList.add('active');
-                    document.body.classList.add('profile-modal-open');
-                }
-            } catch (error) {
-                console.error('Ошибка загрузки профиля:', error);
-                showToast('❌ Не удалось загрузить профиль.');
+            try {
+                return await profileRefreshPromise;
+            } finally {
+                profileRefreshPromise = null;
             }
         }
 

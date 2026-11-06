@@ -1577,6 +1577,206 @@
       }
     }
     </script>
+
+<style id="anireil-projects-styles">
+    .projects-shell {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .projects-intro {
+        max-width: 760px;
+        margin: 0 auto 34px;
+        text-align: center;
+    }
+    .projects-kicker {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 12px;
+        color: var(--neon-color);
+        font-size: .72rem;
+        font-weight: 800;
+        letter-spacing: .2em;
+    }
+    .projects-title { margin: 0 0 18px; }
+    .projects-description {
+        max-width: 670px;
+        margin: 0 auto;
+        color: #94a3b8;
+        font-size: .98rem;
+        line-height: 1.75;
+    }
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+        align-items: stretch;
+    }
+    .project-card {
+        --project-accent: 192, 132, 252;
+        position: relative;
+        display: flex;
+        min-width: 0;
+        min-height: 265px;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 25px;
+        border: 1px solid rgba(255,255,255,.075);
+        border-radius: 20px;
+        background:
+            radial-gradient(circle at 100% 0%, rgba(var(--project-accent), .13), transparent 48%),
+            linear-gradient(145deg, rgba(26,27,41,.84), rgba(17,19,31,.88));
+        box-shadow: 0 16px 38px rgba(0,0,0,.16);
+        backdrop-filter: blur(8px);
+        transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+    .project-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(var(--project-accent), .38);
+        box-shadow: 0 20px 46px rgba(0,0,0,.25), 0 0 28px rgba(var(--project-accent), .08);
+    }
+    .project-card-bot { --project-accent: 96, 165, 250; }
+    .project-card-commands { --project-accent: 192, 132, 252; }
+    .project-card-rules { --project-accent: 96, 165, 250; }
+    .project-card-games {
+        grid-column: 1 / -1;
+        width: calc(50% - 10px);
+        justify-self: center;
+    }
+    .project-card-minecraft { --project-accent: 74, 190, 133; }
+    .project-card-games { --project-accent: 235, 150, 165; }
+    .project-card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+    }
+    .project-mark {
+        display: grid;
+        width: 58px;
+        height: 58px;
+        flex: 0 0 58px;
+        place-items: center;
+        overflow: hidden;
+        border: 1px solid rgba(var(--project-accent), .26);
+        border-radius: 16px;
+        background: rgba(var(--project-accent), .12);
+        color: #f2efff;
+        font-size: 1rem;
+        font-weight: 800;
+        letter-spacing: .08em;
+        box-shadow: inset 0 1px rgba(255,255,255,.06);
+    }
+    .project-mark img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .project-mark-bot img {
+        object-fit: contain;
+        padding: 7px;
+        box-sizing: border-box;
+    }
+    .project-status {
+        display: inline-flex;
+        align-items: center;
+        min-height: 27px;
+        padding: 0 10px;
+        border: 1px solid rgba(255,255,255,.09);
+        border-radius: 999px;
+        background: rgba(255,255,255,.045);
+        color: #cbd5e1;
+        font-size: .67rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .project-status-active {
+        border-color: rgba(96,165,250,.25);
+        background: rgba(96,165,250,.09);
+        color: #a9d1ff;
+    }
+    .project-status-available {
+        border-color: rgba(192,132,252,.25);
+        background: rgba(192,132,252,.09);
+        color: #d8b9ff;
+    }
+    .project-status-preparing {
+        border-color: rgba(74,190,133,.22);
+        background: rgba(74,190,133,.08);
+        color: #a9e2c3;
+    }
+    .project-status-planned {
+        border-color: rgba(235,150,165,.22);
+        background: rgba(235,150,165,.08);
+        color: #e9bec8;
+    }
+    .project-name {
+        margin: 23px 0 9px;
+        color: #f1f5f9;
+        font-size: 1.28rem;
+        font-weight: 800;
+        letter-spacing: -.025em;
+    }
+    .project-card .project-description {
+        margin: 0;
+        color: #9aa8bc;
+        font-size: .88rem;
+        line-height: 1.7;
+    }
+    .project-link {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        gap: 9px;
+        margin-top: auto;
+        padding-top: 22px;
+        color: #c9b8fa;
+        font-size: .82rem;
+        font-weight: 800;
+        text-decoration: none;
+        transition: color .2s ease, gap .2s ease;
+    }
+    .project-link:hover { gap: 13px; color: #fff; }
+    .project-link span { font-size: 1rem; }
+    .project-link-muted { color: #738096; cursor: default; }
+    .project-link-muted:hover { gap: 9px; color: #738096; }
+    .projects-shell .analytics-admin-accounts { margin-top: 24px; }
+    @media (max-width: 700px) {
+        .projects-grid { grid-template-columns: 1fr; gap: 14px; }
+        .project-card-games { grid-column: auto; width: auto; }
+        .project-card { min-height: 235px; padding: 21px; }
+        .projects-intro { margin-bottom: 27px; }
+        .projects-description { font-size: .9rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .project-card, .project-link { transition: none; }
+        .project-card:hover { transform: none; }
+    }
+</style>
+
+    <style id="profile-refresh-status-styles">
+        .profile-refresh-status {
+            margin: 0 0 16px;
+            padding: 9px 13px;
+            border: 1px solid rgba(96, 165, 250, 0.18);
+            border-radius: 11px;
+            background: rgba(96, 165, 250, 0.07);
+            color: #a9c9ed;
+            font-size: 0.76rem;
+            line-height: 1.5;
+        }
+
+        .profile-refresh-status.is-error {
+            border-color: rgba(245, 158, 11, 0.2);
+            background: rgba(245, 158, 11, 0.07);
+            color: #e5c39a;
+        }
+
+        .profile-refresh-status[hidden] {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -1625,7 +1825,7 @@
         <nav class="nav-links" style="display: flex; gap: 25px; align-items: center; margin: 0 auto;">
             <button class="nav-link active" onclick="switchSection('home')">Главная</button>
             <button class="nav-link" onclick="switchSection('stats')">Статистика</button>
-            <button id="analytics-nav" class="nav-link" onclick="switchSection('analytics')">Аналитика</button>
+            <button id="analytics-nav" class="nav-link" onclick="switchSection('analytics')">Проекты</button>
             <button class="nav-link" onclick="switchSection('wall')">Цитаты сообщества</button>
             <button class="nav-link" onclick="switchSection('gallery')">Галерея</button>
             <button class="nav-link" onclick="switchSection('about')">О нас</button>
@@ -1681,7 +1881,7 @@
                     </div>
 
                     <!-- Динамическая кнопка Яндекс Музыки (появляется при поиске) -->
-                    <a id="yandex-music-fallback" href="https://music.yandex.ru" target="_blank" class="yandex-music-btn" style="display: none;">
+                    <a id="yandex-music-fallback" href="https://music.yandex.ru" target="_blank" class="yandex-music-btn" style="display: none;" rel="noopener noreferrer">
                         🔍 Найти в Яндекс Музыка
                     </a>
                     
@@ -1746,7 +1946,7 @@
                             background: linear-gradient(135deg, #5865F2, #4752C4); color: #ffffff; text-decoration: none;
                             font-weight: 600; font-size: 15px; border-radius: 8px; box-shadow: 0 0 20px rgba(88, 101, 242, 0.3);
                             transition: all 0.3s ease; height: 48px; box-sizing: border-box;
-                        ">
+                        " rel="noopener noreferrer">
                             <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="currentColor">
                                 <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a74.37,74.37,0,0,0,6.72-10.93,68.6,68.6,0,0,1-10.64-5.12c.91-.67,1.81-1.37,2.65-2.1a75.22,75.22,0,0,0,72.9,0c.84.73,1.74,1.43,2.65,2.1a68.86,68.86,0,0,1-10.64,5.12,74.74,74.74,0,0,0,6.72,10.93,105.73,105.73,0,0,0,31.57-18.83C129.78,49.49,123.93,26.68,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z"/>
                             </svg>
@@ -1758,7 +1958,7 @@
                             background: linear-gradient(135deg, #24A1DE, #1D83B3); color: #ffffff; text-decoration: none;
                             font-weight: 600; font-size: 15px; border-radius: 8px; box-shadow: 0 0 20px rgba(36, 161, 222, 0.3);
                             transition: all 0.3s ease; height: 48px; box-sizing: border-box;
-                        ">
+                        " rel="noopener noreferrer">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="22" y1="2" x2="11" y2="13"></line>
                                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -1793,7 +1993,7 @@
                             display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--neon-color);
                             padding: 8px 16px; border-radius: 8px; background: var(--neon-glow); backdrop-filter: blur(4px);
                             transition: all 0.25s ease;
-                        " onmouseover="this.style.background='var(--neon-glow)'; this.style.borderColor='var(--neon-color)'; this.style.boxShadow='0 0 15px var(--neon-glow)';" onmouseout="this.style.background='rgba(192, 132, 252, 0.03)'; this.style.borderColor='var(--neon-color)'; this.style.boxShadow='none';">
+                        " onmouseover="this.style.background='var(--neon-glow)'; this.style.borderColor='var(--neon-color)'; this.style.boxShadow='0 0 15px var(--neon-glow)';" onmouseout="this.style.background='rgba(192, 132, 252, 0.03)'; this.style.borderColor='var(--neon-color)'; this.style.boxShadow='none';" rel="noopener noreferrer">
                             Читать полные правила и соглашение &rarr;
                         </a>
                     </div>
@@ -1874,70 +2074,92 @@
   </div>
 </section>
 
-        <section id="analytics" class="content-section">
-            <div class="analytics-shell">
-                <div class="analytics-hero">
-                    <div>
-                        <div class="analytics-kicker">🌐 PUBLIC ANALYTICS · ANIREIL</div>
-                        <h2>Центр аналитики</h2>
-                        <p>Общие показатели аудитории, активности и роста Anireil — доступны всем посетителям без регистрации.</p>
+        
+<section id="analytics" class="content-section" aria-labelledby="projects-title">
+    <div class="projects-shell">
+        <div class="projects-intro">
+            <div class="projects-kicker">ANIREIL · PROJECTS</div>
+            <h2 id="projects-title" class="section-title projects-title">Проекты Anireil</h2>
+            <p class="projects-description">
+                Anireil — это не только сообщество. Мы создаём собственные инструменты, игровые пространства и небольшие проекты, которые постепенно становятся частью одной экосистемы.
+            </p>
+        </div>
+
+        <div class="projects-grid">
+            <article class="project-card project-card-bot">
+                <div class="project-card-top">
+                    <div class="project-mark project-mark-bot">
+                        <img src="avatars/flood.png" alt="Логотип Anireil">
                     </div>
-                    <div class="analytics-actions">
-                        <span id="analytics-status" class="analytics-status">● Готово</span>
-                        <button class="analytics-refresh" type="button" onclick="loadAdminAnalytics()">↻ Обновить</button>
-                    </div>
+                    <span class="project-status project-status-active">Активен</span>
                 </div>
+                <h3 class="project-name">Anireil Bot</h3>
+                <p class="project-description">
+                    Telegram-бот сообщества: профили участников, команды, активности и инструменты для повседневного общения.
+                </p>
+                <a class="project-link" href="https://t.me/Anireil_Bot" target="_blank" rel="noopener noreferrer">
+                    Открыть бота <span aria-hidden="true">↗</span>
+                </a>
+            </article>
 
-                <div class="analytics-kpi-grid">
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(96,165,250,.16)"><div class="analytics-kpi-label">Пользователей в базе</div><div id="analytics-total-users" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">все известные аккаунты</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(34,197,94,.15)"><div class="analytics-kpi-label">Сейчас в чате</div><div id="analytics-current-members" class="analytics-kpi-value">—</div><div id="analytics-telegram-count" class="analytics-kpi-sub">Telegram: —</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(168,85,247,.15)"><div class="analytics-kpi-label">Активны за 24 часа</div><div id="analytics-active-24h" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">по последней активности</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(245,158,11,.15)"><div class="analytics-kpi-label">Сообщений за 24 часа</div><div id="analytics-messages-24h" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">из журнала сообщений</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(96,165,250,.12)"><div class="analytics-kpi-label">Активны за 7 дней</div><div id="analytics-active-7d" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">уникальная аудитория</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(34,197,94,.13)"><div class="analytics-kpi-label">Новых за 30 дней</div><div id="analytics-joins-30d" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">по дате вступления</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(239,68,68,.13)"><div class="analytics-kpi-label">Ушли за 30 дней</div><div id="analytics-leaves-30d" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">по истории выхода</div></div>
-                    <div class="analytics-kpi" style="--kpi-glow:rgba(192,132,252,.16)"><div class="analytics-kpi-label">В чёрном списке</div><div id="analytics-blacklist" class="analytics-kpi-value">—</div><div class="analytics-kpi-sub">ограниченных аккаунтов</div></div>
+            <article class="project-card project-card-commands">
+                <div class="project-card-top">
+                    <div class="project-mark project-mark-commands" aria-hidden="true">AC</div>
+                    <span class="project-status project-status-available">Доступен</span>
                 </div>
+                <h3 class="project-name">Anireil Commands</h3>
+                <p class="project-description">
+                    Веб-каталог команд Anireil Bot с описаниями возможностей и удобным интерфейсом для работы с командами.
+                </p>
+                <a class="project-link" href="https://anireil-bot-0ygc.onrender.com/commands" target="_blank" rel="noopener noreferrer">
+                    Открыть каталог <span aria-hidden="true">↗</span>
+                </a>
+            </article>
 
-                <div class="analytics-grid">
-                    <div class="analytics-card">
-                        <div class="analytics-card-head"><div><h3>Активность за 7 дней</h3><span>сообщения и уникальные активные пользователи</span></div><span id="analytics-updated" class="analytics-updated">—</span></div>
-                        <div class="analytics-chart-box"><canvas id="analyticsActivityChart"></canvas></div>
-                    </div>
-                    <div class="analytics-card">
-                        <div class="analytics-card-head"><div><h3>Самые активные за 7 дней</h3><span>по журналу сообщений</span></div></div>
-                        <div id="analytics-top-users" class="analytics-list"></div>
-                    </div>
+            <article class="project-card project-card-rules">
+                <div class="project-card-top">
+                    <div class="project-mark project-mark-rules" aria-hidden="true">AR</div>
+                    <span class="project-status project-status-available">Доступен</span>
                 </div>
+                <h3 class="project-name">Anireil Rules</h3>
+                <p class="project-description">
+                    Официальная база правил Anireil: нормы сообщества, пояснения и условия участия.
+                </p>
+                <a class="project-link" href="https://anireilst.github.io/Anireil-Rules/" target="_blank" rel="noopener noreferrer">
+                    Открыть правила <span aria-hidden="true">↗</span>
+                </a>
+            </article>
 
-                <div class="analytics-card" style="margin-bottom:18px">
-                    <div class="analytics-card-head"><div><h3>Рост аудитории за 30 дней</h3><span>вступления против выходов</span></div></div>
-                    <div class="analytics-chart-box"><canvas id="analyticsGrowthChart"></canvas></div>
-                </div>
-
-                <div class="analytics-bottom-grid">
-                    <div class="analytics-card">
-                        <div class="analytics-card-head"><div><h3>Популярные команды</h3><span>slash-команды за 7 дней</span></div></div>
-                        <div id="analytics-commands" class="analytics-list"></div>
+            <article class="project-card project-card-minecraft">
+                <div class="project-card-top">
+                    <div class="project-mark project-mark-minecraft">
+                        <img src="logos/minecraft.jpg" alt="Minecraft">
                     </div>
-                    <div class="analytics-card">
-                        <div class="analytics-card-head"><div><h3>Типы активности</h3><span>накопительные счётчики</span></div></div>
-                        <div class="analytics-chart-box" style="height:260px"><canvas id="analyticsMediaChart"></canvas></div>
-                    </div>
-                    <div class="analytics-card">
-                        <div class="analytics-card-head"><div><h3>Удержание базы</h3><span>текущая доля оставшихся</span></div></div>
-                        <div id="analytics-retention" class="analytics-retention"></div>
-                        <div class="analytics-note">Операционный показатель по текущей базе, не классический cohort-retention.</div>
-                    </div>
+                    <span class="project-status project-status-planned">В планах</span>
                 </div>
+                <h3 class="project-name">Anireil Minecraft</h3>
+                <p class="project-description">
+                    Идея собственного Minecraft-сервера Anireil. Сайт проекта уже существует, но сам сервер пока не запущен и остаётся в планах.
+                </p>
+                <a class="project-link" href="https://anireilmine.github.io/" target="_blank" rel="noopener noreferrer">
+                    Сайт проекта <span aria-hidden="true">↗</span>
+                </a>
+            </article>
 
-                <div class="analytics-card" style="margin-top:18px">
-                    <div class="analytics-card-head"><div><h3>Топ за всё время</h3><span>по накопленному счётчику сообщений</span></div></div>
-                    <div id="analytics-lifetime-top" class="analytics-list"></div>
+            <article class="project-card project-card-games">
+                <div class="project-card-top">
+                    <div class="project-mark project-mark-games" aria-hidden="true">AG</div>
+                    <span class="project-status project-status-planned">В планах</span>
                 </div>
+                <h3 class="project-name">Anireil Games</h3>
+                <p class="project-description">
+                    Будущая площадка с игровыми рекомендациями и подборками, чтобы находить интересные игры и делиться ими с сообществом.
+                </p>
+                <span class="project-link project-link-muted">Проект готовится</span>
+            </article>
+        </div>
 
-
-                <div id="analytics-admin-accounts" class="analytics-card analytics-admin-accounts" style="display:none;">
+        <div id="analytics-admin-accounts" class="analytics-card analytics-admin-accounts" style="display:none;">
                     <div class="analytics-admin-accounts-head">
                         <div>
                             <div class="analytics-card-head" style="margin-bottom:6px;">
@@ -1952,10 +2174,9 @@
                     </div>
                     <div id="analytics-admin-accounts-list" class="analytics-admin-accounts-list"></div>
                 </div>
+    </div>
+</section>
 
-                <div class="analytics-note">Оперативная история сообщений хранится 7 дней; рост пользователей и накопительная статистика доступны дольше.</div>
-            </div>
-        </section>
 
         <section id="wall" class="content-section">
             <h2 class="section-title">Цитаты сообщества</h2>
@@ -2074,6 +2295,8 @@
 
         <div class="p-modal-content">
             <button type="button" class="p-modal-close" onclick="closeProfile()" aria-label="Закрыть профиль">&times;</button>
+
+            <div id="profile-refresh-status" class="profile-refresh-status" role="status" aria-live="polite" hidden></div>
 
             <div class="p-profile-header p-wow-hero">
                 <div class="p-wow-orb one"></div>
@@ -2563,6 +2786,7 @@ const API_BASE = window.location.hostname === 'localhost'
 // Можно просто во всех вызовах добавить префикс, как описано выше.
 
         let currentSiteUser = null;
+        let profileRefreshPromise = null;
 
         function getSiteToken() {
             return localStorage.getItem('anireil_site_token');
@@ -2719,7 +2943,9 @@ const API_BASE = window.location.hostname === 'localhost'
                 currentSiteUser = data.user;
                 updateUserUI();
 
-                await loadMyProfile(true);
+                renderMyProfile(currentSiteUser);
+                openProfileDialog();
+                setProfileRefreshStatus('');
 
                 showToast('✅ Google успешно вошёл в Anireil.');
             } catch (error) {
@@ -2777,6 +3003,41 @@ const API_BASE = window.location.hostname === 'localhost'
             }
         }
 
+        function getCachedSiteUser() {
+            if (currentSiteUser) return currentSiteUser;
+
+            try {
+                const cachedUser = JSON.parse(localStorage.getItem('anireil_site_user') || 'null');
+                return cachedUser && typeof cachedUser === 'object' ? cachedUser : null;
+            } catch (error) {
+                console.warn('Не удалось прочитать сохранённый профиль:', error);
+                return null;
+            }
+        }
+
+        function openProfileDialog() {
+            const modal = document.getElementById('profile-modal');
+            if (!modal) return;
+
+            modal.classList.add('active');
+            document.body.classList.add('profile-modal-open');
+        }
+
+        function setProfileRefreshStatus(message = '', isError = false) {
+            const status = document.getElementById('profile-refresh-status');
+            const content = document.querySelector('#profile-modal .p-modal-content');
+
+            if (status) {
+                status.textContent = message;
+                status.hidden = !message;
+                status.classList.toggle('is-error', Boolean(isError));
+            }
+
+            if (content) {
+                content.setAttribute('aria-busy', message && !isError ? 'true' : 'false');
+            }
+        }
+
         async function openMyProfile() {
             await loadMyProfile(true);
         }
@@ -2786,43 +3047,102 @@ const API_BASE = window.location.hostname === 'localhost'
 
             if (!token) {
                 showToast('Сначала войди через Google.');
-                return;
+                return false;
             }
 
-            try {
-                const response = await fetch(API_BASE + '/api/me', {
-                    headers: {
-                        Authorization: 'Bearer ' + token
+            if (openModal) {
+                const cachedUser = getCachedSiteUser();
+
+                if (cachedUser) {
+                    currentSiteUser = cachedUser;
+                    renderMyProfile(cachedUser);
+                } else {
+                    setText('modal-name', 'Загружаем профиль…');
+                }
+
+                openProfileDialog();
+                setProfileRefreshStatus(
+                    cachedUser ? 'Обновляем данные…' : 'Загружаем данные…'
+                );
+            }
+
+            if (profileRefreshPromise) {
+                return profileRefreshPromise;
+            }
+
+            profileRefreshPromise = (async () => {
+                try {
+                    const response = await fetch(API_BASE + '/api/me', {
+                        headers: {
+                            Authorization: 'Bearer ' + token
+                        },
+                        cache: 'no-store'
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success) {
+                        const error = new Error(data.error || 'Не удалось загрузить профиль');
+                        error.status = response.status;
+                        throw error;
                     }
-                });
 
-                const data = await response.json();
+                    const cachedUser = getCachedSiteUser();
+                    const cachedPhoto = currentSiteUser?.photoUrl || cachedUser?.photoUrl || null;
 
-                if (!response.ok || !data.success) {
-                    throw new Error(data.error || 'Не удалось загрузить профиль');
+                    currentSiteUser = {
+                        ...data.user,
+                        photoUrl: data.user.photoUrl || cachedPhoto
+                    };
+
+                    if (data.token) {
+                        localStorage.setItem('anireil_site_token', data.token);
+                    }
+
+                    localStorage.setItem('anireil_site_user', JSON.stringify(currentSiteUser));
+                    updateUserUI();
+                    renderMyProfile(currentSiteUser);
+                    setProfileRefreshStatus('');
+
+                    return true;
+                } catch (error) {
+                    console.error('Ошибка загрузки профиля:', error);
+
+                    if (error.status === 401 || error.status === 403) {
+                        const message = error.status === 403
+                            ? error.message
+                            : 'Сессия истекла. Войди через Google ещё раз.';
+
+                        localStorage.removeItem('anireil_site_token');
+                        localStorage.removeItem('anireil_site_user');
+                        setGoogleLoggedOutUI();
+                        closeProfile();
+                        setProfileRefreshStatus('');
+                        showToast(error.status === 403 ? '⛔ ' + message : message);
+
+                        return false;
+                    }
+
+                    const modal = document.getElementById('profile-modal');
+                    if (modal?.classList.contains('active')) {
+                        setProfileRefreshStatus(
+                            currentSiteUser
+                                ? 'Не удалось обновить данные. Показаны сохранённые сведения.'
+                                : 'Не удалось загрузить профиль. Попробуй позже.',
+                            true
+                        );
+                    } else if (!openModal) {
+                        showToast('Не удалось обновить профиль. Попробуй позже.');
+                    }
+
+                    return false;
                 }
+            })();
 
-                const cachedPhoto = currentSiteUser?.photoUrl || null;
-                currentSiteUser = {
-                    ...data.user,
-                    photoUrl: data.user.photoUrl || cachedPhoto
-                };
-
-                if (data.token) {
-                    localStorage.setItem('anireil_site_token', data.token);
-                }
-
-                localStorage.setItem('anireil_site_user', JSON.stringify(currentSiteUser));
-                updateUserUI();
-                renderMyProfile(currentSiteUser);
-
-                if (openModal) {
-                    document.getElementById('profile-modal').classList.add('active');
-                    document.body.classList.add('profile-modal-open');
-                }
-            } catch (error) {
-                console.error('Ошибка загрузки профиля:', error);
-                showToast('❌ Не удалось загрузить профиль.');
+            try {
+                return await profileRefreshPromise;
+            } finally {
+                profileRefreshPromise = null;
             }
         }
 
@@ -3237,7 +3557,7 @@ const API_BASE = window.location.hostname === 'localhost'
 
             updateUserUI();
             syncAnalyticsNav();
-            loadAdminAnalytics();
+            // Public analytics were replaced by the projects showcase.
             syncAnalyticsAdminPanel();
             audioPlayer.volume = 0.7; 
 
